@@ -215,7 +215,7 @@ public class BGChat {
 		FileConfiguration kitConfig = YamlConfiguration
 				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
 		ConfigurationSection kit = kitConfig.getConfigurationSection(kitname);
-		if (kit == null) {
+		if (kit == null && !BGKit.kits.contains(kitname)) {
 			printPlayerChat(player,
 					"That kit doesn't exist! View all kits with /kit");
 			return;

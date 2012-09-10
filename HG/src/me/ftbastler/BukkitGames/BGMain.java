@@ -269,7 +269,7 @@ public class BGMain extends JavaPlugin {
 
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		
-		kit = new BGKit(this);
+		kit =new BGKit(this);
 		listener = new BGListener(this);
 		cooldown = new BGCooldown(this);
 		chat = new BGChat(this);
@@ -834,6 +834,14 @@ public class BGMain extends JavaPlugin {
 				
 				getGamers()[0].kickPlayer(ChatColor.GOLD
 						+ "You are the winner of this game!");
+				
+				if(SQL_USE) {
+					Integer PL_ID = getPlayerID(winnername);
+					SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'WINNER' WHERE `REF_PLAYER` = "
+							+ PL_ID
+							+ " AND `REF_GAME` = "
+							+ SQL_GAMEID + " ;");
+				}
 				
 				if(ADV_REW) {
 					if (getWinnerID(winnername) == null) {

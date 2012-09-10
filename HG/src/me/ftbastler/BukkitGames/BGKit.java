@@ -1,6 +1,7 @@
 package me.ftbastler.BukkitGames;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -19,9 +20,19 @@ public class BGKit {
 	private static BGMain plugin;
 	static Logger log = Logger.getLogger("Minecraft");
 	static HashMap<Player, String> KIT = new HashMap<Player, String>();
+	public static ArrayList<String> kits = new ArrayList<String>();
 
 	public BGKit(BGMain instan) {
 		plugin = instan;
+		
+		FileConfiguration kitConfig = YamlConfiguration
+				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
+		
+		List<String> kitList = kitConfig.getStringList("KITS");
+		for(String kit : kitList) {
+			kit = kit.toLowerCase();
+			kits.add(kit);
+		}
 	}
 
 	public static void giveKit(Player p) {
@@ -208,7 +219,7 @@ public class BGKit {
 				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
 		ConfigurationSection kit = kitConfig.getConfigurationSection(kitname);
 
-		if (kit == null) {
+		if (kit == null  && !kits.contains(kitname)) {
 			BGChat.printPlayerChat(player, "That kit doesn't exist!");
 			return;
 		}

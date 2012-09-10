@@ -524,7 +524,6 @@ public class BGListener implements Listener {
 		ItemStack writtenbook = bi.getItemStack();
 		p.getInventory().addItem(writtenbook);
 		
-		
 		String playerName = p.getName();
 		
 		if (plugin.SQL_USE) {
@@ -666,10 +665,7 @@ public class BGListener implements Listener {
 							if (plugin.SQL_USE) {
 								Integer PL_ID = plugin.getPlayerID(last_quit);
 								if (last_quit == plugin.NEW_WINNER) {
-									plugin.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'WINNER' WHERE `REF_PLAYER` = "
-											+ PL_ID
-											+ " AND `REF_GAME` = "
-											+ plugin.SQL_GAMEID + " ;");
+									
 								} else {
 									plugin.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'QUIT' WHERE `REF_PLAYER` = "
 											+ PL_ID
