@@ -269,7 +269,7 @@ public class BGMain extends JavaPlugin {
 
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		
-		kit =new BGKit(this);
+		kit = new BGKit(this);
 		listener = new BGListener(this);
 		cooldown = new BGCooldown(this);
 		chat = new BGChat(this);

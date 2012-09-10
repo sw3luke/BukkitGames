@@ -13,11 +13,11 @@ public class BGUpdate {
 	@SuppressWarnings("unused")
 	private BGMain plugin;
 	
-	public static String old = "1.1.0";
+	public static String old;
 	
 	public BGUpdate(BGMain plugin) {
-		
 		this.plugin = plugin;
+		BGUpdate.old = plugin.getDescription().getVersion();
 	}
 	
 	public void update(Player player) throws Exception{
