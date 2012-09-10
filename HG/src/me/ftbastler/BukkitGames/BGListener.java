@@ -515,6 +515,16 @@ public class BGListener implements Listener {
 			p.setDisplayName(p.getName());
 		}
 
+		//Creating a written book.
+		CraftBook bi = new CraftBook(new ItemStack(387,1));
+		String[] content = {"§9Welcome to the HungerGames, hosted on the §1" + plugin.SERVER_TITLE + "§9! \n§r\n§r\n§0Thanks for joining.", "Have fun playing!"};
+		bi.setPages(content);
+		bi.setAuthor("The BukkitGames");
+		bi.setTitle("Welcome to the HungerGames!");
+		ItemStack writtenbook = bi.getItemStack();
+		p.getInventory().addItem(writtenbook);
+		
+		
 		String playerName = p.getName();
 		
 		if (plugin.SQL_USE) {
