@@ -1,6 +1,7 @@
 #Message File for The BukkitGames
 MESSAGES:
   WORLD_BORDER: You have reached the Worldborder!
+  NO_PERMISSIONS: You are not allowed to do this!
   SERVER_FULL: The server is full.
   GAME_PROGRESS: Game is in progress.
   MOTD_PROGRESS: Game is in progress.
@@ -28,4 +29,52 @@ MESSAGES:
   LEFT: left
   THERE: There
   PLAYER_REM: Players remaining
-  TIME_REM: Time remaining 
+  TIME_REM: Time remaining
+  GAME_ALREADY: The game has already begun!
+  GAMEMAKER: §2You are now a GameMaker.
+  NO_GAMEMAKER: §2You are no longer a GameMaker.
+  KITINFO_ERROR: Must include a kit name! (/kitinfo [kitName])
+  TO_SPAWN: Teleported to the spawn location.
+  LESS_ARGS: Too less arrguments!
+  COIN_ALL: With 1 Coin you can use all VIP Kits!
+  COIN_KITS1: With 1 Coin you can use the
+  COIN_KITS2: VIP Kits!
+  COIN_MENU1: For
+  COIN_MENU2: Points you get 1 Coin!
+  COIN_MENU3: You get 1 Point for each time you win a game
+  COIN_MENU4: Type /coin use when you want to use a Coin!
+  COIN_MENU5: Type /coin send points <player> <amount> to send other players points!
+  COIN_MENU6: Type /coin send coins <player> <amount> to send other players coins
+  COIN_COINS: COINS
+  COIN_POINTS: POINTS
+  COIN_ARG_MUCH: Too much arrguments! Try /coin
+  COIN_NOT_NEED: You don't need to use Coins you can use all Kits!
+  COIN_ALREADY: You have already used a coin this round!
+  COIN_USED: Coin used!
+  COIN_LESS: Too less Coins! try /coin for infos!
+  PLAYER_NEVER: Player was never on this server!
+  ONLY_INT: Only Integers are possible!
+  ONLY_POS_INT: Only positive Integers are possible!
+  POINTS_LESS: You don't have enough points!
+  POINTS_SEND1: You have send
+  POINTS_SEND2: Points to
+  POINTS_REC1: You have received
+  POINTS_REC2: Points from
+  COINS_SEND1: You have send
+  COINS_SEND2: Coins to
+  COINS_REC1: You have received
+  COINS_REC2: Coins from
+  POINTS_GAVE1: You gave
+  POINTS_GAVE2: Points to
+  COINS_GAVE1: You gave
+  COINS_GAVE2: Coins to
+  POINTS_TAKE1: You took
+  POINTS_TAKE2: Points from
+  COINS_TAKE1: You took
+  COINS_TAKE2: Coins from
+  COINS_LOSE: You lost
+  POINTS_LOSE: You lost
+  COIN_STATS: This are the stats of
+  FBATTLE_AH: Final battle ahead. Teleporting everybody to spawn in 1 minute!
+  NOT_FBATTLE: You can not start the Final Battle because it will start automaticly soon!
+  GAME_NOT_STARTED: The games is not started yet!
