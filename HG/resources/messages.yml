@@ -1,0 +1,31 @@
+#Message File for The BukkitGames
+MESSAGES:
+  WORLD_BORDER: You have reached the Worldborder!
+  SERVER_FULL: The server is full.
+  GAME_PROGRESS: Game is in progress.
+  MOTD_PROGRESS: Game is in progress.
+  MOTD_COUNTDOWN: Game begins in <time>.
+  NO_KIT_PERMISSION: You are not allowed to use this kit.
+  HELP_MESSAGE: For help, visit tinyurl.com/HGHelp
+  SERVER_TITLE: BukkitGames HG Server
+  KIT_BUY_WEBSITE: Ask operator.
+  WELCOME: Welcome to the HungerGames! | Get your kit now: §f/kit
+  ADV_ABI_DIS: Advanced Abilities disabled! This ability wont work!
+  IS: is
+  ARE: are
+  PLAYER: player
+  PLAYERS: players
+  MINUTE: minute
+  MINUTES: minutes
+  AVAI_KITS: §bAvailable kits: §7(/kit [KitName])
+  YOUR_KITS: §aYour kits
+  OTHER_KITS: §aOther kits:
+  MORE_KITS: §bMore kits available at
+  KIT_NOT_EXIST: That kit doesn't exist! View all kits with /kit
+  KIT_INC: kit includes
+  WITH: with
+  ONLINE: online
+  LEFT: left
+  THERE: There
+  PLAYER_REM: Players remaining
+  TIME_REM: Time remaining 

@@ -1,0 +1,6 @@
+#Winner Reward Config
+#Add here all Kits which can be used with 1 Coin (add - ALL to use all Kits)
+KITS:
+  - Poseidon
+  - Archer
+  - Beastmaster
