@@ -31,18 +31,18 @@ public class BGReward extends JavaPlugin{
 	public void createUser(String playerName) {
 		
 		if (plugin.getWinnerID(playerName) == null) {
-			plugin.SQLquery("INSERT INTO WINNERS (user, points) VALUES ('"+ playerName + "', 0)");
+			plugin.SQLquery("INSERT INTO WINNERS (REF_PLAYER, POINTS) VALUES ("+ plugin.getPlayerID(playerName) + ", 0)");
 		}
 	}
 	
 	public void givePoints(String playerName, int points) {
 		
-		plugin.SQLquery("UPDATE WINNERS SET points = (points+"+points+") WHERE ID=" + plugin.getWinnerID(playerName));
+		plugin.SQLquery("UPDATE WINNERS SET points = (points+"+points+") WHERE REF_PLAYER=" + plugin.getPlayerID(playerName));
 	}
 	
 	public void takePoints(String playerName, int points) {
 		
-		plugin.SQLquery("UPDATE WINNERS SET points = (points-"+points+") WHERE ID=" + plugin.getWinnerID(playerName));
+		plugin.SQLquery("UPDATE WINNERS SET points = (points-"+points+") WHERE REF_PLAYER=" + plugin.getPlayerID(playerName));
 	}
 	
 	public void coinUse(String playerName) {

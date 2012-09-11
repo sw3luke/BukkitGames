@@ -188,7 +188,7 @@ public class BGCommand implements CommandExecutor {
 				}
 				if (args[1].equalsIgnoreCase("points")) {
 				
-					if (plugin.getWinnerID(args[2]) == null) {
+					if (plugin.getPlayerID(args[2]) == null) {
 					
 						BGChat.printPlayerChat(p, "Player was never on this server!");
 						return true;
@@ -234,7 +234,7 @@ public class BGCommand implements CommandExecutor {
 				}
 				if (args[1].equalsIgnoreCase("coins")) {
 					
-					if (plugin.getWinnerID(args[2]) == null) {
+					if (plugin.getPlayerID(args[2]) == null) {
 						
 						BGChat.printPlayerChat(p, "Player was never on this server!");
 						return true;
@@ -286,7 +286,7 @@ public class BGCommand implements CommandExecutor {
 							BGChat.printPlayerChat(p, "Too less arrguments!");
 							return true;
 						}
-						if (plugin.getWinnerID(args[2]) == null) {
+						if (plugin.getPlayerID(args[2]) == null) {
 						
 							BGChat.printPlayerChat(p, "Player was never on this server!");
 							return true;
@@ -361,7 +361,7 @@ public class BGCommand implements CommandExecutor {
 							BGChat.printPlayerChat(p, "Too less arrguments!");
 							return true;
 						}
-						if (plugin.getWinnerID(args[2]) == null) {
+						if (plugin.getPlayerID(args[2]) == null) {
 						
 							BGChat.printPlayerChat(p, "Player was never on this server!");
 							return true;
@@ -437,7 +437,7 @@ public class BGCommand implements CommandExecutor {
 							BGChat.printPlayerChat(p, "To less arrguments!");
 						}
 						
-						if (plugin.getWinnerID(args[1]) == null) {
+						if (plugin.getPlayerID(args[1]) == null) {
 							
 							BGChat.printPlayerChat(p, "Player was never on this server!");
 							return true;
