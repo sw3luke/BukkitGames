@@ -514,6 +514,8 @@ public class BGMain extends JavaPlugin {
 		File rewardFile = new File(getDataFolder(), "reward.yml");
 		File deathSignFile = new File(getDataFolder(), "deathsign.yml");
 		File abilitiesFile = new File(getDataFolder(), "abilities.yml");
+		File bookFile = new File(getDataFolder(), "book.yml");
+		File messagesFile = new File(getDataFolder(), "messages.yml");
 
 		if (!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
@@ -545,6 +547,17 @@ public class BGMain extends JavaPlugin {
 			copy(getResource("abilities.yml"), abilitiesFile);
 			this.log.info("[BukkitGames] 'abilities.yml' didn't exist. Created it.");
 		}
+		if (!bookFile.exists()) {
+			bookFile.getParentFile().mkdirs();
+			copy(getResource("book.yml"), abilitiesFile);
+			this.log.info("[BukkitGames] 'book.yml' didn't exist. Created it.");
+		}
+		if (!messagesFile.exists()) {
+			messagesFile.getParentFile().mkdirs();
+			copy(getResource("messages.yml"), abilitiesFile);
+			this.log.info("[BukkitGames] 'messages.yml' didn't exist. Created it.");
+		}
+		
 	}
 
 	private void copyDirectory(File sourceLocation, File targetLocation)

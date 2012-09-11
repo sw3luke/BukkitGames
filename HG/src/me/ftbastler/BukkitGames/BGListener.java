@@ -516,11 +516,32 @@ public class BGListener implements Listener {
 		}
 
 		//Creating a written book.
+		FileConfiguration bookConfig = YamlConfiguration.loadConfiguration(
+				new File(plugin.getDataFolder(), "book.yml"));
+		List<String> pages = bookConfig.getStringList("content");
+		List<String> content = new ArrayList<String>();
+		List<String> page = new ArrayList<String>();
+		for(String line : pages)  {
+			line = line.replace("<server_title>", plugin.SERVER_TITLE);
+			line = line.replace("<space>", "§r\n");
+			if(!line.contains("<newpage>")) {
+				page.add(line + "\n");
+			} else {
+				String pagestr = "";
+				for(String l : page)
+					pagestr = pagestr + l;
+				content.add(pagestr);	
+			}
+		}
+		String pagestr = "";
+		for(String l : page)
+			pagestr = pagestr + l;
+		content.add(pagestr);	
+		
 		CraftBook bi = new CraftBook(new ItemStack(387,1));
-		String[] content = {"§9Welcome to the HungerGames, hosted on the §1" + plugin.SERVER_TITLE + "§9! \n§r\n§r\n§0Thanks for joining.", "Have fun playing!"};
-		bi.setPages(content);
-		bi.setAuthor("The BukkitGames");
-		bi.setTitle("Welcome to the HungerGames!");
+		bi.setPages(content.toArray(new String[0]));
+		bi.setAuthor(bookConfig.getString("author"));
+		bi.setTitle(bookConfig.getString("title"));
 		ItemStack writtenbook = bi.getItemStack();
 		p.getInventory().addItem(writtenbook);
 		

@@ -2,6 +2,7 @@
 
 # Use the placeholder <server_title> where the Server name should be inserted.
 # Use the placeholder <space> where you want to leave a line blank.
+# Use the placeholder <newpage> where you want to end the page and go on with the next one.
 # Every line you create at content represents a line in the book.
 # Max. 16 chars per line! (ColorCodes does not matter!)
 # §k is used in the End Poem, when the supernatural beings say words not meant for your eyes. Using it ingame will make all characters except spaces flash randomly as many different characters. It is currently the only animated format code.
@@ -12,8 +13,8 @@
 # §[0-f, hexadecimal] creates colored text. See Color codes.
 # §r resets any of the previous styles so text after it appears normally.
 
-Title: Welcome to the Hungergames!
-Content:
+title: Welcome to the Hungergames!
+content:
   - §9Welcome to the
   - §9HungerGames,
   - §9hosted on the
@@ -23,4 +24,6 @@ Content:
   - <space>
   - Thanks for joining!
   - Have fun playing!
-Author: The BukkitGames
+  - <newpage>
+  - Get a kit now!
+author: The BukkitGames
