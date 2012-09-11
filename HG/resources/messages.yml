@@ -94,7 +94,7 @@ MESSAGES:
   NOT_FBATTLE: You can not start the Final Battle because it will start automaticly soon!
   FBATTLE: Final battle! Teleported everybody to spawn.
   FBATTLE_LEFT: Final battle! 1 minute left.
-  GAME_NOT_STARTED: The games is not started yet!
+  GAME_NOT_STARTED: The games has not started yet!
   COMPASS_TRACKING: Tracking player
   COMPASS_DISTANCE: Distance
   COMPASS_NO_PLAYER: No players in range. Compass points to spawn.
