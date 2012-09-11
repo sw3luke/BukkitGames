@@ -7,7 +7,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class BGFiles {
 	
-	@SuppressWarnings("unused")
 	private static BGMain plugin;
 	
 	public static FileConfiguration abconf;

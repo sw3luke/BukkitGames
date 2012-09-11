@@ -30,7 +30,7 @@ public class BGReward extends JavaPlugin{
 	
 	public void createUser(String playerName) {
 		
-		if (plugin.getWinnerID(playerName) == null) {
+		if (plugin.getPlayerID(playerName) == null) {
 			plugin.SQLquery("INSERT INTO WINNERS (REF_PLAYER, POINTS) VALUES ("+ plugin.getPlayerID(playerName) + ", 0)");
 		}
 	}
