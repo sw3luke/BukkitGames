@@ -1,16 +1,27 @@
 #Message File for The BukkitGames
 MESSAGES:
   WORLD_BORDER: You have reached the Worldborder!
+  SERVER_RESTART: Server is restarting!
   NO_PERMISSIONS: You are not allowed to do this!
   SERVER_FULL: The server is full.
   GAME_PROGRESS: Game is in progress.
   MOTD_PROGRESS: Game is in progress.
   MOTD_COUNTDOWN: Game begins in <time>.
+  COUTNDOWN: Game start in <time>.
+  CHEST_SPAWN: Chest spawned at
+  TABLE_SPAWN: Enchantment Table spawned at
+  TOO_LESS_PLAYERS: There are too few players on, restarting countdown.
+  INV_COUNTDOWN: Invincibility wears off in <time>.
   NO_KIT_PERMISSION: You are not allowed to use this kit.
   HELP_MESSAGE: For help, visit tinyurl.com/HGHelp
   SERVER_TITLE: BukkitGames HG Server
   KIT_BUY_WEBSITE: Ask operator.
   WELCOME: Welcome to the HungerGames! | Get your kit now: §f/kit
+  ADV_CHAT_GB:  --- The games have begun! ---
+  ADV_CHAT_MSG: §e\"May the odds be ever in your favor!\
+  GAME_BEGUN: The games have begun!
+  INV_MSG: Everyone is invincible for
+  WINNER: You are the winner of this game!
   ADV_ABI_DIS: Advanced Abilities disabled! This ability wont work!
   IS: is
   ARE: are
@@ -18,12 +29,16 @@ MESSAGES:
   PLAYERS: players
   MINUTE: minute
   MINUTES: minutes
+  SECOND: second
+  SECONDS: seconds
   AVAI_KITS: §bAvailable kits: §7(/kit [KitName])
   YOUR_KITS: §aYour kits
   OTHER_KITS: §aOther kits:
   MORE_KITS: §bMore kits available at
   KIT_NOT_EXIST: That kit doesn't exist! View all kits with /kit
   KIT_INC: kit includes
+  KIT_CHOSE1: You have chosen
+  KIT_CHOSE2: as your kit
   WITH: with
   ONLINE: online
   LEFT: left
@@ -77,4 +92,14 @@ MESSAGES:
   COIN_STATS: This are the stats of
   FBATTLE_AH: Final battle ahead. Teleporting everybody to spawn in 1 minute!
   NOT_FBATTLE: You can not start the Final Battle because it will start automaticly soon!
+  FBATTLE: Final battle! Teleported everybody to spawn.
+  FBATTLE_LEFT: Final battle! 1 minute left.
   GAME_NOT_STARTED: The games is not started yet!
+  COMPASS_TRACKING: Tracking player
+  COMPASS_DISTANCE: Distance
+  COMPASS_NO_PLAYER: No players in range. Compass points to spawn.
+  PLAYER_LEFT: left the game!
+  PLAYER_REM: players remaining.
+  HEADSHOT: HEADSHOT!
+  PLAYER_HEADSHOT: was headshotted by
+  
