@@ -587,7 +587,7 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 
-	private void copy(InputStream in, File file) {
+	public void copy(InputStream in, File file) {
 		try {
 			OutputStream out = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
@@ -857,7 +857,7 @@ public class BGMain extends JavaPlugin {
 				}
 				
 				if(ADV_REW) {
-					if (getWinnerID(winnername) == null) {
+					if (getPlayerID(winnername) == null) {
 						
 						reward.createUser(winnername);
 						reward.givePoints(winnername, 1);
