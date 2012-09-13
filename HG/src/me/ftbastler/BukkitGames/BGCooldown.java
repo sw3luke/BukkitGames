@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,13 +12,11 @@ public class BGCooldown extends JavaPlugin {
 	
 	private BGMain plugin;
 	
-	FileConfiguration abconf;
-	
 	public BGCooldown(BGMain plugin) {
 		
 		this.plugin = plugin;
 		
-		abconf = YamlConfiguration.loadConfiguration(
+		BGFiles.abconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "abilities.yml"));
 	}
 	
@@ -34,7 +31,7 @@ public class BGCooldown extends JavaPlugin {
 		};
 		
 		Timer timer = new Timer();
-		timer.schedule(action, abconf.getInt("AB.13.Cooldown") * 1000);
+		timer.schedule(action, BGFiles.abconf.getInt("AB.13.Cooldown") * 1000);
 	}
 	
 	public void thiefCooldown(final Player player) {
@@ -48,7 +45,7 @@ public class BGCooldown extends JavaPlugin {
 		};
 		
 		Timer timer = new Timer();
-		timer.schedule(action, abconf.getInt("AB.15.Cooldown") * 1000);
+		timer.schedule(action, BGFiles.abconf.getInt("AB.15.Cooldown") * 1000);
 	}
 	
 	public void ghostCooldown(final Player player) {
@@ -62,7 +59,7 @@ public class BGCooldown extends JavaPlugin {
 		};
 		
 		Timer timer = new Timer();
-		timer.schedule(action, abconf.getInt("AB.16.Cooldown") * 1000);
+		timer.schedule(action, BGFiles.abconf.getInt("AB.16.Cooldown") * 1000);
 	}
 	
 	public void showPlayerCooldown(final Player player, final Player[] players) {
@@ -77,12 +74,12 @@ public class BGCooldown extends JavaPlugin {
 					}
 					p.showPlayer(player);
 				}
-				BGChat.printPlayerChat(player, abconf.getString("AB.16.visible"));
+				BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.16.visible"));
 			}
 		};
 		
 		Timer timer = new Timer();
-		timer.schedule(action, abconf.getInt("AB.16.Duration") * 1000);
+		timer.schedule(action, BGFiles.abconf.getInt("AB.16.Duration") * 1000);
 	}
 	
 	public void viperCooldown(final Player player) {
@@ -96,7 +93,7 @@ public class BGCooldown extends JavaPlugin {
 		};
 		
 		Timer timer = new Timer();
-		timer.schedule(action, abconf.getInt("AB.19.Duration") * 1000);
+		timer.schedule(action, BGFiles.abconf.getInt("AB.19.Duration") * 1000);
 	}
 	
 	public void thorCooldown(final Player player) {
@@ -110,7 +107,7 @@ public class BGCooldown extends JavaPlugin {
 		};
 		
 		Timer timer = new Timer();
-		timer.schedule(action, abconf.getInt("AB.11.Cooldown") * 1000);
+		timer.schedule(action, BGFiles.abconf.getInt("AB.11.Cooldown") * 1000);
 	}
 	
 	public void fbattleCooldown() {
