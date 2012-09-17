@@ -9,20 +9,26 @@ public class BGFiles {
 	
 	private static BGMain plugin;
 	
-	public static FileConfiguration abconf;
-	public static FileConfiguration bookconf;
-	public static FileConfiguration config;
-	public static FileConfiguration dsign;
-	public static FileConfiguration kitconf;
-	public static FileConfiguration messageconf;
-	public static FileConfiguration rewardconf;
+	static FileConfiguration abconf;
+	static FileConfiguration bookconf;
+	static FileConfiguration config;
+	static FileConfiguration dsign;
+	static FileConfiguration kitconf;
+	static FileConfiguration messageconf;
+	static FileConfiguration rewardconf;
 
 	public BGFiles(BGMain main) {
 		
 		plugin = main;
+		
+		try{
+			loadFiles();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void loadFiles() throws Exception {
+	private void loadFiles() throws Exception {
 		
 		//Create files if not exist
 		File configFile = new File(plugin.getDataFolder(), "config.yml");

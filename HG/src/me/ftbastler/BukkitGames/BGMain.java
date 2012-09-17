@@ -55,6 +55,7 @@ public class BGMain extends JavaPlugin {
 	public BGUpdate update;
 	public BGVanish vanish;
 	public Border border;
+	public BGFiles files;
 
 	public String HELP_MESSAGE = null;
 	public String SERVER_FULL_MSG = "";
@@ -262,7 +263,7 @@ public class BGMain extends JavaPlugin {
 	public void onEnable() {
 		
 		try {
-			firstRun();
+			files = new BGFiles(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -505,59 +506,6 @@ public class BGMain extends JavaPlugin {
 		}
 		Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(),
 				this.STOP_CMD);
-	}
-
-	private void firstRun() throws Exception {
-		File configFile = new File(getDataFolder(), "config.yml");
-		File kitFile = new File(getDataFolder(), "kit.yml");
-		File leaderboardFile = new File(getDataFolder(), "leaderboard.yml");
-		File rewardFile = new File(getDataFolder(), "reward.yml");
-		File deathSignFile = new File(getDataFolder(), "deathsign.yml");
-		File abilitiesFile = new File(getDataFolder(), "abilities.yml");
-		File bookFile = new File(getDataFolder(), "book.yml");
-		File messagesFile = new File(getDataFolder(), "messages.yml");
-
-		if (!configFile.exists()) {
-			configFile.getParentFile().mkdirs();
-			copy(getResource("config.yml"), configFile);
-			this.log.info("[BukkitGames] 'config.yml' didn't exist. Created it.");
-		}
-		if (!kitFile.exists()) {
-			kitFile.getParentFile().mkdirs();
-			copy(getResource("kit.yml"), kitFile);
-			this.log.info("[BukkitGames] 'kit.yml' didn't exist. Created it.");
-		}
-		if (!leaderboardFile.exists()) {
-			leaderboardFile.getParentFile().mkdirs();
-			copy(getResource("leaderboard.yml"), leaderboardFile);
-			this.log.info("[BukkitGames] 'leaderboard.yml' didn't exist. Created it.");
-		}
-		if (!rewardFile.exists()) {
-			rewardFile.getParentFile().mkdirs();
-			copy(getResource("reward.yml"), rewardFile);
-			this.log.info("[BukkitGames] 'reward.yml' didn't exist. Created it.");
-		}
-		if (!deathSignFile.exists()) {
-			deathSignFile.getParentFile().mkdirs();
-			copy(getResource("deathsign.yml"), deathSignFile);
-			this.log.info("[BukkitGames] 'deathsign.yml' didn't exist. Created it.");
-		}
-		if (!abilitiesFile.exists()) {
-			abilitiesFile.getParentFile().mkdirs();
-			copy(getResource("abilities.yml"), abilitiesFile);
-			this.log.info("[BukkitGames] 'abilities.yml' didn't exist. Created it.");
-		}
-		if (!bookFile.exists()) {
-			bookFile.getParentFile().mkdirs();
-			copy(getResource("book.yml"), abilitiesFile);
-			this.log.info("[BukkitGames] 'book.yml' didn't exist. Created it.");
-		}
-		if (!messagesFile.exists()) {
-			messagesFile.getParentFile().mkdirs();
-			copy(getResource("messages.yml"), abilitiesFile);
-			this.log.info("[BukkitGames] 'messages.yml' didn't exist. Created it.");
-		}
-		
 	}
 
 	private void copyDirectory(File sourceLocation, File targetLocation)
