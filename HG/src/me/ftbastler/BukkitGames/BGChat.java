@@ -1,13 +1,11 @@
 package me.ftbastler.BukkitGames;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
@@ -32,14 +30,9 @@ public class BGChat {
 	static HashMap<Integer, String> ABILITY_DESC = new HashMap<Integer, String>();
 
 	static Boolean update = true;
-	
-	FileConfiguration abconf;
 
 	public BGChat(BGMain ins) {
 		plugin = ins;
-		
-		abconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "abilities.yml"));
 		
 		CHAT_MSG[0] = "";
 		CHAT_MSG[1] = "";
@@ -48,34 +41,34 @@ public class BGChat {
 		CHAT_MSG[4] = "";
 		CHAT_MSG[5] = "";
 
-		ABILITY_DESC.put(1, abconf.getString("AB.1.Desc"));
-		ABILITY_DESC.put(2, abconf.getString("AB.2.Desc"));
-		ABILITY_DESC.put(3, abconf.getString("AB.3.Desc"));
-		ABILITY_DESC.put(4, abconf.getString("AB.4.Desc"));
-		ABILITY_DESC.put(5, abconf.getString("AB.5.Desc"));
-		ABILITY_DESC.put(6, abconf.getString("AB.6.Desc"));
-		ABILITY_DESC.put(7, abconf.getString("AB.7.Desc"));
-		ABILITY_DESC.put(8, abconf.getString("AB.8.Desc"));
-		ABILITY_DESC.put(9, abconf.getString("AB.9.Desc"));
-		ABILITY_DESC.put(10, abconf.getString("AB.10.Desc"));
-		ABILITY_DESC.put(11, abconf.getString("AB.11.Desc"));
-		ABILITY_DESC.put(12, abconf.getString("AB.12.Desc"));
-		ABILITY_DESC.put(13, abconf.getString("AB.13.Desc"));
-		ABILITY_DESC.put(14, abconf.getString("AB.14.Desc"));
-		ABILITY_DESC.put(15, abconf.getString("AB.15.Desc"));
-		ABILITY_DESC.put(16, abconf.getString("AB.16.Desc"));
+		ABILITY_DESC.put(1, BGFiles.abconf.getString("AB.1.Desc"));
+		ABILITY_DESC.put(2, BGFiles.abconf.getString("AB.2.Desc"));
+		ABILITY_DESC.put(3, BGFiles.abconf.getString("AB.3.Desc"));
+		ABILITY_DESC.put(4, BGFiles.abconf.getString("AB.4.Desc"));
+		ABILITY_DESC.put(5, BGFiles.abconf.getString("AB.5.Desc"));
+		ABILITY_DESC.put(6, BGFiles.abconf.getString("AB.6.Desc"));
+		ABILITY_DESC.put(7, BGFiles.abconf.getString("AB.7.Desc"));
+		ABILITY_DESC.put(8, BGFiles.abconf.getString("AB.8.Desc"));
+		ABILITY_DESC.put(9, BGFiles.abconf.getString("AB.9.Desc"));
+		ABILITY_DESC.put(10, BGFiles.abconf.getString("AB.10.Desc"));
+		ABILITY_DESC.put(11, BGFiles.abconf.getString("AB.11.Desc"));
+		ABILITY_DESC.put(12, BGFiles.abconf.getString("AB.12.Desc"));
+		ABILITY_DESC.put(13, BGFiles.abconf.getString("AB.13.Desc"));
+		ABILITY_DESC.put(14, BGFiles.abconf.getString("AB.14.Desc"));
+		ABILITY_DESC.put(15, BGFiles.abconf.getString("AB.15.Desc"));
+		ABILITY_DESC.put(16, BGFiles.abconf.getString("AB.16.Desc"));
 		
 		if(plugin.ADV_ABI) {
-			ABILITY_DESC.put(17, abconf.getString("AB.17.Desc"));
+			ABILITY_DESC.put(17, BGFiles.abconf.getString("AB.17.Desc"));
 		}else {
 			ABILITY_DESC.put(17, "Advanced Abilities disabled! This ability wont work!");
 		}
 		
 		
-		ABILITY_DESC.put(18, abconf.getString("AB.18.Desc"));
-		ABILITY_DESC.put(19, abconf.getString("AB.19.Desc"));
-		ABILITY_DESC.put(20, abconf.getString("AB.20.Desc"));
-		ABILITY_DESC.put(21, abconf.getString("AB.21.Desc"));
+		ABILITY_DESC.put(18, BGFiles.abconf.getString("AB.18.Desc"));
+		ABILITY_DESC.put(19, BGFiles.abconf.getString("AB.19.Desc"));
+		ABILITY_DESC.put(20, BGFiles.abconf.getString("AB.20.Desc"));
+		ABILITY_DESC.put(21, BGFiles.abconf.getString("AB.21.Desc"));
 		
 	}
 
@@ -181,10 +174,7 @@ public class BGChat {
 						}
 					}, 100);
 		} else {
-			FileConfiguration kitConfig = YamlConfiguration
-					.loadConfiguration(new File(plugin.getDataFolder(),
-							"kit.yml"));
-			List<String> kitname = kitConfig.getStringList("KITS");
+			List<String> kitname = BGFiles.kitconf.getStringList("KITS");
 
 			String yourkits = "";
 			String otherkits = "";
@@ -212,9 +202,7 @@ public class BGChat {
 	public static void printKitInfo(Player player, String kitname) {
 		String kitinfoname = kitname;
 		kitname = kitname.toLowerCase();
-		FileConfiguration kitConfig = YamlConfiguration
-				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
-		ConfigurationSection kit = kitConfig.getConfigurationSection(kitname);
+		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname);
 		if (kit == null && !BGKit.kits.contains(kitname)) {
 			printPlayerChat(player,
 					"That kit doesn't exist! View all kits with /kit");
@@ -403,10 +391,7 @@ public class BGChat {
 
 		} else if (KIT_CHAT.containsKey(p)) {
 			Integer line = 5;
-			FileConfiguration kitConfig = YamlConfiguration
-					.loadConfiguration(new File(plugin.getDataFolder(),
-							"kit.yml"));
-			List<String> kitname = kitConfig.getStringList("KITS");
+			List<String> kitname = BGFiles.kitconf.getStringList("KITS");
 
 			String yourkits = "";
 			String otherkits = "";
@@ -457,10 +442,7 @@ public class BGChat {
 			String kitname = KITINFO_CHAT.get(p);
 			String kitinfoname = kitname;
 			kitname = kitname.toLowerCase();
-			FileConfiguration kitConfig = YamlConfiguration
-					.loadConfiguration(new File(plugin.getDataFolder(),
-							"kit.yml"));
-			ConfigurationSection kit = kitConfig
+			ConfigurationSection kit = BGFiles.kitconf
 					.getConfigurationSection(kitname);
 
 			char[] stringArray = kitinfoname.toCharArray();
