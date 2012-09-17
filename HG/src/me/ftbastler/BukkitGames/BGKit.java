@@ -25,10 +25,7 @@ public class BGKit {
 	public BGKit(BGMain instan) {
 		plugin = instan;
 		
-		FileConfiguration kitConfig = YamlConfiguration
-				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
-		
-		List<String> kitList = kitConfig.getStringList("KITS");
+		List<String> kitList = BGFiles.kitconf.getStringList("KITS");
 		for(String kit : kitList) {
 			kit = kit.toLowerCase();
 			kits.add(kit);
@@ -41,9 +38,6 @@ public class BGKit {
 		p.getInventory().setChestplate(null);
 		p.getInventory().setLeggings(null);
 		p.getInventory().setBoots(null);
-
-		FileConfiguration kitConfig = YamlConfiguration
-				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
 		
 		if (!KIT.containsKey(p)) {
 			if (plugin.COMPASS.booleanValue()) {
@@ -52,7 +46,7 @@ public class BGKit {
 			}
 			if (plugin.DEFAULT_KIT) {
 				
-				ConfigurationSection def = kitConfig.getConfigurationSection("default");
+				ConfigurationSection def = BGFiles.kitconf.getConfigurationSection("default");
 				
 				List<String> kititems = def.getStringList("ITEMS");
 				for (String item : kititems) {
@@ -132,7 +126,7 @@ public class BGKit {
 		}
 
 		String kitname = (String) KIT.get(p);
-		ConfigurationSection kit = kitConfig.getConfigurationSection(kitname
+		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname
 				.toLowerCase());
 
 		List<String> kititems = kit.getStringList("ITEMS");
@@ -215,9 +209,7 @@ public class BGKit {
 
 	public static void setKit(Player player, String kitname) {
 		kitname = kitname.toLowerCase();
-		FileConfiguration kitConfig = YamlConfiguration
-				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
-		ConfigurationSection kit = kitConfig.getConfigurationSection(kitname);
+		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname);
 
 		if (kit == null  && !kits.contains(kitname)) {
 			BGChat.printPlayerChat(player, "That kit doesn't exist!");
@@ -260,13 +252,11 @@ public class BGKit {
 	}
 
 	public static Boolean hasAbility(Player player, Integer ability) {
-		FileConfiguration kitConfig = YamlConfiguration
-				.loadConfiguration(new File(plugin.getDataFolder(), "kit.yml"));
 		
 		if (!KIT.containsKey(player)) {
 			if (plugin.DEFAULT_KIT) {
 				
-				ConfigurationSection def = kitConfig.getConfigurationSection("default");
+				ConfigurationSection def = BGFiles.kitconf.getConfigurationSection("default");
 				
 				List<Integer> s = def.getIntegerList("ABILITY");
 				for(Integer i : s) {
@@ -283,7 +273,7 @@ public class BGKit {
 		}
 
 		String kitname = (String) KIT.get(player);
-		ConfigurationSection kit = kitConfig.getConfigurationSection(kitname);
+		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname);
 
 		List<Integer> s = kit.getIntegerList("ABILITY");
 		for(Integer i : s) {
