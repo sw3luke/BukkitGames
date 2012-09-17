@@ -1,6 +1,5 @@
 package me.ftbastler.BukkitGames;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
@@ -78,14 +75,11 @@ public class BGListener implements Listener {
 	public ArrayList<Player> ghostList = new ArrayList<Player>();
 	public ArrayList<Player> thorList = new ArrayList<Player>();
 
-	FileConfiguration abconf;
 	
 	public BGListener(BGMain instance) {
 		this.plugin = instance;
 		this.plugin.getServer().getPluginManager()
 				.registerEvents(this, this.plugin);
-		abconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "abilities.yml"));
 	}
 
 	@EventHandler
@@ -121,7 +115,7 @@ public class BGListener implements Listener {
 			if ((BGKit.hasAbility(p, Integer.valueOf(5)) & p.getItemInHand()
 					.getType() == Material.COOKIE)) {
 				p.addPotionEffect(new PotionEffect(
-						PotionEffectType.INCREASE_DAMAGE, abconf.getInt("AB.5.Duration") * 20, 0));
+						PotionEffectType.INCREASE_DAMAGE, BGFiles.abconf.getInt("AB.5.Duration") * 20, 0));
 				p.getInventory().removeItem(
 						new ItemStack[] { new ItemStack(Material.COOKIE, 1) });
 			}
@@ -163,7 +157,7 @@ public class BGListener implements Listener {
 				World world = plugin.getServer().getWorld("world");
 				world.strikeLightning(loc);
 			}else {
-				BGChat.printPlayerChat(p, abconf.getString("AB.11.Expired"));
+				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.11.Expired"));
 			}
 		}
 			
@@ -190,10 +184,10 @@ public class BGListener implements Listener {
 					}
 					player.hidePlayer(p);
 				}
-				BGChat.printPlayerChat(p, abconf.getString("AB.16.invisible"));
+				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.invisible"));
 			}else {
 					
-				BGChat.printPlayerChat(p, abconf.getString("AB.16.Expired"));
+				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
 			}
 		}
 
@@ -427,7 +421,7 @@ public class BGListener implements Listener {
 		if (BGKit.hasAbility(p, Integer.valueOf(7)).booleanValue()) {
 			if (e.getEntityType().getName().equalsIgnoreCase("pig")) {
 				e.getDrops().clear();
-				e.getDrops().add(new ItemStack(Material.PORK, abconf.getInt("AB.7.Amount")));
+				e.getDrops().add(new ItemStack(Material.PORK, BGFiles.abconf.getInt("AB.7.Amount")));
 			}
 		}
 	}
@@ -516,9 +510,7 @@ public class BGListener implements Listener {
 		}
 
 		//Creating a written book.
-		FileConfiguration bookConfig = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "book.yml"));
-		List<String> pages = bookConfig.getStringList("content");
+		List<String> pages = BGFiles.bookconf.getStringList("content");
 		List<String> content = new ArrayList<String>();
 		List<String> page = new ArrayList<String>();
 		for(String line : pages)  {
@@ -540,8 +532,8 @@ public class BGListener implements Listener {
 		
 		CraftBook bi = new CraftBook(new ItemStack(387,1));
 		bi.setPages(content.toArray(new String[0]));
-		bi.setAuthor(bookConfig.getString("author"));
-		bi.setTitle(bookConfig.getString("title"));
+		bi.setAuthor(BGFiles.bookconf.getString("author"));
+		bi.setTitle(BGFiles.bookconf.getString("title"));
 		ItemStack writtenbook = bi.getItemStack();
 		p.getInventory().addItem(writtenbook);
 		
@@ -724,7 +716,7 @@ public class BGListener implements Listener {
 				if (!BGKit.hasAbility(p, 9)) {
 					return;
 				}
-				if (p.getLocation().distance(event.getEntity().getLocation()) >= abconf.getInt("AB.9.Distance")) {
+				if (p.getLocation().distance(event.getEntity().getLocation()) >= BGFiles.abconf.getInt("AB.9.Distance")) {
 					if (event.getEntity() instanceof LivingEntity) {
 						LivingEntity victom = (LivingEntity) event.getEntity();
 						if (victom instanceof Player) {
@@ -797,48 +789,48 @@ public class BGListener implements Listener {
 				
 					if (!monkList.contains(dam)) {
 						
-						int random = (int) (Math.random()* (abconf.getInt("AB.13.Chance")-1)+1);
+						int random = (int) (Math.random()* (BGFiles.abconf.getInt("AB.13.Chance")-1)+1);
 						if (random == 1) {
 							monkList.add(dam);
 							plugin.cooldown.monkCooldown(dam);
 							def.getInventory().clear(def.getInventory().getHeldItemSlot());
-							BGChat.printPlayerChat(dam, abconf.getString("AB.13.Success"));
-							BGChat.printPlayerChat(def, abconf.getString("AB.13.Success"));
+							BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.13.Success"));
+							BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.13.Success"));
 						}
 					}else {
 						
-						BGChat.printPlayerChat(dam, abconf.getString("AB.13.Expired"));
+						BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.13.Expired"));
 					}
 				}
 				
 				if(BGKit.hasAbility(dam, 15) && dam.getItemInHand().getType() == Material.STICK && def.getItemInHand() != null) {
 					
 					if(!thiefList.contains(dam)) {
-						int random = (int) (Math.random()* (abconf.getInt("AB.15.Chance")-1)+1);
+						int random = (int) (Math.random()* (BGFiles.abconf.getInt("AB.15.Chance")-1)+1);
 						if(random == 1) {
 							thiefList.add(dam);
 							plugin.cooldown.thiefCooldown(dam);
 							dam.getInventory().clear(dam.getInventory().getHeldItemSlot());
 							dam.getInventory().addItem(def.getItemInHand());
 							def.getInventory().clear(def.getInventory().getHeldItemSlot());
-							BGChat.printPlayerChat(dam, abconf.getString("AB.15.Success"));
-							BGChat.printPlayerChat(def, abconf.getString("AB.15.Success"));
+							BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.15.Success"));
+							BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.15.Success"));
 						}
 					}else {
 						
-						BGChat.printPlayerChat(dam, abconf.getString("AB.15.Expired"));
+						BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.15.Expired"));
 					}
 				}
 				
 				if (BGKit.hasAbility(dam, 19)) {
 					
-					int random = (int) (Math.random()* (abconf.getInt("AB.19.Chance")-1)+1);
+					int random = (int) (Math.random()* (BGFiles.abconf.getInt("AB.19.Chance")-1)+1);
 					if(random == 1 && !viperList.contains(def)) {
 						
-						def.addPotionEffect(new PotionEffect(PotionEffectType.POISON, abconf.getInt("AB.19.Duration")*20, 1));
+						def.addPotionEffect(new PotionEffect(PotionEffectType.POISON, BGFiles.abconf.getInt("AB.19.Duration")*20, 1));
 						viperList.add(def);
-						BGChat.printPlayerChat(dam, abconf.getString("AB.19.Damager"));
-						BGChat.printPlayerChat(def, abconf.getString("AB.19.Defender"));
+						BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.19.Damager"));
+						BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.19.Defender"));
 						plugin.cooldown.viperCooldown(def);
 					}
 				}
@@ -904,12 +896,10 @@ public class BGListener implements Listener {
 		if (plugin.DEATH_SIGNS) {
 			
 			Location loc = dp.getLocation();
-			FileConfiguration signConfig = YamlConfiguration.loadConfiguration(
-					new File(plugin.getDataFolder(), "deathsign.yml"));
-			String fl = signConfig.getString("FIRST_LINE");
-			String sl = signConfig.getString("SECOND_LINE");
-			String tl = signConfig.getString("THIRD_LINE");
-			String fol = signConfig.getString("FOURTH_LINE");
+			String fl = BGFiles.dsign.getString("FIRST_LINE");
+			String sl = BGFiles.dsign.getString("SECOND_LINE");
+			String tl = BGFiles.dsign.getString("THIRD_LINE");
+			String fol = BGFiles.dsign.getString("FOURTH_LINE");
 			
 			if(fl != null)	
 				fl = fl.replace("[name]", dp.getName());
