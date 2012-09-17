@@ -1,11 +1,8 @@
 package me.ftbastler.BukkitGames;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BGReward extends JavaPlugin{
@@ -19,9 +16,7 @@ public class BGReward extends JavaPlugin{
 		
 		this.plugin = plugin;
 		
-		FileConfiguration rewardConfig = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "reward.yml"));
-		List<String> kits = rewardConfig.getStringList("KITS");
+		List<String> kits = BGFiles.rewardconf.getStringList("KITS");
 		for (String kit : kits) {
 			kit = kit.toLowerCase();
 			rewardKits.add(kit);
