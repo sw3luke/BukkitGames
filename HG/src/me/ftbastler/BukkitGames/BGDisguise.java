@@ -25,14 +25,9 @@ public class BGDisguise extends JavaPlugin{
 	
 	public ArrayList<Player> disList = new ArrayList<Player>();
 	
-	FileConfiguration abconf;
-	
 	public BGDisguise(BGMain plugin) {
 		
 		this.plugin = plugin;
-		
-		abconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "abilities.yml"));
 		
 		dcapi = DisguiseCraft.getAPI();
 	}
@@ -42,7 +37,7 @@ public class BGDisguise extends JavaPlugin{
 		if (!dcapi.isDisguised(player)) {
 			Disguise dis = new Disguise(dcapi.newEntityID(), mob);
 			dcapi.disguisePlayer(player, dis);
-			BGChat.printPlayerChat(player, abconf.getString("AB.17.disguise"));
+			BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.17.disguise"));
 			hidePlayer(player);
 			disList.add(player);
 			updateDisguise(player);
@@ -59,7 +54,7 @@ public class BGDisguise extends JavaPlugin{
 		
 		if (dcapi.isDisguised(player)) {
 			dcapi.undisguisePlayer(player);
-			BGChat.printPlayerChat(player, abconf.getString("AB.17.undisguise"));
+			BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.17.undisguise"));
 			showPlayer(player);
 			disList.remove(player);
 		}
