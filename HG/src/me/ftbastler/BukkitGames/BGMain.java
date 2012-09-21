@@ -460,7 +460,7 @@ public class BGMain extends JavaPlugin {
 			SQLquery("CREATE TABLE IF NOT EXISTS `GAMES` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `STARTTIME` datetime NOT NULL, `ENDTIME` datetime, `REF_WINNER` int(10), PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 			SQLquery("CREATE TABLE IF NOT EXISTS `PLAYERS` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `NAME` varchar(255) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 			SQLquery("CREATE TABLE IF NOT EXISTS `PLAYS` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10), `REF_GAME` int(10), `KIT` varchar(255), `DEATHTIME` datetime, `REF_KILLER` int(10), `DEATH_REASON` varchar(255), PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
-			SQLquery("CREATE TABLE IF NOT EXISTS `WINNERS` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10) NOT NULL, `POINTS` int(10) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
+			SQLquery("CREATE TABLE IF NOT EXISTS `REWARD` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10) NOT NULL, `POINTS` int(10) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 		}
 
 		Location loc = randomLocation(this.spawn.getChunk()).add(0.0D, 30.0D,
@@ -927,12 +927,12 @@ public class BGMain extends JavaPlugin {
 
 	}
 	
-	public Integer getPoints(String playername) {
+	public Integer getPoints(Integer playerID) {
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet r = stmt
-					.executeQuery("SELECT `points`, `user` FROM `WINNERS` WHERE `user` = '"
-							+ playername + "' ;");
+					.executeQuery("SELECT `POINTS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
+							+ playerID + " ;");
 			r.last();
 			if (r.getRow() == 0) {
 				stmt.close();
@@ -945,8 +945,8 @@ public class BGMain extends JavaPlugin {
 			return PL_ID;
 		} catch (SQLException ex) {
 			System.err.println("[BukkitGames] Error with following query: "
-					+ "SELECT `points`, `user` FROM `WINNERS` WHERE `user` = '"
-					+ playername + "' ;");
+					+ "SELECT `POINTS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
+					+ playerID + " ;");
 			System.err.println("[BukkitGames] MySQL-Error: " + ex.getMessage());
 			return null;
 		} catch (NullPointerException ex) {
