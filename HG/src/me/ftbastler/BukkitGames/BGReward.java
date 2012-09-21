@@ -48,7 +48,7 @@ public class BGReward extends JavaPlugin{
 	public boolean sendCoins(String sender, String dest, int coins) {
 		
 		int npoints = coins* plugin.getConfig().getInt("POINTS_FOR_COIN");
-		int points = (int) plugin.getPoints(sender);
+		int points = (int) plugin.getPoints(plugin.getPlayerID(sender));
 		if(points >= npoints) {
 			takePoints(sender, npoints);
 			givePoints(dest, npoints);
@@ -59,7 +59,7 @@ public class BGReward extends JavaPlugin{
 	
 	public boolean sendPoints(String sender, String dest, int points) {
 		
-		int hpoints = (int) plugin.getPoints(sender);
+		int hpoints = (int) plugin.getPoints(plugin.getPlayerID(sender));
 		if(points <= hpoints) {
 			takePoints(sender, points);
 			givePoints(dest, points);

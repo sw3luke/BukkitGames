@@ -127,7 +127,7 @@ public class BGCommand implements CommandExecutor {
 				return true;
 			}
 			
-			int points = plugin.getPoints(p.getName());
+			int points = plugin.getPoints(plugin.getPlayerID(p.getName()));
 			int coins = (int) (points/plugin.P_F_C);
 			
 			String fsatz;
@@ -442,7 +442,7 @@ public class BGCommand implements CommandExecutor {
 							return true;
 						}
 						
-						int points1 = plugin.getPoints(args[1]);
+						int points1 = plugin.getPoints(plugin.getPlayerID(args[1]));
 						int coins1 = (int) points1/plugin.P_F_C;
 						
 						BGChat.printPlayerChat(p, "This are the stats of " + args[1] + ":"+
