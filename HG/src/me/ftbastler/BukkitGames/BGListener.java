@@ -110,6 +110,13 @@ public class BGListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		Action a = event.getAction();
+		
+		if (this.plugin.DENY_BLOCKBREAK.booleanValue()
+				& (!plugin.hasPerm(p, "bg.admin.editblocks") || !plugin
+						.hasPerm(p, "bg.admin.*"))) {
+			event.setCancelled(true);
+			return;
+		}
 
 		if (a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK) {
 			if ((BGKit.hasAbility(p, Integer.valueOf(5)) & p.getItemInHand()
@@ -220,14 +227,6 @@ public class BGListener implements Listener {
 				p.setCompassTarget(this.plugin.spawn);
 			}
 		}		
-		
-		if (this.plugin.DENY_BLOCKBREAK.booleanValue()
-				& (!plugin.hasPerm(p, "bg.admin.editblocks") || !plugin
-						.hasPerm(p, "bg.admin.*"))) {
-			event.setCancelled(true);
-			return;
-		}	
-		
 	}
 
 	@EventHandler
