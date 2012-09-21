@@ -556,12 +556,19 @@ public class BGListener implements Listener {
 			}
 		}
 		
-		if(p.hasPermission("bg.admin.update")) {
+		if(p.hasPermission("bg.admin.check")) {
 			
-			try{
-				plugin.update.update(p);
-			}catch (Exception e) {
-				BGChat.printPlayerChat(p, "Error to connect to Update-Server!");
+			Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+			
+			boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+			
+			if (update) {
+				
+				String newversion = updater.getLatestVersionString();
+				long size = updater.getFileSize();
+				
+				BGChat.printPlayerChat(p, "The BukkitGames Update is available: " + newversion + "(" + size + "bytes)\n"+
+										"Type /bgdownload to download the update! (remember to regenerate all config files");
 			}
 		}
 	}

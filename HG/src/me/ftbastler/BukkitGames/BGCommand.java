@@ -488,19 +488,24 @@ public class BGCommand implements CommandExecutor {
 			}
 		}
 		
-		if(cmd.getName().equalsIgnoreCase("bgupdate")) {
+		if(cmd.getName().equalsIgnoreCase("bgcheckversion")) {
 			
-			if(p.hasPermission("bg.admin.update")) {
+			if(p.hasPermission("bg.admin.check")) {
 				
-				try{	
-					plugin.update.updateOnCommand(p);
+				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+				
+				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+				
+				if (update) {
 					
-					return true;
-				}catch (Exception e) {
+					String newversion = updater.getLatestVersionString();
+					long size = updater.getFileSize();
 					
-					BGChat.printPlayerChat(p, "Error to connect to Update-Server!");
+					BGChat.printPlayerChat(p, "The BukkitGames Update is available: " + newversion + "(" + size + "bytes)\n"+
+											"Type /bgdownload to download the update! (remember to regenerate all config files");
+				}else {
 					
-					return true;
+					BGChat.printPlayerChat(p, "There is no Update for The BukkitGames available!");
 				}
 			}else {
 				
@@ -514,8 +519,39 @@ public class BGCommand implements CommandExecutor {
 			
 			if(p.hasPermission("bg.admin.version")) {
 				
-				String version = plugin.update.getVersion();
-				BGChat.printPlayerChat(p, "Current Version of The BukkitGames: " + version);
+				BGChat.printPlayerChat(p, "Current Version of The BukkitGames: " + plugin.getDescription().getVersion());
+				
+				return true;
+			}else {
+				
+				BGChat.printPlayerChat(p, "You don't have enough Permissions!");
+				
+				return true;
+			}
+		}
+		
+		if(cmd.getName().equalsIgnoreCase("bgdownload")) {
+			
+			if(p.hasPermission("bg.admin.download")) {
+				
+				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+				
+				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+				
+				if(update) {
+					
+					BGChat.printPlayerChat(p, "Starting download a new Version of The BukkitGames");
+					
+					Updater download = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+					
+					if(download.getResult() == Updater.UpdateResult.SUCCESS)
+						BGChat.printPlayerChat(p, "Download completed! Let the plugin regenerate all config files!");
+					else
+						BGChat.printPlayerChat(p, "Ooops! Something went wrong look at your console to see a better error log!");
+				}else {
+					
+					BGChat.printPlayerChat(p, "There is no Update available to download!");
+				}
 				
 				return true;
 			}else {

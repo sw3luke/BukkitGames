@@ -52,7 +52,6 @@ public class BGMain extends JavaPlugin {
 	public BGListener listener;
 	public BGReward reward;
 	public BGSign sign;
-	public BGUpdate update;
 	public BGVanish vanish;
 	public Border border;
 	public BGFiles files;
@@ -275,7 +274,6 @@ public class BGMain extends JavaPlugin {
 		cooldown = new BGCooldown(this);
 		chat = new BGChat(this);
 		command = new BGCommand(this);
-		update = new BGUpdate(this);
 		vanish = new BGVanish(this);
 		sign = new BGSign(this);
 
@@ -332,15 +330,19 @@ public class BGMain extends JavaPlugin {
 		else
 			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand fbattle returns null");
 		
-		if (this.getCommand("bgupdate") != null)
-			this.getCommand("bgupdate").setExecutor(bgcmd);
+		if (this.getCommand("bgcheckversion") != null)
+			this.getCommand("bgcheckversion").setExecutor(bgcmd);
 		else
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgupdate returns null");
+			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgcheckversions returns null");
 		
 		if (this.getCommand("bgversion") != null)
 			this.getCommand("bgversion").setExecutor(bgcmd);
 		else
 			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgversion returns null");
+		if(this.getCommand("bgdownload") != null)
+			this.getCommand("bgdownload").setExecutor(bgcmd);
+		else
+			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgdownload returns null");
 
 		this.DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
 		this.SIMP_REW = Boolean.valueOf(getConfig().getBoolean("SIMPLE_REWARD"));
@@ -965,5 +967,10 @@ public class BGMain extends JavaPlugin {
 					.println("[BukkitGames] Error while performing a query. (NullPointerException)");
 			return null;
 		}
+	}
+	
+	public File  getPFile() {
+		
+		return getFile();
 	}
 }

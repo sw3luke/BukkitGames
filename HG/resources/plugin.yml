@@ -38,9 +38,12 @@ commands:
   fbattle:
     description: Start Final Battle
     usage: /<command>
-  bgupdate:
+  bgcheckversion:
     description: Checks if there is an Update.
     usage: /<command>
   bgversion:
     description: Shows version of the plugin.
+    usage: /<command>
+  bgdownload:
+    description: Download a new Update if available.
     usage: /<command>
