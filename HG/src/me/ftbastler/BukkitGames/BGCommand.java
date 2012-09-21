@@ -23,8 +23,8 @@ public class BGCommand implements CommandExecutor {
 		}
 		Player p = (Player) sender;
 		if (cmd.getName().equalsIgnoreCase("start")) {
-			if (plugin.hasPerm(p, "bg.admin.start")
-					|| plugin.hasPerm(p, "bg.admin.*")) {
+			if (p.hasPermission("bg.admin.start")
+					|| p.hasPermission("bg.admin.*")) {
 				if (this.plugin.DENY_LOGIN.booleanValue())
 					BGChat.printPlayerChat(p, "The game has already begun!");
 				else
@@ -36,8 +36,8 @@ public class BGCommand implements CommandExecutor {
 		}
 
 		if (cmd.getName().equalsIgnoreCase("gamemaker")) {
-			if (plugin.hasPerm(p, "bg.admin.gamemaker")
-					|| plugin.hasPerm(p, "bg.admin.*")) {
+			if (p.hasPermission("bg.admin.gamemaker")
+					|| p.hasPermission("bg.admin.*")) {
 				if (p.getGameMode() == GameMode.CREATIVE) {
 					p.setGameMode(GameMode.SURVIVAL);
 					BGVanish.makeVisible(p);
@@ -62,8 +62,8 @@ public class BGCommand implements CommandExecutor {
 		}
 
 		if (cmd.getName().equalsIgnoreCase("chest")) {
-			if (plugin.hasPerm(p, "bg.admin.chest")
-					|| plugin.hasPerm(p, "bg.admin.*")) {
+			if (p.hasPermission("bg.admin.chest")
+					|| p.hasPermission("bg.admin.*")) {
 				this.plugin.spawnChest(p.getLocation());
 				return true;
 			}
@@ -72,8 +72,8 @@ public class BGCommand implements CommandExecutor {
 		}
 
 		if (cmd.getName().equalsIgnoreCase("rchest")) {
-			if (plugin.hasPerm(p, "bg.admin.rchest")
-					|| plugin.hasPerm(p, "bg.admin.*")) {
+			if (p.hasPermission("bg.admin.rchest")
+					|| p.hasPermission("bg.admin.*")) {
 				this.plugin.spawnChest();
 				return true;
 			}
@@ -110,8 +110,7 @@ public class BGCommand implements CommandExecutor {
 
 		if (cmd.getName().equalsIgnoreCase("spawn")) {
 			if (this.plugin.DENY_LOGIN.booleanValue()
-					& !(plugin.hasPerm(p, "bg.admin.spawn") || plugin.hasPerm(
-							p, "bg.admin.*"))) {
+					& !(p.hasPermission("bg.admin.spawn") || p.hasPermission("bg.admin.*"))) {
 				BGChat.printPlayerChat(p, "The game has already started!");
 				return true;
 			} else {

@@ -75,7 +75,6 @@ public class BGMain extends JavaPlugin {
 	public Integer END_GAME_TIME = Integer.valueOf(25);
 	public Integer P_F_C = Integer.valueOf(5);
 	public final String WORLD_TEMPOARY_NAME = "world";
-	public static Permission perms = null;
 	public Boolean REGEN_WORLD = false;
 	public Boolean RANDOM_START = false;
 	public Boolean SPAWN_CHESTS = false;
@@ -468,20 +467,12 @@ public class BGMain extends JavaPlugin {
 				0.0D);
 		Bukkit.getServer().getWorld("world").loadChunk(loc.getChunk());
 		log.info("[BukkitGames] Setting up permissions...");
-		setupPermissions();
 		this.timer1.scheduleAtFixedRate(this.task1, 0L, 1000L);
 
 		PluginDescriptionFile pdfFile = getDescription();
 		this.log.info("[BukkitGames] Plugin enabled");
 		this.log.info("[BukkitGames] Author: " + pdfFile.getAuthors());
 		this.log.info("[BukkitGames] Version: " + pdfFile.getVersion());
-	}
-
-	private boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> rsp = getServer()
-				.getServicesManager().getRegistration(Permission.class);
-		perms = rsp.getProvider();
-		return perms != null;
 	}
 
 	public void onDisable() {
@@ -732,10 +723,6 @@ public class BGMain extends JavaPlugin {
 		}
 		BGChat.printTimeChat("Everyone is invincible for "
 				+ TIME(this.FINAL_COUNTDOWN_SECONDS) + ".");
-	}
-
-	public boolean hasPerm(Player p, String s) {
-		return BGMain.perms.has(p, s);
 	}
 
 	public static Location randomLocation(Chunk c) {

@@ -112,8 +112,7 @@ public class BGListener implements Listener {
 		Action a = event.getAction();
 		
 		if (this.plugin.DENY_BLOCKBREAK.booleanValue()
-				& (!plugin.hasPerm(p, "bg.admin.editblocks") || !plugin
-						.hasPerm(p, "bg.admin.*"))) {
+				& (!p.hasPermission("bg.admin.editblocks") || !p.hasPermission("bg.admin.*"))) {
 			event.setCancelled(true);
 			return;
 		}
@@ -336,16 +335,15 @@ public class BGListener implements Listener {
 		Player p = event.getPlayer();
 
 		if (this.plugin.DENY_LOGIN.booleanValue()
-				& (!plugin.hasPerm(p, "bg.admin.logingame") || !plugin.hasPerm(
-						p, "bg.admin.*"))) {
+				& (!p.hasPermission("bg.admin.logingame") || !p.hasPermission("bg.admin.*"))) {
 			event.setKickMessage(ChatColor.RED
 					+ this.plugin.GAME_IN_PROGRESS_MSG);
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
 					event.getKickMessage());
 		} else if (event.getResult() == Result.KICK_FULL) {
-			if (plugin.hasPerm(p, "bg.vip.full")
-					|| plugin.hasPerm(p, "bg.admin.full")
-					|| plugin.hasPerm(p, "bg.admin.*"))
+			if (p.hasPermission("bg.vip.full")
+					|| p.hasPermission("bg.admin.full")
+					|| p.hasPermission("bg.admin.*"))
 				event.allow();
 			else {
 				event.setKickMessage(ChatColor.RED
@@ -469,8 +467,8 @@ public class BGListener implements Listener {
 		Player p = event.getPlayer();
 		
 		if (plugin.DENY_LOGIN) {
-			if (plugin.hasPerm(p, "bg.admin.gamemaker")
-					|| plugin.hasPerm(p, "bg.admin.*")) {
+			if (p.hasPermission("bg.admin.gamemaker")
+					|| p.hasPermission("bg.admin.*")) {
 				if (p.getGameMode() == GameMode.SURVIVAL) {
 					p.setGameMode(GameMode.CREATIVE);
 					BGVanish.makeVanished(p);
@@ -493,13 +491,13 @@ public class BGListener implements Listener {
 			p.setPlayerListName(ChatColor.GOLD + getShortStr(p.getName())
 					+ ChatColor.RESET);
 			p.setDisplayName(ChatColor.GOLD + p.getName() + ChatColor.RESET);
-		} else if (plugin.hasPerm(p, "bg.admin.color")
-				|| plugin.hasPerm(p, "bg.admin.*")) {
+		} else if (p.hasPermission("bg.admin.color")
+				|| p.hasPermission("bg.admin.*")) {
 			p.setPlayerListName(ChatColor.RED + getShortStr(p.getName())
 					+ ChatColor.RESET);
 			p.setDisplayName(ChatColor.RED + p.getName() + ChatColor.RESET);
-		} else if (plugin.hasPerm(p, "bg.vip.color")
-				|| plugin.hasPerm(p, "bg.vip.*")) {
+		} else if (p.hasPermission("bg.vip.color")
+				|| p.hasPermission("bg.vip.*")) {
 			p.setPlayerListName(ChatColor.BLUE + getShortStr(p.getName())
 					+ ChatColor.RESET);
 			p.setDisplayName(ChatColor.BLUE + p.getName() + ChatColor.RESET);
@@ -596,8 +594,8 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player p = event.getPlayer();
-		if ((this.plugin.DENY_BLOCKBREAK.booleanValue() & (!plugin.hasPerm(p,
-				"bg.admin.editblocks") || !plugin.hasPerm(p, "bg.admin.*")))) {
+		if ((this.plugin.DENY_BLOCKBREAK.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
+				|| !p.hasPermission("bg.admin.*")))) {
 			event.setCancelled(true);
 			return;
 		}
@@ -620,8 +618,8 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player p = event.getPlayer();
-		if ((this.plugin.DENY_BLOCKPLACE.booleanValue() & (!plugin.hasPerm(p,
-				"bg.admin.editblocks") || !plugin.hasPerm(p, "bg.admin.*")))) {
+		if ((this.plugin.DENY_BLOCKPLACE.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
+				|| !p.hasPermission("bg.admin.*")))) {
 			event.setCancelled(true);
 			return;
 		}

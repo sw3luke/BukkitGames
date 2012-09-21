@@ -213,8 +213,8 @@ public class BGKit {
 			return;
 		}
 
-		if (BGMain.perms.has(player, "bg.kit." + kitname)
-				|| BGMain.perms.has(player, "bg.kit.*")
+		if (player.hasPermission("bg.kit." + kitname)
+				|| player.hasPermission("bg.kit.*")
 				|| plugin.winner(player) || (plugin.reward.playerNames.contains(player.getName())
 						& (plugin.reward.rewardKits.contains(kitname) || plugin.reward.rewardKits.contains("all")))) {
 			if (KIT.containsKey(player)) {
@@ -231,12 +231,12 @@ public class BGKit {
 			if (plugin.winner(player))
 				player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.GOLD
 						+ player.getName() + ChatColor.WHITE);
-			else if (plugin.hasPerm(player, "bg.admin.color")
-					|| BGMain.perms.has(player, "bg.admin.*"))
+			else if (player.hasPermission("bg.admin.color")
+					|| player.hasPermission("bg.admin.*"))
 				player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.RED
 						+ player.getName() + ChatColor.WHITE);
-			else if (plugin.hasPerm(player, "bg.vip.color")
-					|| BGMain.perms.has(player, "bg.vip.*"))
+			else if (player.hasPermission("bg.vip.color")
+					|| player.hasPermission("bg.vip.*"))
 				player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.BLUE
 						+ player.getName() + ChatColor.WHITE);
 			else
