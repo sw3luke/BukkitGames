@@ -100,6 +100,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean END_GAME_A = true;
 	public Boolean END_GAME_M = true;
 	public Boolean DEFAULT_KIT = false;
+	Boolean SQL_DSC = false;
 	public Location spawn;
 	public String STOP_CMD = "";
 	public String LAST_WINNER = "";
@@ -486,6 +487,7 @@ public class BGMain extends JavaPlugin {
 				Integer PL_ID = getPlayerID(NEW_WINNER);
 				SQLquery("UPDATE `GAMES` SET `ENDTIME` = NOW(), `REF_WINNER` = "
 						+ PL_ID + " WHERE `ID` = " + SQL_GAMEID + " ;");
+				SQL_DSC = true;
 				SQLdisconnect();
 			}
 		}
@@ -925,6 +927,11 @@ public class BGMain extends JavaPlugin {
 					.println("[BukkitGames] Error while closing the connection...");
 		}
 
+		if(!SQL_DSC){
+			
+			log.info("[BukkitGames] Reconnecting with MySQL database...");
+			SQLconnect();
+		}
 	}
 	
 	public Integer getPoints(Integer playerID) {
