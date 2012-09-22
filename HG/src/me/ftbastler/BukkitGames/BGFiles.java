@@ -16,6 +16,7 @@ public class BGFiles {
 	static FileConfiguration kitconf;
 	static FileConfiguration messageconf;
 	static FileConfiguration rewardconf;
+	static FileConfiguration chestconf;
 
 	public BGFiles(BGMain main) {
 		
@@ -39,6 +40,7 @@ public class BGFiles {
 		File abilitiesFile = new File(plugin.getDataFolder(), "abilities.yml");
 		File bookFile = new File(plugin.getDataFolder(), "book.yml");
 		File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
+		File chestFile = new File(plugin.getDataFolder(), "chest.yml");
 
 		if (!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
@@ -72,13 +74,18 @@ public class BGFiles {
 		}
 		if (!bookFile.exists()) {
 			bookFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("book.yml"), abilitiesFile);
+			plugin.copy(plugin.getResource("book.yml"), bookFile);
 			plugin.log.info("[BukkitGames] 'book.yml' didn't exist. Created it.");
 		}
 		if (!messagesFile.exists()) {
 			messagesFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("messages.yml"), abilitiesFile);
+			plugin.copy(plugin.getResource("messages.yml"), messagesFile);
 			plugin.log.info("[BukkitGames] 'messages.yml' didn't exist. Created it.");
+		}
+		if(!chestFile.exists()) {
+			chestFile.getParentFile().mkdirs();
+			plugin.copy(plugin.getResource("chest.yml"), chestFile);
+			plugin.log.info("[BukkitGames] 'chest.yml' didn't exist. Created it.");
 		}
 		
 		
@@ -103,5 +110,7 @@ public class BGFiles {
 		
 		rewardconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "reward.yml"));
+		chestconf = YamlConfiguration.loadConfiguration(
+				new File(plugin.getDataFolder(), "chest.yml"));
 	}
 }

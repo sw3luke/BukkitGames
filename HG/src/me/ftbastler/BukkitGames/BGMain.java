@@ -17,7 +17,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -30,12 +29,9 @@ import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Chest;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,6 +49,7 @@ public class BGMain extends JavaPlugin {
 	public BGVanish vanish;
 	public Border border;
 	public BGFiles files;
+	public BGChest chest;
 
 	public String HELP_MESSAGE = null;
 	public String SERVER_FULL_MSG = "";
@@ -192,13 +189,13 @@ public class BGMain extends JavaPlugin {
 
 			if (BGMain.this.GAME_RUNNING_TIME % 10 == 0) {
 				if (BGMain.this.SPAWN_CHESTS == true) {
-					BGMain.this.spawnChest();
+					chest.spawnChest();
 				}
 			}
 			if ((BGMain.this.GAME_RUNNING_TIME % 5 == 0)
 					& (BGMain.this.GAME_RUNNING_TIME % 10 != 0)) {
 				if (BGMain.this.SPAWN_TABLES == true) {
-					BGMain.this.spawnTable();
+					chest.spawnTable();
 				}
 			}
 			if ((BGMain.this.GAME_RUNNING_TIME % 5 != 0)
@@ -274,6 +271,7 @@ public class BGMain extends JavaPlugin {
 		command = new BGCommand(this);
 		vanish = new BGVanish(this);
 		sign = new BGSign(this);
+		chest = new BGChest(this);
 
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
 		BGCommand bgcmd = new BGCommand(this);
@@ -564,46 +562,7 @@ public class BGMain extends JavaPlugin {
 		}
 		return false;
 	}
-
-	public void spawnChest() {
-		Location loc = getRandomLocation();
-		if (!inBorder(loc)) {
-			loc = getRandomLocation();
-		}
-		spawnChest(loc);
-	}
-
-	public void spawnChest(Location l) {
-		l.getBlock().setType(Material.CHEST);
-		Chest c = (Chest) l.getBlock().getState();
-		Random r = new Random();
-		c.getInventory().addItem(
-				new ItemStack[] {
-						new ItemStack(r.nextInt(22) + 298, 1, (short) r
-								.nextInt(100)),
-						new ItemStack(r.nextInt(4) + 283, 1, (short) r
-								.nextInt(100)),
-						new ItemStack(r.nextInt(15) + 352, r.nextInt(5)) });
-		c.update(true);
-		DecimalFormat df = new DecimalFormat("##.#");
-		BGChat.printInfoChat("Chest spawned at X: " + df.format(l.getX())
-				+ " | Y: " + df.format(l.getY()) + " | Z: "
-				+ df.format(l.getZ()));
-	}
-
-	public void spawnTable() {
-		spawnTable(randomLocation(this.spawn.getChunk()));
-	}
-
-	public void spawnTable(Location l) {
-		l.getBlock().setType(Material.ENCHANTMENT_TABLE);
-		DecimalFormat df = new DecimalFormat("##.#");
-		BGChat.printInfoChat("Enchantment Table spawned at X: "
-				+ df.format(l.getX()) + " | Y: " + df.format(l.getY())
-				+ " | Z: " + df.format(l.getZ()));
-
-	}
-
+	
 	public Location getSpawn() {
 		Location loc = Bukkit.getWorld("world").getSpawnLocation();
 		loc.setY(Bukkit.getWorld("world").getHighestBlockYAt(

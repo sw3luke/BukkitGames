@@ -1,0 +1,16 @@
+# Here you can config what should be spawned in the chests,
+# which are spawned during the game.
+
+# Layout for a item line:
+# - 'ITEM_ID,MIN_AMOUNT,MAX_AMOUNT,MUST_SPAWN,ENCHANTMENT_ID,ENCHANTMENT_LEVEL'
+#
+# Example for one item line(bread which must be spawned):
+# - '297,5,10,true'
+# Example for one item line(bread which is maybe spawned):
+# - '297,5,10,false'
+
+ITEMS:
+  - '297,5,10,true'
+  - '276,1,1,false'
+  - '307,1,1,false'
+  
