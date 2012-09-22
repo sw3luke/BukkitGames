@@ -385,6 +385,12 @@ public class BGMain extends JavaPlugin {
 				"MINIMUM_PLAYERS_START"));
 		BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt(
 				"WORLD_BORDER_RADIUS"));
+		
+		if(BGMain.WORLDRADIUS.intValue() < 50) {
+			
+			log.info("[BukkitGames] Wordlborder radius have to be 50 or higher!");
+			getServer().getPluginManager().disablePlugin(this);
+		}
 
 		this.MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt(
 				"TIME.MAX_GAME-MIN"));
