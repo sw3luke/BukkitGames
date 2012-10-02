@@ -1,10 +1,12 @@
 name: The BukkitGames
 main: me.ftbastler.BukkitGames.BGMain
 version: 1.1.0
-website: http://www.bukkit.org/server-mods/bukkitgames
+website: http://dev.bukkit.org/server-mods/bukkitgames
+dev-url: http://dev.bukkit.org/server-mods/bukkitgames
 author: ftbastler
 startup: startup
 depend: [Vault]
+
 description: >
              The BukkitGames.
 commands:
