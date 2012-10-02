@@ -17,6 +17,8 @@ public class BGFiles {
 	static FileConfiguration messageconf;
 	static FileConfiguration rewardconf;
 	static FileConfiguration chestconf;
+	static FileConfiguration cornconf;
+	static FileConfiguration feastconf;
 
 	public BGFiles(BGMain main) {
 		
@@ -41,6 +43,8 @@ public class BGFiles {
 		File bookFile = new File(plugin.getDataFolder(), "book.yml");
 		File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
 		File chestFile = new File(plugin.getDataFolder(), "chest.yml");
+		File cornFile = new File(plugin.getDataFolder(), "cornucopia.yml");
+		File feastFile = new File(plugin.getDataFolder(), "feast.yml");
 
 		if (!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
@@ -87,6 +91,16 @@ public class BGFiles {
 			plugin.copy(plugin.getResource("chest.yml"), chestFile);
 			plugin.log.info("[BukkitGames] 'chest.yml' didn't exist. Created it.");
 		}
+		if(!cornFile.exists()) {
+			cornFile.getParentFile().mkdirs();
+			plugin.copy(plugin.getResource("cornucopia.yml"), cornFile);
+			plugin.log.info("[BukkitGames] 'cornucopia.yml' didn't exist. Created it.");
+		}
+		if(!feastFile.exists()) {
+			feastFile.getParentFile().mkdirs();
+			plugin.copy(plugin.getResource("feast.yml"), feastFile);
+			plugin.log.info("[BukkitGames] 'feast.yml' didn't exist. Created it.");
+		}
 		
 		
 		//Save files in variables
@@ -112,5 +126,9 @@ public class BGFiles {
 				new File(plugin.getDataFolder(), "reward.yml"));
 		chestconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "chest.yml"));
+		cornconf = YamlConfiguration.loadConfiguration(
+				new File(plugin.getDataFolder(), "cornucopia.yml"));
+		feastconf = YamlConfiguration.loadConfiguration(
+				new File(plugin.getDataFolder(), "feast.yml"));
 	}
 }

@@ -41,6 +41,12 @@ TIP:
 #Advcanced Abilities (DisguiseCraft needed!)
 ADVANCED_ABILITIES: false
 
+#Spawn cornucopia on start (see cornucopia.yml)
+CORNUCOPIA: true
+
+#Feast (see feast.yml)
+FEAST: true
+
 # Radius of the world...
 WORLD_BORDER_RADIUS: 300
 

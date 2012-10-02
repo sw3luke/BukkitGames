@@ -95,6 +95,8 @@ public class BGMain extends JavaPlugin {
 	public Boolean END_GAME_A = true;
 	public Boolean END_GAME_M = true;
 	public Boolean DEFAULT_KIT = false;
+	public Boolean CORNUCOPIA = true;
+	public Boolean FEAST = true;
 	Boolean SQL_DSC = false;
 	public Location spawn;
 	public String STOP_CMD = "";
@@ -351,6 +353,8 @@ public class BGMain extends JavaPlugin {
 		this.DEFAULT_KIT = Boolean.valueOf(getConfig().getBoolean("DEFAULT_KIT"));
 		this.SHOW_TIPS = Boolean.valueOf(getConfig().getBoolean("SHOW_TIPS"));
 		this.REGEN_WORLD = Boolean.valueOf(getConfig().getBoolean("REGEN_WORLD"));
+		this.CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
+		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
 		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
 		this.GAME_IN_PROGRESS_MSG = getConfig().getString(
 				"MESSAGE.GAME_PROGRESS");
@@ -569,6 +573,13 @@ public class BGMain extends JavaPlugin {
 				Bukkit.getWorld("world").getSpawnLocation()) + 1.5);
 		return loc;
 	}
+	
+	public Location getCornSpawn() {
+		Location loc = Bukkit.getWorld("world").getSpawnLocation();
+		loc.setY(Bukkit.getWorld("world").getHighestBlockYAt(
+				Bukkit.getWorld("world").getSpawnLocation()));
+		return loc;
+	}
 
 	public Player[] getGamers() {
 		ArrayList<Player> gamers = new ArrayList<Player>();
@@ -649,7 +660,7 @@ public class BGMain extends JavaPlugin {
 				Random r = new Random();
 				Location startFrom = getSpawn();
 				Location loc = startFrom.clone();
-				loc.add((r.nextBoolean() ? 1 : -1) * r.nextInt(7), 60, (r.nextBoolean() ? 1 : -1) * r.nextInt(7));
+				loc.add((r.nextBoolean() ? 1 : -1) * r.nextInt(6), 60, (r.nextBoolean() ? 1 : -1) * r.nextInt(6));
 				loc.setY(getServer().getWorld("world").getHighestBlockYAt(loc) + 1.5);
 				p.teleport(loc);
 			} else {
