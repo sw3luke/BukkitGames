@@ -238,13 +238,13 @@ public class BGMain extends JavaPlugin {
 	};
 
 	public void onLoad() {
-		this.log.info("[BukkitGames] Deleting old world...");
+		this.log.info("[BukkitGames] Deleting old world.");
 		Bukkit.getServer().unloadWorld("world", false);
 		deleteDir(new File("world"));
 
 		this.REGEN_WORLD = getConfig().getBoolean("REGEN_WORLD");
 		if (this.REGEN_WORLD == false) {
-			this.log.info("[BukkitGames] Copying saved world...");
+			this.log.info("[BukkitGames] Copying saved world.");
 			try {
 				copyDirectory(new File(this.getDataFolder(), "world"),
 						new File("world"));
@@ -252,7 +252,7 @@ public class BGMain extends JavaPlugin {
 				log.warning("[BukkitGames] Error: " + e.toString());
 			}
 		} else {
-			this.log.info("[BukkitGames] Generating new world...");
+			this.log.info("[BukkitGames] Generating new world.");
 		}
 	}
 
@@ -263,10 +263,8 @@ public class BGMain extends JavaPlugin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		
-		kit =new BGKit(this);
+		kit = new BGKit(this);
 		listener = new BGListener(this);
 		cooldown = new BGCooldown(this);
 		chat = new BGChat(this);
@@ -342,6 +340,8 @@ public class BGMain extends JavaPlugin {
 		else
 			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgdownload returns null");
 
+		log.info("[BukkitGames] Loading configuration options.");
+		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		this.DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
 		this.SIMP_REW = Boolean.valueOf(getConfig().getBoolean("SIMPLE_REWARD"));
 		this.KIT_BUY_WEB = getConfig().getString("MESSAGE.KIT_BUY_WEBSITE");
@@ -356,62 +356,58 @@ public class BGMain extends JavaPlugin {
 		this.CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
 		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
 		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
-		this.GAME_IN_PROGRESS_MSG = getConfig().getString(
-				"MESSAGE.GAME_PROGRESS");
+		this.GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
 		this.SERVER_FULL_MSG = getConfig().getString("MESSAGE.SERVER_FULL");
 		this.WORLD_BORDER_MSG = getConfig().getString("MESSAGE.WORLD_BORDER");
 		this.MOTD_PROGRESS_MSG = getConfig().getString("MESSAGE.MOTD_PROGRESS");
-		this.MOTD_COUNTDOWN_MSG = getConfig().getString(
-				"MESSAGE.MOTD_COUNTDOWN");
+		this.MOTD_COUNTDOWN_MSG = getConfig().getString("MESSAGE.MOTD_COUNTDOWN");
 		this.ADV_CHAT_SYSTEM = Boolean.valueOf(getConfig().getBoolean("ADVANCED_CHAT"));
-
 		this.SQL_USE = Boolean.valueOf(getConfig().getBoolean("MYSQL"));
 		this.SQL_HOST = getConfig().getString("HOST");
 		this.SQL_PORT = getConfig().getString("PORT");
 		this.SQL_USER = getConfig().getString("USERNAME");
 		this.SQL_PASS = getConfig().getString("PASSWORD");
 		this.SQL_DATA = getConfig().getString("DATABASE");
+		this.ADV_REW = Boolean.valueOf(getConfig().getBoolean("ADVANCED_REWARD"));
+		this.MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));
+		BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt("WORLD_BORDER_RADIUS"));
+		this.MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
+		COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.COUNTDOWN-SEC"));
+		this.FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.FINAL_COUNTDOWN-SEC"));
+		this.END_GAME_TIME = Integer.valueOf(getConfig().getInt("TIME.INCREASE_DIFFICULTY-MIN"));
+		this.P_F_C = Integer.valueOf(getConfig().getInt("POINTS_FOR_COIN"));
+		this.COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
+		this.AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
+		this.STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
+		BGChat.tip1 = getConfig().getString("TIP.1");
+		BGChat.tip2 = getConfig().getString("TIP.2");
+		BGChat.tip3 = getConfig().getString("TIP.3");
+		BGChat.tip4 = getConfig().getString("TIP.4");
+		BGChat.tip5 = getConfig().getString("TIP.5");
+		BGChat.tip6 = getConfig().getString("TIP.6");
+		
 		
 		if (ADV_ABI) {
+			log.info("[BukkitGames] Enabeling the AdvancedAbilities.");
 			dis = new BGDisguise(this);
 		}
 		
-		if(SQL_USE) {
-			this.ADV_REW = Boolean.valueOf(getConfig().getBoolean("ADVANCED_REWARD"));
+		if(!SQL_USE && ADV_REW) {
+			log.warning("[BukkitGames] MySQL has to be enabled for AdvancedReward, turning AR off.");
+			this.ADV_REW = false;
 		}
 		
 		reward = new BGReward(this);
 		
-
-		this.MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt(
-				"MINIMUM_PLAYERS_START"));
-		BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt(
-				"WORLD_BORDER_RADIUS"));
-		
 		if(BGMain.WORLDRADIUS.intValue() < 50) {
-			
-			log.info("[BukkitGames] Wordlborder radius have to be 50 or higher!");
+			log.warning("[BukkitGames] Wordlborder radius has to be 50 or higher!");
 			getServer().getPluginManager().disablePlugin(this);
 		}
 
-		this.MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt(
-				"TIME.MAX_GAME-MIN"));
-		COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt(
-				"TIME.COUNTDOWN-SEC"));
-		this.FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt(
-				"TIME.FINAL_COUNTDOWN-SEC"));
-		this.END_GAME_TIME = Integer.valueOf(getConfig().getInt(
-				"TIME.INCREASE_DIFFICULTY-MIN"));
-		this.P_F_C = Integer.valueOf(getConfig().getInt("POINTS_FOR_COIN"));
-
-		this.COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
-		this.AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
-		this.STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
-
+		log.info("[BukkitGames] Getting winner of last game.");
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new FileReader(new File(getDataFolder(),
-					"leaderboard.yml")));
+			br = new BufferedReader(new FileReader(new File(getDataFolder(),"leaderboard.yml")));
 		} catch (FileNotFoundException e) {
 			this.log.warning(e.toString());
 		}
@@ -432,18 +428,10 @@ public class BGMain extends JavaPlugin {
 
 		this.LAST_WINNER = merke;
 
-		BGChat.tip1 = getConfig().getString("TIP.1");
-		BGChat.tip2 = getConfig().getString("TIP.2");
-		BGChat.tip3 = getConfig().getString("TIP.3");
-		BGChat.tip4 = getConfig().getString("TIP.4");
-		BGChat.tip5 = getConfig().getString("TIP.5");
-		BGChat.tip6 = getConfig().getString("TIP.6");
-
 		World thisWorld = getServer().getWorld("world");
 		this.spawn = thisWorld.getSpawnLocation();
 
-		Border newBorder = new Border(this.spawn.getX(), this.spawn.getZ(),
-				BGMain.WORLDRADIUS.intValue());
+		Border newBorder = new Border(this.spawn.getX(), this.spawn.getZ(), BGMain.WORLDRADIUS.intValue());
 		if (!this.BORDERS.containsKey(thisWorld)) {
 			ArrayList<Border> newArray = new ArrayList<Border>();
 			this.BORDERS.put(thisWorld, newArray);
@@ -470,10 +458,8 @@ public class BGMain extends JavaPlugin {
 			SQLquery("CREATE TABLE IF NOT EXISTS `REWARD` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10) NOT NULL, `POINTS` int(10) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 		}
 
-		Location loc = randomLocation(this.spawn.getChunk()).add(0.0D, 30.0D,
-				0.0D);
+		Location loc = randomLocation(this.spawn.getChunk()).add(0.0D, 30.0D,0.0D);
 		Bukkit.getServer().getWorld("world").loadChunk(loc.getChunk());
-		log.info("[BukkitGames] Setting up permissions...");
 		this.timer1.scheduleAtFixedRate(this.task1, 0L, 1000L);
 
 		PluginDescriptionFile pdfFile = getDescription();
@@ -484,10 +470,7 @@ public class BGMain extends JavaPlugin {
 
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = getDescription();
-		this.log.info("[BukkitGames] Plugin disabled");
-		this.log.info("[BukkitGames] Author: " + pdfFile.getAuthors());
-		this.log.info("[BukkitGames] Version: " + pdfFile.getVersion());
-
+		
 		if (SQL_USE) {
 			if (SQL_GAMEID != null) {
 				Integer PL_ID = getPlayerID(NEW_WINNER);
@@ -505,8 +488,11 @@ public class BGMain extends JavaPlugin {
 		for (Player p : getPlayers()) {
 			p.kickPlayer(ChatColor.YELLOW + "Server is restarting!");
 		}
-		Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(),
-				this.STOP_CMD);
+		
+		this.log.info("[BukkitGames] Plugin disabled");
+		this.log.info("[BukkitGames] Author: " + pdfFile.getAuthors());
+		this.log.info("[BukkitGames] Version: " + pdfFile.getVersion());
+		Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(), this.STOP_CMD);
 	}
 
 	private void copyDirectory(File sourceLocation, File targetLocation)
@@ -602,6 +588,7 @@ public class BGMain extends JavaPlugin {
 	}
 
 	public void startgame() {
+		log.info("[BukkitGames] Starting game.");
 		this.timer1.cancel();
 		this.timer3.scheduleAtFixedRate(this.task3, 3000, 1000);
 
