@@ -38,14 +38,14 @@ commands:
     description: Coin Menu.
     usage: /<command>
   fbattle:
-    description: Start Final Battle
+    description: Final battle.
     usage: /<command>
   bgcheckversion:
-    description: Checks if there is an Update.
+    description: Checks if there is an update.
     usage: /<command>
   bgversion:
-    description: Shows version of the plugin.
+    description: Displays the current version of the plugin.
     usage: /<command>
   bgdownload:
-    description: Download a new Update if available.
+    description: Download the new update if available.
     usage: /<command>
