@@ -165,6 +165,7 @@ public class BGMain extends JavaPlugin {
 			} else {
 				BGChat.printTimeChat("");
 				BGChat.printTimeChat("Invincibility was worn off.");
+				log.info("[BukkitGames] Game phase: 3 - Fighting");
 				if(SHOW_TIPS) {
 					BGChat.printTipChat();
 				}
@@ -221,6 +222,7 @@ public class BGMain extends JavaPlugin {
 					w.setDifficulty(Difficulty.HARD);
 					w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
 					BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
+					log.info("[BukkitGames] Game phase: 4 - Final");
 					BGMain.this.endgame();
 				}
 			}
@@ -466,6 +468,8 @@ public class BGMain extends JavaPlugin {
 		this.log.info("[BukkitGames] Plugin enabled");
 		this.log.info("[BukkitGames] Author: " + pdfFile.getAuthors());
 		this.log.info("[BukkitGames] Version: " + pdfFile.getVersion());
+		
+		log.info("[BukkitGames] Game phase: 1 - Waiting");
 	}
 
 	public void onDisable() {
@@ -588,7 +592,7 @@ public class BGMain extends JavaPlugin {
 	}
 
 	public void startgame() {
-		log.info("[BukkitGames] Starting game.");
+		log.info("[BukkitGames] Game phase: 2 - Starting");
 		this.timer1.cancel();
 		this.timer3.scheduleAtFixedRate(this.task3, 3000, 1000);
 
