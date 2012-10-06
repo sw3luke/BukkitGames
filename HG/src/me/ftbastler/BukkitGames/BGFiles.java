@@ -1,6 +1,7 @@
 package me.ftbastler.BukkitGames;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,6 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class BGFiles {
 	
 	private static BGMain plugin;
+	
+	Logger log = Logger.getLogger("Minecraft");
 	
 	static FileConfiguration abconf;
 	static FileConfiguration bookconf;
@@ -46,88 +49,97 @@ public class BGFiles {
 		File cornFile = new File(plugin.getDataFolder(), "cornucopia.yml");
 		File feastFile = new File(plugin.getDataFolder(), "feast.yml");
 
+		Integer creation = 0;
+		
 		if (!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("config.yml"), configFile);
-			plugin.log.info("[BukkitGames] 'config.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if (!kitFile.exists()) {
 			kitFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("kit.yml"), kitFile);
-			plugin.log.info("[BukkitGames] 'kit.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if (!leaderboardFile.exists()) {
 			leaderboardFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("leaderboard.yml"), leaderboardFile);
-			plugin.log.info("[BukkitGames] 'leaderboard.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if (!rewardFile.exists()) {
 			rewardFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("reward.yml"), rewardFile);
-			plugin.log.info("[BukkitGames] 'reward.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if (!deathSignFile.exists()) {
 			deathSignFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("deathsign.yml"), deathSignFile);
-			plugin.log.info("[BukkitGames] 'deathsign.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if (!abilitiesFile.exists()) {
 			abilitiesFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("abilities.yml"), abilitiesFile);
-			plugin.log.info("[BukkitGames] 'abilities.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if (!bookFile.exists()) {
 			bookFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("book.yml"), bookFile);
-			plugin.log.info("[BukkitGames] 'book.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if (!messagesFile.exists()) {
 			messagesFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("messages.yml"), messagesFile);
-			plugin.log.info("[BukkitGames] 'messages.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if(!chestFile.exists()) {
 			chestFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("chest.yml"), chestFile);
-			plugin.log.info("[BukkitGames] 'chest.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if(!cornFile.exists()) {
 			cornFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("cornucopia.yml"), cornFile);
-			plugin.log.info("[BukkitGames] 'cornucopia.yml' didn't exist. Created it.");
+			creation++;
 		}
 		if(!feastFile.exists()) {
 			feastFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("feast.yml"), feastFile);
-			plugin.log.info("[BukkitGames] 'feast.yml' didn't exist. Created it.");
+			creation++;
 		}
+		
+		if(creation > 0)
+			log.info("[BukkitGames] Created " + creation + " files.");
 		
 		
 		//Save files in variables
+		log.info("[BukkitGames] Loading abilities.yml");
 		abconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "abilities.yml"));
-		
+		log.info("[BukkitGames] Loading book.yml");
 		bookconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "book.yml"));
-		
+		log.info("[BukkitGames] Loading config.yml");
 		config = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "config.yml"));
-		
+		log.info("[BukkitGames] Loading deathsign.yml");
 		dsign = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "deathsign.yml"));
-		
+		log.info("[BukkitGames] Loading kit.yml");
 		kitconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "kit.yml"));
-		
+		log.info("[BukkitGames] Loading messages.yml");
 		messageconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "messages.yml"));
-		
+		log.info("[BukkitGames] Loading reward.yml");
 		rewardconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "reward.yml"));
+		log.info("[BukkitGames] Loading chest.yml");
 		chestconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "chest.yml"));
+		log.info("[BukkitGames] Loading cornucopia.yml");
 		cornconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "cornucopia.yml"));
+		log.info("[BukkitGames] Loading feast.yml");
 		feastconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "feast.yml"));
 	}
