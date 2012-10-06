@@ -16,9 +16,9 @@ MESSAGES:
   HELP_MESSAGE: For help, visit tinyurl.com/HGHelp
   SERVER_TITLE: BukkitGames HG Server
   KIT_BUY_WEBSITE: Ask operator.
-  WELCOME: Welcome to the HungerGames! | Get your kit now: §f/kit
+  WELCOME: 'Welcome to the HungerGames! | Get your kit now: &f/kit'
   ADV_CHAT_GB:  --- The games have begun! ---
-  ADV_CHAT_MSG: §e\"May the odds be ever in your favor!\
+  ADV_CHAT_MSG: '&eMay the odds be ever in your favor!'
   GAME_BEGUN: The games have begun!
   INV_MSG: Everyone is invincible for
   WINNER: You are the winner of this game!
@@ -31,10 +31,10 @@ MESSAGES:
   MINUTES: minutes
   SECOND: second
   SECONDS: seconds
-  AVAI_KITS: §bAvailable kits: §7(/kit [KitName])
-  YOUR_KITS: §aYour kits
-  OTHER_KITS: §aOther kits:
-  MORE_KITS: §bMore kits available at
+  AVAI_KITS: '&bAvailable kits: &7(/kit [KitName])'
+  YOUR_KITS: '&aYour kits:'
+  OTHER_KITS: '&aOther kits:'
+  MORE_KITS: &bMore kits available at
   KIT_NOT_EXIST: That kit doesn't exist! View all kits with /kit
   KIT_INC: kit includes
   KIT_CHOSE1: You have chosen
@@ -46,8 +46,8 @@ MESSAGES:
   PLAYER_REM: Players remaining
   TIME_REM: Time remaining
   GAME_ALREADY: The game has already begun!
-  GAMEMAKER: §2You are now a GameMaker.
-  NO_GAMEMAKER: §2You are no longer a GameMaker.
+  GAMEMAKER: '&2You are now a GameMaker.'
+  NO_GAMEMAKER: '&2You are no longer a GameMaker.'
   KITINFO_ERROR: Must include a kit name! (/kitinfo [kitName])
   TO_SPAWN: Teleported to the spawn location.
   LESS_ARGS: Too less arrguments!
