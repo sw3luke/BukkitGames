@@ -153,8 +153,8 @@ public class BGListener implements Listener {
 			}
 		}
 			
-		if (BGKit.hasAbility(p, 11) && a == Action.RIGHT_CLICK_BLOCK && event.getItem().getType() == Material.STONE_AXE) {
-				
+		if (BGKit.hasAbility(p, 11) && a == Action.RIGHT_CLICK_BLOCK && p.getItemInHand()
+				.getType() == Material.STONE_AXE) {
 			if(!thorList.contains(p)) {
 				thorList.add(p);
 				plugin.cooldown.thorCooldown(p);
@@ -167,7 +167,8 @@ public class BGListener implements Listener {
 			}
 		}
 			
-		if (BGKit.hasAbility(p, 16) && event.getItem().getType() == Material.APPLE && (a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {
+		if (BGKit.hasAbility(p, 16) && p.getItemInHand()
+				.getType() == Material.APPLE && (a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {
 			
 			if(!ghostList.contains(p)) {
 				ghostList.add(p);
@@ -192,7 +193,6 @@ public class BGListener implements Listener {
 				}
 				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.invisible"));
 			}else {
-					
 				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
 			}
 		}
