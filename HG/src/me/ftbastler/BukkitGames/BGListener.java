@@ -513,19 +513,22 @@ public class BGListener implements Listener {
 		for(String line : pages)  {
 			line = line.replace("<server_title>", plugin.SERVER_TITLE);
 			line = line.replace("<space>", "§r\n");
+			line = line.replace("&", "§");
 			if(!line.contains("<newpage>")) {
 				page.add(line + "\n");
 			} else {
 				String pagestr = "";
 				for(String l : page)
 					pagestr = pagestr + l;
-				content.add(pagestr);	
+				content.add(pagestr);
+				page.clear();
 			}
 		}
 		String pagestr = "";
 		for(String l : page)
 			pagestr = pagestr + l;
 		content.add(pagestr);	
+		page.clear();
 		
 		CraftBook bi = new CraftBook(new ItemStack(387,1));
 		bi.setPages(content.toArray(new String[0]));
@@ -537,10 +540,10 @@ public class BGListener implements Listener {
 		String playerName = p.getName();
 		
 		if (plugin.SQL_USE) {
-			Integer PL_ID = plugin.getPlayerID(p.getName());
+			Integer PL_ID = plugin.getPlayerID(playerName);
 			if (PL_ID == null) {
 				plugin.SQLquery("INSERT INTO `PLAYERS` (`NAME`) VALUES ('"
-						+ p.getName() + "') ;");
+						+ playerName + "') ;");
 			}
 		}
 		
@@ -561,12 +564,10 @@ public class BGListener implements Listener {
 			boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			
 			if (update) {
-				
 				String newversion = updater.getLatestVersionString();
 				long size = updater.getFileSize();
-				
-				BGChat.printPlayerChat(p, "The BukkitGames Update is available: " + newversion + "(" + size + "bytes)\n"+
-										"Type /bgdownload to download the update! (remember to regenerate all config files");
+				BGChat.printPlayerChat(p, "§bAn update for the BukkitGames is available: " + newversion + " (" + size + " bytes)\n"+
+										"§7Type /bgdownload to download the update! (Remember: regenerate all config files!)");
 			}
 		}
 	}
