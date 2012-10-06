@@ -93,6 +93,9 @@ ADVANCED_REWARD: false
 #How many points are needed for 1 Coin?
 POINTS_FOR_COIN: 5
 
+#If enabled, players can join server during the game and act like spectators
+SPECTATOR_SYSTEM: false
+
 # Weather to use a MySQL database for statistics. (leaderboard.yml will still be used!)
 MYSQL: false
 
