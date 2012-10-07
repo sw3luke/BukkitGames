@@ -19,5 +19,5 @@ CHESTS: true
 
 ITEMS:
   - '297,5,10,true'
-  - '276,1,1,false'
-  - '307,1,1,false'
+  - '276,1,4,false'
+  - '307,1,1,true,1,1'

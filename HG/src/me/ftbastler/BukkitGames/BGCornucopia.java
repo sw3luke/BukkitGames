@@ -1,182 +1,125 @@
 package me.ftbastler.BukkitGames;
 
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Logger;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 
 public class BGCornucopia {
 
-	private BGMain plugin;
-	
-	private final Block mainBlock;
+	private static BGMain plugin;
+	private static Block mainBlock;
+	private static Integer radius = 10;
+	static Logger log = Logger.getLogger("Minecraft");
 	
 	public BGCornucopia(BGMain plugin) {
-		
-		this.plugin = plugin;
-		
-		mainBlock= plugin.getServer().getWorld("world").getBlockAt(plugin.getCornSpawn());
+		BGCornucopia.plugin = plugin;
 	}
 	
-	public void createCorn() {
-		
-		mainBlock.setType(Material.GOLD_BLOCK);
+	public static void createCorn() {
+		BGCornucopia.mainBlock = BGCornucopia.getCornSpawnBlock();
+		mainBlock.setType(Material.DIAMOND_BLOCK);
 		removeAbove(mainBlock);
 		
-		createKreuz();
+		createFloor(Material.GOLD_BLOCK);
 	}
 	
-	public void createBigFloor(){
-		
+	private static Block getCornSpawnBlock() {
+		Location loc = plugin.getSpawn();
+		loc.subtract(0, 2.5, 0);
+		Block b = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		return b;
+	}
+	
+	private static void createFloor(Material m) {
 		Location loc = mainBlock.getLocation();
-		loc.setZ(loc.getZ()+1);
-		Block nextBlock;
-		for(int i=1; i<=3; i++){
-			
-			loc.setX(loc.getX()+1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		loc.setZ(loc.getZ()+1);
-		for(int i=1; i<=3; i++){
-			
-			loc.setX(loc.getX()-1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		loc.setZ(mainBlock.getLocation().getZ()-1);
-		for(int i=1; i<=3; i++){
-			
-			loc.setX(loc.getX()+1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		loc.setZ(loc.getZ()-1);
-		for(int i=1; i<=3; i++){
-			
-			loc.setX(loc.getX()-1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		
-		loc = mainBlock.getLocation();
-		loc.setX(loc.getX()+1);
-		for(int i=1; i<=3; i++){
-			
-			loc.setZ(loc.getZ()+1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		loc.setX(loc.getX()+1);
-		for(int i=1; i<=3; i++){
-			
-			loc.setZ(loc.getZ()-1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		loc.setX(loc.getX()-1);
-		for(int i=1; i<=3; i++){
-			
-			loc.setZ(loc.getZ()+1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		loc.setX(loc.getX()-1);
-		for(int i=1; i<=3; i++){
-			
-			loc.setZ(loc.getZ()-1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
+		Integer r = radius;
+	               
+		log.info("[BukkitGames] Generating the cornucopia.");	    
+	    
+	    for (double x = -r; x <= r; x++) {
+	        for (double z = -r; z <= r; z++) {
+	        	Location l = new Location(Bukkit.getServer().getWorld("world"), loc.getX() + x, loc.getY(), loc.getZ() + z);
+	        	if(l.distance(loc) <= r && l.getBlock().getType() != Material.DIAMOND_BLOCK) {
+	        		removeAbove(l.getBlock());
+	        		l.getBlock().setType(m);
+	        	}
+	        }
+	    }
 	}
 	
-	public void createKreuz() {
-		
-		Location loc = mainBlock.getLocation();
-		Block nextBlock;
-		for(int i=1; i<=3; i++){
-			
-			loc.setX(loc.getX()+1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		for(int i=1; i<=3; i++){
-			
-			loc.setX(loc.getX()-1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		for(int i=1; i<=3; i++){
-			
-			loc.setZ(loc.getZ()+1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
-		
-		loc = mainBlock.getLocation();
-		for(int i=1; i<=3; i++){
-			
-			loc.setZ(loc.getZ()-1); 
-			nextBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-			
-			nextBlock.setType(Material.GOLD_BLOCK);
-			removeAbove(nextBlock);
-		}
+	public static Boolean isCornucopiaBlock(Block b) {		
+		if(!plugin.CORNUCOPIA)
+			return false;
+
+		if(b.getLocation().distance(mainBlock.getLocation()) <= radius + 3)
+			return true;
+
+		return false;
 	}
 	
-	public void removeAbove(Block block) {
-		
+	
+	public static void removeAbove(Block block) {
 		Location loc = block.getLocation();
-		
 		loc.setY(loc.getY()+1);
-		
-		Block newBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
-		
+		Block newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
 		while(newBlock.getType() != Material.AIR) {
-			
 			newBlock.setType(Material.AIR);
-			
 			loc.setY(loc.getY()+1);
-			
-			newBlock = plugin.getServer().getWorld("world").getBlockAt(loc);
+			newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
 		}
 	}
-}
+	
+	
+	public static void spawnChests() {
+		List<String> items = BGFiles.cornconf.getStringList("ITEMS");
+		for(String item : items) {
+			String[] oneitem = item.split(",");
+			ItemStack i = null;
+			Random r = new Random();
+			Integer id = Integer.parseInt(oneitem[0]);
+			Integer minamount = Integer.parseInt(oneitem[1]);
+			Integer maxamount = Integer.parseInt(oneitem[2]);
+			Boolean force = Boolean.parseBoolean(oneitem[3]);
+			Boolean spawn = force;
+						
+			if(minamount == maxamount)
+				i = new ItemStack(id, maxamount);
+			else
+				i = new ItemStack(id, minamount + r.nextInt(maxamount - minamount));
+			
+			if(oneitem.length == 6) {
+				i.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(oneitem[4])), Integer.parseInt(oneitem[5]));
+			}
+			
+			if(!force)
+				spawn = r.nextBoolean();
+			
+			if(!spawn)
+				continue;
+			
+			Integer ra = radius;
+			Location c = mainBlock.getLocation();
+			c.add(-(ra/2) + r.nextInt(ra), 1, -(ra/2) + r.nextInt(ra));
+			
+			while(c.getBlock().getType() == Material.CHEST) {
+				c = mainBlock.getLocation();
+				c.add(-8 + r.nextInt(16), 1, -8 + r.nextInt(16));
+			}
+			
+			c.getBlock().setType(Material.CHEST);
+			Chest chest = (Chest) c.getBlock().getState();
+            
+			chest.getInventory().addItem(i);
+		}
+	}
+	
+	
+ }

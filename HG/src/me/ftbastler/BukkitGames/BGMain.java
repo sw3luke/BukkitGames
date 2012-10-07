@@ -50,6 +50,7 @@ public class BGMain extends JavaPlugin {
 	public Border border;
 	public BGFiles files;
 	public BGChest chest;
+	public BGCornucopia cornucopia;
 
 	public String HELP_MESSAGE = null;
 	public String SERVER_FULL_MSG = "";
@@ -97,6 +98,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean DEFAULT_KIT = false;
 	public Boolean CORNUCOPIA = true;
 	public Boolean FEAST = true;
+	public Boolean SPECTATOR_SYSTEM = false;
 	Boolean SQL_DSC = false;
 	public Location spawn;
 	public String STOP_CMD = "";
@@ -274,7 +276,7 @@ public class BGMain extends JavaPlugin {
 		vanish = new BGVanish(this);
 		sign = new BGSign(this);
 		chest = new BGChest(this);
-
+		
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
 		BGCommand bgcmd = new BGCommand(this);
 		
@@ -357,6 +359,7 @@ public class BGMain extends JavaPlugin {
 		this.REGEN_WORLD = Boolean.valueOf(getConfig().getBoolean("REGEN_WORLD"));
 		this.CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
 		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
+		this.SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
 		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
 		this.GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
 		this.SERVER_FULL_MSG = getConfig().getString("MESSAGE.SERVER_FULL");
@@ -397,6 +400,11 @@ public class BGMain extends JavaPlugin {
 		if(!SQL_USE && ADV_REW) {
 			log.warning("[BukkitGames] MySQL has to be enabled for AdvancedReward, turning AR off.");
 			this.ADV_REW = false;
+		}
+		
+		if(CORNUCOPIA) {
+			cornucopia = new BGCornucopia(this);
+			BGCornucopia.createCorn();
 		}
 		
 		reward = new BGReward(this);
@@ -559,15 +567,7 @@ public class BGMain extends JavaPlugin {
 	
 	public Location getSpawn() {
 		Location loc = Bukkit.getWorld("world").getSpawnLocation();
-		loc.setY(Bukkit.getWorld("world").getHighestBlockYAt(
-				Bukkit.getWorld("world").getSpawnLocation()) + 1.5);
-		return loc;
-	}
-	
-	public Location getCornSpawn() {
-		Location loc = Bukkit.getWorld("world").getSpawnLocation();
-		loc.setY(Bukkit.getWorld("world").getHighestBlockYAt(
-				Bukkit.getWorld("world").getSpawnLocation()));
+		loc.setY(Bukkit.getWorld("world").getHighestBlockYAt(Bukkit.getWorld("world").getSpawnLocation()) + 1.5);
 		return loc;
 	}
 
@@ -605,6 +605,9 @@ public class BGMain extends JavaPlugin {
 		this.DENY_SHOOT_BOW = Boolean.valueOf(false);
 		this.QUIT_MSG = Boolean.valueOf(true);
 
+		if(CORNUCOPIA)
+			BGCornucopia.spawnChests();
+		
 		if (SQL_USE) {
 			PreparedStatement statement = null;
 			ResultSet generatedKeys = null;
@@ -720,8 +723,7 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().getWorld("world").loadChunk(getSpawn().getChunk());
 		for (Player p : getPlayers()) {
 			Random r = new Random();
-			Location startFrom = getSpawn();
-			Location loc = startFrom.clone();
+			Location loc = getSpawn();
 			loc.add((r.nextBoolean() ? 1 : -1) * r.nextInt(3), 60, (r.nextBoolean() ? 1 : -1) * r.nextInt(3));
 			loc.setY(getServer().getWorld("world").getHighestBlockYAt(loc) + 1.5);
 			p.teleport(loc);
