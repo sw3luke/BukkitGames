@@ -221,6 +221,7 @@ public class BGKit {
 				KIT.remove(player);
 			}
 
+			kitname = kitname.replace(".", "");
 			KIT.put(player, kitname);
 			char[] stringArray = kitname.toCharArray();
 			stringArray[0] = Character.toUpperCase(stringArray[0]);

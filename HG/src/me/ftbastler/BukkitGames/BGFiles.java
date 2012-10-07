@@ -112,34 +112,24 @@ public class BGFiles {
 		
 		
 		//Save files in variables
-		log.info("[BukkitGames] Loading abilities.yml");
 		abconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "abilities.yml"));
-		log.info("[BukkitGames] Loading book.yml");
 		bookconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "book.yml"));
-		log.info("[BukkitGames] Loading config.yml");
 		config = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "config.yml"));
-		log.info("[BukkitGames] Loading deathsign.yml");
 		dsign = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "deathsign.yml"));
-		log.info("[BukkitGames] Loading kit.yml");
 		kitconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "kit.yml"));
-		log.info("[BukkitGames] Loading messages.yml");
 		messageconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "messages.yml"));
-		log.info("[BukkitGames] Loading reward.yml");
 		rewardconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "reward.yml"));
-		log.info("[BukkitGames] Loading chest.yml");
 		chestconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "chest.yml"));
-		log.info("[BukkitGames] Loading cornucopia.yml");
 		cornconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "cornucopia.yml"));
-		log.info("[BukkitGames] Loading feast.yml");
 		feastconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "feast.yml"));
 	}
