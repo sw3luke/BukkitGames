@@ -97,6 +97,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean END_GAME_M = true;
 	public Boolean DEFAULT_KIT = false;
 	public Boolean CORNUCOPIA = true;
+	public Boolean CORNUCOPIA_CHESTS = true;
 	public Boolean FEAST = true;
 	public Boolean SPECTATOR_SYSTEM = false;
 	Boolean SQL_DSC = false;
@@ -358,6 +359,7 @@ public class BGMain extends JavaPlugin {
 		this.SHOW_TIPS = Boolean.valueOf(getConfig().getBoolean("SHOW_TIPS"));
 		this.REGEN_WORLD = Boolean.valueOf(getConfig().getBoolean("REGEN_WORLD"));
 		this.CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
+		this.CORNUCOPIA_CHESTS = Boolean.valueOf(BGFiles.cornconf.getBoolean("CHESTS"));
 		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
 		this.SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
 		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
@@ -605,7 +607,7 @@ public class BGMain extends JavaPlugin {
 		this.DENY_SHOOT_BOW = Boolean.valueOf(false);
 		this.QUIT_MSG = Boolean.valueOf(true);
 
-		if(CORNUCOPIA)
+		if(CORNUCOPIA_CHESTS)
 			BGCornucopia.spawnChests();
 		
 		if (SQL_USE) {
