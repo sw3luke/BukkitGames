@@ -567,7 +567,7 @@ public class BGListener implements Listener {
 				String newversion = updater.getLatestVersionString();
 				long size = updater.getFileSize();
 				BGChat.printPlayerChat(p, "§bAn update for the BukkitGames is available: " + newversion + " (" + size + " bytes)\n"+
-										"§7Type /bgdownload to download the update! (Remember: regenerate all config files!)");
+										"§7Type /bgdownload to download this update!");
 			}
 		}
 	}
@@ -613,7 +613,12 @@ public class BGListener implements Listener {
 				l.setY(y);
 			}
 		}
-
+		
+		if(BGCornucopia.isCornucopiaBlock(event.getBlock()) && p.getGameMode() != GameMode.CREATIVE) {
+			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
+			event.setCancelled(true);
+		}
+		
 	}
 
 	@EventHandler
@@ -629,6 +634,11 @@ public class BGListener implements Listener {
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.CROPS) {
 			
 			block.setData(CropState.RIPE.getData());
+		}
+		
+		if(BGCornucopia.isCornucopiaBlock(event.getBlock()) && p.getGameMode() != GameMode.CREATIVE) {
+			BGChat.printPlayerChat(p, "§cYou can't place a block here!");
+			event.setCancelled(true);
 		}
 	}
 	
