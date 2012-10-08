@@ -1,4 +1,5 @@
-#ConfigFile for the Abilities of The BukkitGames
+# ConfigFile for the abilities of The BukkitGames.
+
 AB:
   '1':
     Desc: Arrows fired at the ground at explode.

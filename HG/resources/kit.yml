@@ -1,3 +1,13 @@
+# If default kit is enabled in the config you can configure the default kit here
+default:
+  ITEMS:
+    - '297,3'
+  ABILITY:
+    - 0
+  POTION:
+    - 0
+
+# For each kit below you have to add its name here. First letter has to be a capital letter.
 KITS:
   - Barbarian
   - Miner
@@ -12,15 +22,6 @@ KITS:
   - Archer
   - Engineer
 
-# If default kit is enabled in the config you can configure the default kit here
-
-default:
-  ITEMS:
-    - '297,3'
-  ABILITY:
-    - 0
-  POTION:
-    - 0
 
 # Add a section for each kit. EXAMPLE:
 # kitname: [THE NAME - SAME AS ABOVE - HAS TO BE IN SMALL LETTERS]

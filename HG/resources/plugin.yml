@@ -22,12 +22,6 @@ commands:
   start:
     description: Start.
     usage: /<command>
-  chest:
-    description: Spawn chest.
-    usage: /<command>
-  rchest:
-    description: Spawn chest.
-    usage: /<command>
   gamemaker:
     description: GameMaker.
     usage: /<command>

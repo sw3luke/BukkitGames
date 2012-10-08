@@ -1,4 +1,5 @@
-#Message File for The BukkitGames
+# Message file for The BukkitGames. You are not allowed to change the messages, your are only allowed to translate them!
+
 MESSAGES:
   WORLD_BORDER: You have reached the Worldborder!
   SERVER_RESTART: Server is restarting!

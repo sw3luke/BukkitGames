@@ -1,23 +1,21 @@
-# The cornucopia is a place at the spawn where the players
-# can find chests, crafting table etc.
-# If you want to spawn a cornucopia, enbale the CORNUCOPIA
-# in the config.yml
+# The cornucopia is a place at the spawn where the players can find chests, crafting table etc.
+# If you want to spawn a cornucopia, enable the CORNUCOPIA in the config.yml
+# Here you can config what should be spawned in the chests, which are spawned at the cornucopia.
+#
+# Layout for a item line:
+# - 'ITEM_ID:DURABILITY,MIN_AMOUNT,MAX_AMOUNT,MUST_SPAWN,ENCHANTMENT_ID,ENCHANTMENT_LEVEL'
+#
+# Example for one a line:
+# Bread, which will be spawned:
+# - '297,2,5,true'
+# Sword (with knockback enchantment), which maybe will be spawned:
+# - '268,1,1,false,19,1'
 
-# Do you want to spawn chest with item? (items are configure able below)
+# Do you want to spawn chests with items? (CORNUCOPIA has to be enabled)
 CHESTS: true
 
-# Here you can config what should be spawned in the chests,
-# which are spawned at the cornucopia.
-
-# Layout for a item line:
-# - 'ITEM_ID,MIN_AMOUNT,MAX_AMOUNT,MUST_SPAWN,ENCHANTMENT_ID,ENCHANTMENT_LEVEL'
-#
-# Example for one item line(bread which must be spawned):
-# - '297,5,10,true'
-# Example for one item line(bread which is maybe spawned):
-# - '297,5,10,false'
-
 ITEMS:
-  - '297,5,10,true'
-  - '276,1,4,false'
-  - '307,1,1,true,1,1'
+  - '268,1,1,false,19,1'
+  - '298,1,1,false'
+  - '297,2,5,true'
+  - '373:8201,1,2,true'

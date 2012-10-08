@@ -44,7 +44,7 @@ ADVANCED_ABILITIES: false
 #Spawn cornucopia on start (see cornucopia.yml)
 CORNUCOPIA: true
 
-#Feast (see feast.yml)
+#Spawn feast (see feast.yml)
 FEAST: true
 
 # Radius of the world...
@@ -53,34 +53,26 @@ WORLD_BORDER_RADIUS: 300
 # Minimum of players to start with.
 MINIMUM_PLAYERS_START: 5
 
-# Use default kit?
-# Users which not choose a kit get the default kit (can be configured in the kit.yml)
+# Users which did not choose a kit, get the default kit (can be configured in the kit.yml)
 DEFAULT_KIT: false
 
 # Enable or disable compass feature.
 COMPASS: true
 
-# Auto Update Compass (if true, may causes lag on the server!)
-# Has only effects when COMPASS is set to true
+# Auto Update Compass (If true, may causes lag on the server!) COMPASS has to be enabled for this to work.
 AUTO_COMPASS: false
 
-# Death signs mark Player death places! (Lines can be configured in deathsign.yml)
+# Death signs mark Player death places! (Lines can be configured in deathsign.yml).
 DEATH_SIGNS: true
 
 # What should the server run in order to restart the server?
 RESTART_SERVER_COMMAND: 'stop'
 
-# Regenerate world? (false: Put your custom map in the directory /plugins/The BukkitGames/ and rename it to "world")
+# Regenerate world? (false: Put your custom map in the directory /plugins/The BukkitGames/ and rename it to "world").
 REGEN_WORLD: true
 
-# Spawn chests throughout the game?
-SPAWN_CHESTS: false
-
-# Spawn enchantment table throughout the game?
-SPAWN_TABLES: false
-
 # If false, all players start the game at the spawn.
-# If true, each players starts at a random spot. (May causes lag on the server!)
+# If true, each player starts at a random spot. (May causes lag on some servers!)
 RANDOM_START: false
 
 #Simple Reward (Last Winner gets all Kits for one Round)
