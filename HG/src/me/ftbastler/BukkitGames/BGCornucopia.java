@@ -17,7 +17,7 @@ public class BGCornucopia {
 	private static BGMain plugin;
 	private static Block mainBlock;
 	private static Integer radius = 10;
-	static Logger log = Logger.getLogger("Minecraft");
+	private static Logger log = Logger.getLogger("Minecraft");
 	
 	public BGCornucopia(BGMain plugin) {
 		BGCornucopia.plugin = plugin;
@@ -84,16 +84,29 @@ public class BGCornucopia {
 			String[] oneitem = item.split(",");
 			ItemStack i = null;
 			Random r = new Random();
-			Integer id = Integer.parseInt(oneitem[0]);
+			String itemid = oneitem[0];
 			Integer minamount = Integer.parseInt(oneitem[1]);
 			Integer maxamount = Integer.parseInt(oneitem[2]);
 			Boolean force = Boolean.parseBoolean(oneitem[3]);
 			Boolean spawn = force;
-						
+			Integer id = null;
+			Short durability = null;
+			
+			if (item.contains(":")) {
+				String[] it = itemid.split(":");
+				id = Integer.parseInt(it[0]);
+				durability = Short.parseShort(it[1]);
+			} else {
+				id = Integer.parseInt(itemid);
+			}
+			
 			if(minamount == maxamount)
 				i = new ItemStack(id, maxamount);
 			else
 				i = new ItemStack(id, minamount + r.nextInt(maxamount - minamount));
+			
+			if(durability != null)
+				i.setDurability(durability);
 			
 			if(oneitem.length == 6) {
 				i.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(oneitem[4])), Integer.parseInt(oneitem[5]));
@@ -118,6 +131,7 @@ public class BGCornucopia {
 			Chest chest = (Chest) c.getBlock().getState();
             
 			chest.getInventory().addItem(i);
+			chest.update();
 		}
 	}
 	

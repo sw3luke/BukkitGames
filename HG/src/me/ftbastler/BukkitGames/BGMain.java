@@ -49,8 +49,8 @@ public class BGMain extends JavaPlugin {
 	public BGVanish vanish;
 	public Border border;
 	public BGFiles files;
-	public BGChest chest;
 	public BGCornucopia cornucopia;
+	public BGFeast feasts;
 
 	public String HELP_MESSAGE = null;
 	public String SERVER_FULL_MSG = "";
@@ -73,8 +73,6 @@ public class BGMain extends JavaPlugin {
 	public final String WORLD_TEMPOARY_NAME = "world";
 	public Boolean REGEN_WORLD = false;
 	public Boolean RANDOM_START = false;
-	public Boolean SPAWN_CHESTS = false;
-	public Boolean SPAWN_TABLES = false;
 	public Boolean SHOW_TIPS = true;
 	public Boolean DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
 	public Boolean DENY_LOGIN = false;
@@ -110,6 +108,7 @@ public class BGMain extends JavaPlugin {
 	HashMap<World, ArrayList<Border>> BORDERS = new HashMap<World, ArrayList<Border>>();
 	public static Integer WORLDRADIUS = Integer.valueOf(250);
 	public Boolean SQL_USE = false;
+	public Integer FEAST_SPAWN_TIME = 30;
 
 	public Integer SQL_GAMEID = null;
 	public String SQL_HOST = null;
@@ -193,18 +192,19 @@ public class BGMain extends JavaPlugin {
 			BGMain.this.checkwinner();
 			BGVanish.updateVanished();
 
-			if (BGMain.this.GAME_RUNNING_TIME % 10 == 0) {
-				if (BGMain.this.SPAWN_CHESTS == true) {
-					chest.spawnChest();
-				}
+			if(FEAST) {
+				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 3)
+					feasts.announceFeast(3);
+				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 2)
+					feasts.announceFeast(2);
+				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 1)
+					feasts.announceFeast(1);
+				
+				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME)
+					feasts.spawnFeast();
 			}
-			if ((BGMain.this.GAME_RUNNING_TIME % 5 == 0)
-					& (BGMain.this.GAME_RUNNING_TIME % 10 != 0)) {
-				if (BGMain.this.SPAWN_TABLES == true) {
-					chest.spawnTable();
-				}
-			}
-			if ((BGMain.this.GAME_RUNNING_TIME % 5 != 0)
+			
+			if ((GAME_RUNNING_TIME % 5 != 0)
 					& (BGMain.this.GAME_RUNNING_TIME % 10 != 0)) {
 				if(SHOW_TIPS) {	
 					BGChat.printTipChat();
@@ -213,13 +213,13 @@ public class BGMain extends JavaPlugin {
 					BGChat.updateChat();
 				}
 			}
-			if (BGMain.this.GAME_RUNNING_TIME == (BGMain.this.END_GAME_TIME - 1)) {
+			if (GAME_RUNNING_TIME == (BGMain.this.END_GAME_TIME - 1)) {
 				if(END_GAME_A) {
 					BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
 					END_GAME_M = false; 
 				}			
             }
-			if (BGMain.this.GAME_RUNNING_TIME == BGMain.this.END_GAME_TIME) {
+			if (GAME_RUNNING_TIME == BGMain.this.END_GAME_TIME) {
 				if(END_GAME_A) {
 					World w = Bukkit.getWorld("world");
 					w.setDifficulty(Difficulty.HARD);
@@ -230,13 +230,13 @@ public class BGMain extends JavaPlugin {
 				}
 			}
 
-			if (BGMain.this.GAME_RUNNING_TIME.intValue() == BGMain.this.MAX_GAME_RUNNING_TIME
+			if (GAME_RUNNING_TIME.intValue() == MAX_GAME_RUNNING_TIME
 					.intValue() - 1) {
 				BGChat.printInfoChat("Final battle! 1 minute left.");
 				BGMain.this.endgame();
 			}
 
-			if (BGMain.this.GAME_RUNNING_TIME.intValue() >= BGMain.this.MAX_GAME_RUNNING_TIME
+			if (GAME_RUNNING_TIME.intValue() >= MAX_GAME_RUNNING_TIME
 					.intValue())
 				Bukkit.getServer().shutdown();
 		}
@@ -276,7 +276,6 @@ public class BGMain extends JavaPlugin {
 		command = new BGCommand(this);
 		vanish = new BGVanish(this);
 		sign = new BGSign(this);
-		chest = new BGChest(this);
 		
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
 		BGCommand bgcmd = new BGCommand(this);
@@ -353,8 +352,6 @@ public class BGMain extends JavaPlugin {
 		this.SERVER_TITLE = getConfig().getString("MESSAGE.SERVER_TITLE");
 		this.HELP_MESSAGE = getConfig().getString("MESSAGE.HELP_MESSAGE");
 		this.RANDOM_START = Boolean.valueOf(getConfig().getBoolean("RANDOM_START"));
-		this.SPAWN_CHESTS = Boolean.valueOf(getConfig().getBoolean("SPAWN_CHESTS"));
-		this.SPAWN_TABLES = Boolean.valueOf(getConfig().getBoolean("SPAWN_TABLES"));
 		this.DEFAULT_KIT = Boolean.valueOf(getConfig().getBoolean("DEFAULT_KIT"));
 		this.SHOW_TIPS = Boolean.valueOf(getConfig().getBoolean("SHOW_TIPS"));
 		this.REGEN_WORLD = Boolean.valueOf(getConfig().getBoolean("REGEN_WORLD"));
@@ -402,6 +399,11 @@ public class BGMain extends JavaPlugin {
 		if(!SQL_USE && ADV_REW) {
 			log.warning("[BukkitGames] MySQL has to be enabled for AdvancedReward, turning AR off.");
 			this.ADV_REW = false;
+		}
+		
+		if(FEAST) {
+			this.FEAST_SPAWN_TIME = Integer.valueOf(BGFiles.feastconf.getInt("SPAWN_TIME"));
+			feasts = new BGFeast(this);
 		}
 		
 		if(CORNUCOPIA) {
@@ -607,7 +609,7 @@ public class BGMain extends JavaPlugin {
 		this.DENY_SHOOT_BOW = Boolean.valueOf(false);
 		this.QUIT_MSG = Boolean.valueOf(true);
 
-		if(CORNUCOPIA_CHESTS)
+		if(CORNUCOPIA_CHESTS && CORNUCOPIA)
 			BGCornucopia.spawnChests();
 		
 		if (SQL_USE) {

@@ -61,46 +61,6 @@ public class BGCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (cmd.getName().equalsIgnoreCase("chest")) {
-			if (p.hasPermission("bg.admin.chest")
-					|| p.hasPermission("bg.admin.*")) {
-				plugin.chest.spawnChest(p.getLocation());
-				return true;
-			}
-			BGChat.printPlayerChat(p, "You are not allowed to do this.");
-			return false;
-		}
-
-		if (cmd.getName().equalsIgnoreCase("rchest")) {
-			if (p.hasPermission("bg.admin.rchest")
-					|| p.hasPermission("bg.admin.*")) {
-				plugin.chest.spawnChest();
-				return true;
-			}
-			BGChat.printPlayerChat(p, "You are not allowed to do this.");
-			return false;
-		}
-		
-		if (cmd.getName().equalsIgnoreCase("table")) {
-			if (p.hasPermission("bg.admin.table")
-					|| p.hasPermission("bg.admin.*")) {
-				plugin.chest.spawnTable(p.getLocation());
-				return true;
-			}
-			BGChat.printPlayerChat(p, "You are not allowed to do this.");
-			return false;
-		}
-
-		if (cmd.getName().equalsIgnoreCase("rtable")) {
-			if (p.hasPermission("bg.admin.rtable")
-					|| p.hasPermission("bg.admin.*")) {
-				plugin.chest.spawnTable();
-				return true;
-			}
-			BGChat.printPlayerChat(p, "You are not allowed to do this.");
-			return false;
-		}
-
 		if (cmd.getName().equalsIgnoreCase("kitinfo")) {
 			if (args.length != 1) {
 				BGChat.printPlayerChat(p,
