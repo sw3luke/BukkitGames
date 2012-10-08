@@ -186,10 +186,9 @@ public class BGMain extends JavaPlugin {
 	final Timer timer2 = new Timer();
 	TimerTask task2 = new TimerTask() {
 		public void run() {
-			BGMain.this.GAME_RUNNING_TIME = Integer
-					.valueOf(BGMain.this.GAME_RUNNING_TIME.intValue() + 1);
+			GAME_RUNNING_TIME++;
 
-			BGMain.this.checkwinner();
+			checkwinner();
 			BGVanish.updateVanished();
 
 			if(FEAST) {
@@ -280,15 +279,6 @@ public class BGMain extends JavaPlugin {
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
 		BGCommand bgcmd = new BGCommand(this);
 		
-		if (this.getCommand("chest") != null) 
-			this.getCommand("chest").setExecutor(bgcmd); 
-		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand chest returns null");
-
-		if (this.getCommand("rchest") != null)
-			this.getCommand("rchest").setExecutor(bgcmd); 
-		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand rchest returns null");
 
 		if (this.getCommand("help") != null) 
 			this.getCommand("help").setExecutor(bgcmd); 
@@ -329,11 +319,6 @@ public class BGMain extends JavaPlugin {
 			this.getCommand("fbattle").setExecutor(bgcmd);
 		else
 			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand fbattle returns null");
-		
-		if (this.getCommand("bgcheckversion") != null)
-			this.getCommand("bgcheckversion").setExecutor(bgcmd);
-		else
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgcheckversions returns null");
 		
 		if (this.getCommand("bgversion") != null)
 			this.getCommand("bgversion").setExecutor(bgcmd);

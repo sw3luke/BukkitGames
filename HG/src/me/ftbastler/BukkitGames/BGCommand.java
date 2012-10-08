@@ -155,14 +155,14 @@ public class BGCommand implements CommandExecutor {
 					return true;
 				}else {
 					
-					BGChat.printPlayerChat(p, "Too less Coins! try /coin for infos!");
+					BGChat.printPlayerChat(p, "Too few Coins! try /coin for infos!");
 					return true;
 				}
 			}else if (args[0].equalsIgnoreCase("send")) {
 				
 				if (args.length < 4) {
 					
-					BGChat.printPlayerChat(p, "Too less arrguments! Try /coin");
+					BGChat.printPlayerChat(p, "Too few arrguments! Try /coin");
 					return true;
 				}
 				if (args[1].equalsIgnoreCase("points")) {
@@ -262,7 +262,7 @@ public class BGCommand implements CommandExecutor {
 					if (p.hasPermission("bg.admin.give")) {	
 						if (args.length < 4) {
 						
-							BGChat.printPlayerChat(p, "Too less arrguments!");
+							BGChat.printPlayerChat(p, "Too few arrguments!");
 							return true;
 						}
 						if (plugin.getPlayerID(args[2]) == null) {
@@ -448,13 +448,12 @@ public class BGCommand implements CommandExecutor {
 						
 						return true;
 					}else {
-						BGChat.printPlayerChat(p, "You can not start the Final Battle because it will start automaticly soon!");
-						
+						BGChat.printPlayerChat(p, "You can not start the final battle because it will start soon!");
 						return true;
 					}
 				}else{
 					
-					BGChat.printPlayerChat(p, "The games is not started yet!");
+					BGChat.printPlayerChat(p, "§cThe game has not started yet!");
 					
 					return true;
 				}
@@ -467,44 +466,23 @@ public class BGCommand implements CommandExecutor {
 			}
 		}
 		
-		if(cmd.getName().equalsIgnoreCase("bgcheckversion")) {
+		if(cmd.getName().equalsIgnoreCase("bgversion")) {
 			
 			if(p.hasPermission("bg.admin.check")) {
 				
 				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-				
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				
 				if (update) {
-					
 					String newversion = updater.getLatestVersionString();
 					long size = updater.getFileSize();
+					BGChat.printPlayerChat(p, "§aUpdate available: " + newversion + " (" + size + " bytes). §r/bgdownload");
 					
-					BGChat.printPlayerChat(p, "The BukkitGames Update is available: " + newversion + "(" + size + "bytes)\n"+
-											"Type /bgdownload to download the update! (remember to regenerate all config files");
 				}else {
-					
-					BGChat.printPlayerChat(p, "There is no Update for The BukkitGames available!");
+					BGChat.printPlayerChat(p, "§7Curren version of The BukkitGames: " + plugin.getDescription().getVersion());
 				}
-			}else {
-				
-				BGChat.printPlayerChat(p, "You don't have enough Permissions!");
-				
-				return true;
-			}
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("bgversion")) {
-			
-			if(p.hasPermission("bg.admin.version")) {
-				
-				BGChat.printPlayerChat(p, "Current Version of The BukkitGames: " + plugin.getDescription().getVersion());
-				
-				return true;
-			}else {
-				
-				BGChat.printPlayerChat(p, "You don't have enough Permissions!");
-				
+			} else {
+				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
 				return true;
 			}
 		}
@@ -514,28 +492,26 @@ public class BGCommand implements CommandExecutor {
 			if(p.hasPermission("bg.admin.download")) {
 				
 				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-				
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				
 				if(update) {
 					
-					BGChat.printPlayerChat(p, "Starting download a new Version of The BukkitGames");
-					
+					BGChat.printPlayerChat(p, "§7Starting download of the new version...");
 					Updater download = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
 					
 					if(download.getResult() == Updater.UpdateResult.SUCCESS)
-						BGChat.printPlayerChat(p, "Download completed! Let the plugin regenerate all config files!");
+						BGChat.printPlayerChat(p, "§aDownload complete! §7Regenerate all config files!");
 					else
-						BGChat.printPlayerChat(p, "Ooops! Something went wrong look at your console to see a better error log!");
+						BGChat.printPlayerChat(p, "§cOoops! Something went wrong. See console error log!");
 				}else {
 					
-					BGChat.printPlayerChat(p, "There is no Update available to download!");
+					BGChat.printPlayerChat(p, "§7There is no update available to download!");
 				}
 				
 				return true;
 			}else {
 				
-				BGChat.printPlayerChat(p, "You don't have enough Permissions!");
+				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
 				
 				return true;
 			}
