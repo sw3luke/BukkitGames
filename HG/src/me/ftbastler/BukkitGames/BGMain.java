@@ -95,8 +95,10 @@ public class BGMain extends JavaPlugin {
 	public Boolean END_GAME_M = true;
 	public Boolean DEFAULT_KIT = false;
 	public Boolean CORNUCOPIA = true;
-	public Boolean CORNUCOPIA_CHESTS = true;
+	public Boolean CORNUCOPIA_ITEMS = true;
+	public Boolean CORNUCOPIA_CHESTS = false;
 	public Boolean FEAST = true;
+	public Boolean FEAST_CHESTS = false;
 	public Boolean SPECTATOR_SYSTEM = false;
 	Boolean SQL_DSC = false;
 	public Location spawn;
@@ -190,7 +192,17 @@ public class BGMain extends JavaPlugin {
 
 			checkwinner();
 			BGVanish.updateVanished();
-
+			
+			if ((GAME_RUNNING_TIME % 5 != 0)
+					& (BGMain.this.GAME_RUNNING_TIME % 10 != 0)) {
+				if(SHOW_TIPS) {	
+					BGChat.printTipChat();
+				}
+				if(ADV_CHAT_SYSTEM && !SHOW_TIPS) {
+					BGChat.updateChat();
+				}
+			}
+			
 			if(FEAST) {
 				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 3)
 					feasts.announceFeast(3);
@@ -203,21 +215,13 @@ public class BGMain extends JavaPlugin {
 					feasts.spawnFeast();
 			}
 			
-			if ((GAME_RUNNING_TIME % 5 != 0)
-					& (BGMain.this.GAME_RUNNING_TIME % 10 != 0)) {
-				if(SHOW_TIPS) {	
-					BGChat.printTipChat();
-				}
-				if(ADV_CHAT_SYSTEM && !SHOW_TIPS) {
-					BGChat.updateChat();
-				}
-			}
 			if (GAME_RUNNING_TIME == (BGMain.this.END_GAME_TIME - 1)) {
 				if(END_GAME_A) {
 					BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
 					END_GAME_M = false; 
 				}			
             }
+			
 			if (GAME_RUNNING_TIME == BGMain.this.END_GAME_TIME) {
 				if(END_GAME_A) {
 					World w = Bukkit.getWorld("world");
@@ -341,8 +345,10 @@ public class BGMain extends JavaPlugin {
 		this.SHOW_TIPS = Boolean.valueOf(getConfig().getBoolean("SHOW_TIPS"));
 		this.REGEN_WORLD = Boolean.valueOf(getConfig().getBoolean("REGEN_WORLD"));
 		this.CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
+		this.CORNUCOPIA_ITEMS = Boolean.valueOf(BGFiles.cornconf.getBoolean("ITEM_SPAWN"));
 		this.CORNUCOPIA_CHESTS = Boolean.valueOf(BGFiles.cornconf.getBoolean("CHESTS"));
 		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
+		this.FEAST_CHESTS = Boolean.valueOf(BGFiles.feastconf.getBoolean("CHESTS"));
 		this.SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
 		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
 		this.GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
@@ -594,7 +600,7 @@ public class BGMain extends JavaPlugin {
 		this.DENY_SHOOT_BOW = Boolean.valueOf(false);
 		this.QUIT_MSG = Boolean.valueOf(true);
 
-		if(CORNUCOPIA_CHESTS && CORNUCOPIA)
+		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
 			BGCornucopia.spawnChests();
 		
 		if (SQL_USE) {

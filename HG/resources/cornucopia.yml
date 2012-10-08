@@ -11,8 +11,11 @@
 # Sword (with knockback enchantment), which maybe will be spawned:
 # - '268,1,1,false,19,1'
 
-# Do you want to spawn chests with items? (CORNUCOPIA has to be enabled)
-CHESTS: true
+# Do you want to spawn items at the cornucopia? (CORNUCOPIA has to be enabled)
+ITEM_SPAWN: true
+
+# Whether to spawn the items in chests or not
+CHESTS: false
 
 ITEMS:
   - '268,1,1,false,19,1'

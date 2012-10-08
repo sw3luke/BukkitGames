@@ -16,7 +16,7 @@
 #
 # !!! If you use color codes you have to surround your message with '' !!!
 
-title: Welcome to the Hungergames!
+title: Welcome to the HungerGames!
 content:
   - '&9Welcome to the'
   - '&9HungerGames,'
@@ -28,5 +28,7 @@ content:
   - Thanks for joining!
   - Have fun playing!
   - <newpage>
-  - Get a kit now!
+  - '&9Get a kit now:'
+  - '&1/kit [kitName]'
+  - '&1/kitinfo [kitName]'
 author: The BukkitGames

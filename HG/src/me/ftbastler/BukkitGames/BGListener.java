@@ -566,8 +566,7 @@ public class BGListener implements Listener {
 			if (update) {
 				String newversion = updater.getLatestVersionString();
 				long size = updater.getFileSize();
-				BGChat.printPlayerChat(p, "§bAn update for the BukkitGames is available: " + newversion + " (" + size + " bytes)\n"+
-										"§7Type /bgdownload to download this update!");
+				BGChat.printPlayerChat(p, "§bUpdate available: " + newversion + " (" + size + " bytes) §r/bgdownload");
 			}
 		}
 	}
@@ -614,7 +613,7 @@ public class BGListener implements Listener {
 			}
 		}
 		
-		if(BGCornucopia.isCornucopiaBlock(event.getBlock()) && p.getGameMode() != GameMode.CREATIVE) {
+		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || plugin.feasts.isFeastBlock(event.getBlock())) && p.getGameMode() != GameMode.CREATIVE) {
 			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
 			event.setCancelled(true);
 		}
@@ -636,7 +635,7 @@ public class BGListener implements Listener {
 			block.setData(CropState.RIPE.getData());
 		}
 		
-		if(BGCornucopia.isCornucopiaBlock(event.getBlock()) && p.getGameMode() != GameMode.CREATIVE) {
+		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || plugin.feasts.isFeastBlock(event.getBlock())) && p.getGameMode() != GameMode.CREATIVE) {
 			BGChat.printPlayerChat(p, "§cYou can't place a block here!");
 			event.setCancelled(true);
 		}
@@ -910,7 +909,7 @@ public class BGListener implements Listener {
 		
 		if (plugin.DEATH_SIGNS) {
 			
-			Location loc = dp.getLocation();
+			Location loc = dp.getLocation().add(0, 1, 0);
 			String fl = BGFiles.dsign.getString("FIRST_LINE");
 			String sl = BGFiles.dsign.getString("SECOND_LINE");
 			String tl = BGFiles.dsign.getString("THIRD_LINE");
@@ -918,7 +917,6 @@ public class BGListener implements Listener {
 			
 			if(fl != null)	
 				fl = fl.replace("[name]", dp.getName());
-			
 			if(sl != null)
 				sl = sl.replace("[name]", dp.getName());
 			if(tl != null)

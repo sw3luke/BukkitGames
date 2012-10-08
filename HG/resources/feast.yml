@@ -13,6 +13,9 @@
 # When the feast should spawn, 3 minutes before it will announce the coords and will set the ground to soulsand
 SPAWN_TIME: 30
 
+# Whether to spawn the items in chests or not
+CHESTS: false
+
 ITEMS:
   - '268,1,1,false,19,1'
   - '298,1,1,false'

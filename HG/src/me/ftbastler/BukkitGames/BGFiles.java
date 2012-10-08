@@ -19,7 +19,6 @@ public class BGFiles {
 	static FileConfiguration kitconf;
 	static FileConfiguration messageconf;
 	static FileConfiguration rewardconf;
-	static FileConfiguration chestconf;
 	static FileConfiguration cornconf;
 	static FileConfiguration feastconf;
 
@@ -45,7 +44,6 @@ public class BGFiles {
 		File abilitiesFile = new File(plugin.getDataFolder(), "abilities.yml");
 		File bookFile = new File(plugin.getDataFolder(), "book.yml");
 		File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
-		File chestFile = new File(plugin.getDataFolder(), "chest.yml");
 		File cornFile = new File(plugin.getDataFolder(), "cornucopia.yml");
 		File feastFile = new File(plugin.getDataFolder(), "feast.yml");
 
@@ -91,11 +89,6 @@ public class BGFiles {
 			plugin.copy(plugin.getResource("messages.yml"), messagesFile);
 			creation++;
 		}
-		if(!chestFile.exists()) {
-			chestFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("chest.yml"), chestFile);
-			creation++;
-		}
 		if(!cornFile.exists()) {
 			cornFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("cornucopia.yml"), cornFile);
@@ -126,8 +119,6 @@ public class BGFiles {
 				new File(plugin.getDataFolder(), "messages.yml"));
 		rewardconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "reward.yml"));
-		chestconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "chest.yml"));
 		cornconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "cornucopia.yml"));
 		feastconf = YamlConfiguration.loadConfiguration(

@@ -27,9 +27,10 @@ public class BGFeast {
 	public void announceFeast(Integer time) {
 		if(mainBlock == null) {
 			do {
-				mainBlock = BGMain.getRandomLocation().getBlock();
+				mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
 			} while (!plugin.inBorder(mainBlock.getLocation()));
 			mainBlock.setType(Material.NETHERRACK);
+			removeAbove(mainBlock);
 			createFeast(Material.SOUL_SAND);
 		}
 		
@@ -42,21 +43,30 @@ public class BGFeast {
 	}
 	
 	public void spawnFeast() {
+		if(mainBlock == null)
+			announceFeast(0);
+		
 		DecimalFormat df = new DecimalFormat("##.#");
 		BGChat.printInfoChat("Feast spawned at X: " + df.format(mainBlock.getLocation().getX()) + " | Y: " + df.format(mainBlock.getLocation().getY()) + " | Z: " + df.format(mainBlock.getLocation().getZ()));
 		
-		List<String> items = BGFiles.cornconf.getStringList("ITEMS");
+		List<String> items = BGFiles.feastconf.getStringList("ITEMS");
 		for(String item : items) {
 			String[] oneitem = item.split(",");
-			ItemStack i = null;
 			Random r = new Random();
 			String itemid = oneitem[0];
 			Integer minamount = Integer.parseInt(oneitem[1]);
 			Integer maxamount = Integer.parseInt(oneitem[2]);
+			Integer amount = 0;
 			Boolean force = Boolean.parseBoolean(oneitem[3]);
 			Boolean spawn = force;
 			Integer id = null;
 			Short durability = null;
+			
+			if(!force)
+				spawn = r.nextBoolean();
+			
+			if(!spawn)
+				continue;
 			
 			if (item.contains(":")) {
 				String[] it = itemid.split(":");
@@ -66,39 +76,53 @@ public class BGFeast {
 				id = Integer.parseInt(itemid);
 			}
 			
-			if(minamount == maxamount)
-				i = new ItemStack(id, maxamount);
-			else
-				i = new ItemStack(id, minamount + r.nextInt(maxamount - minamount));
+			ItemStack i = new ItemStack(id, 1);
 			
 			if(durability != null)
 				i.setDurability(durability);
 			
-			if(oneitem.length == 6) {
+			if(oneitem.length == 6)
 				i.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(oneitem[4])), Integer.parseInt(oneitem[5]));
-			}
-			
-			if(!force)
-				spawn = r.nextBoolean();
-			
-			if(!spawn)
-				continue;
-			
+						
 			Integer ra = radius;
 			Location c = mainBlock.getLocation();
 			c.add(-(ra/2) + r.nextInt(ra), 1, -(ra/2) + r.nextInt(ra));
 			
-			while(c.getBlock().getType() == Material.CHEST) {
-				c = mainBlock.getLocation();
-				c.add(-8 + r.nextInt(16), 1, -8 + r.nextInt(16));
-			}
+			if(maxamount == minamount)
+				amount = maxamount;
+			else
+				amount = minamount + r.nextInt(maxamount - minamount + 1);
 			
-			c.getBlock().setType(Material.CHEST);
-			Chest chest = (Chest) c.getBlock().getState();
-            
-			chest.getInventory().addItem(i);
-			chest.update();
+			if(plugin.FEAST_CHESTS) {
+				while(c.getBlock().getType() == Material.CHEST) {
+					c = mainBlock.getLocation();
+					c.add(-8 + r.nextInt(16), 1, -8 + r.nextInt(16));
+				}
+				
+				while(amount > 0) {
+					c.getBlock().setType(Material.CHEST);
+					Chest chest = (Chest) c.getBlock().getState();
+					chest.getInventory().addItem(i);
+					chest.update();
+					amount--;
+				}
+			} else {
+				while(amount > 0) {
+					Bukkit.getServer().getWorld("world").dropItemNaturally(c, i).setPickupDelay(20 * 5);
+					amount--;
+				}
+			}
 		}
+	}
+	
+	public Boolean isFeastBlock(Block b) {		
+		if(!plugin.FEAST)
+			return false;
+
+		if(b.getLocation().distance(mainBlock.getLocation()) <= radius + 3)
+			return true;
+
+		return false;
 	}
 	
 	private void createFeast(Material m) {
