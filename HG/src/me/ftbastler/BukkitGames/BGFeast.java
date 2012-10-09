@@ -19,6 +19,7 @@ public class BGFeast {
 	private static Block mainBlock = null;
 	private static Integer radius = 8;
 	private static Logger log = Logger.getLogger("Minecraft");
+	private static Boolean spawned = false;
 	
 	public BGFeast(BGMain plugin) {	
 		BGFeast.plugin = plugin;
@@ -32,6 +33,7 @@ public class BGFeast {
 			mainBlock.setType(Material.NETHERRACK);
 			removeAbove(mainBlock);
 			createFeast(Material.SOUL_SAND);
+			spawned = true;
 		}
 		
 		String s = "";
@@ -118,7 +120,7 @@ public class BGFeast {
 	}
 	
 	public static Boolean isFeastBlock(Block b) {		
-		if(!plugin.FEAST)
+		if(!plugin.FEAST || !spawned)
 			return false;
 
 		if(b.getLocation().distance(mainBlock.getLocation()) <= radius + 3)
