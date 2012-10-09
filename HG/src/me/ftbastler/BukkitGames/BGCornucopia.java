@@ -18,6 +18,7 @@ public class BGCornucopia {
 	private static Block mainBlock;
 	private static Integer radius = 10;
 	private static Logger log = BGMain.getPluginLogger();
+	private static Chest[] chests = new Chest[8];
 	
 	public BGCornucopia(BGMain plugin) {
 		BGCornucopia.plugin = plugin;
@@ -29,6 +30,9 @@ public class BGCornucopia {
 		removeAbove(mainBlock);
 		
 		createFloor(Material.GOLD_BLOCK);
+		
+		if(plugin.CORNUCOPIA_CHESTS)
+			createPile(Material.DIAMOND_BLOCK);
 	}
 	
 	private static Block getCornSpawnBlock() {
@@ -53,6 +57,40 @@ public class BGCornucopia {
 	        	}
 	        }
 	    }
+	    
+	}
+	
+	private static void createPile(Material m) {
+		
+		Location loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		
+		Block block = loc.getBlock();
+		block.setType(m);
+		for(int i = 1; i < 4; i++) {
+			loc.setY(loc.getY() +1);
+			Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
+		}
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()+1);
+		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()-1);
+		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setZ(loc.getZ()+1);
+		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setZ(loc.getZ()-1);
+		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
 	}
 	
 	public static Boolean isCornucopiaBlock(Block b) {		
@@ -77,8 +115,74 @@ public class BGCornucopia {
 		}
 	}
 	
-	
 	public static void spawnChests() {
+		Location loc;
+		Block block;
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()+1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[0] = (Chest) block.getState();
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()+1);
+		loc.setZ(loc.getZ()+1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[1] = (Chest) block.getState();
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()+1);
+		loc.setZ(loc.getZ()-1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[2] = (Chest) block.getState();
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()-1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[3] = (Chest) block.getState();
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()-1);
+		loc.setZ(loc.getZ()+1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[4] = (Chest) block.getState();
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setX(loc.getX()-1);
+		loc.setZ(loc.getZ()-1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[5] = (Chest) block.getState();
+		
+		
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setZ(loc.getZ()+1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[6] = (Chest) block.getState();
+		
+		loc = mainBlock.getLocation();
+		loc.setY(loc.getY()+1);
+		loc.setZ(loc.getZ()-1);
+		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		block.setType(Material.CHEST);
+		chests[7] = (Chest) block.getState();
+	}
+	
+	public static void spawnItems() {
 		List<String> items = BGFiles.cornconf.getStringList("ITEMS");
 		for(String item : items) {
 			String[] oneitem = item.split(",");
@@ -124,13 +228,9 @@ public class BGCornucopia {
 				amount = minamount + r.nextInt(maxamount - minamount + 1);
 			
 			if(plugin.CORNUCOPIA_CHESTS) {
-				while(c.getBlock().getType() == Material.CHEST) {
-					c = mainBlock.getLocation();
-					c.add(-8 + r.nextInt(16), 1, -8 + r.nextInt(16));
-				}
+				spawnChests();
 				
-				c.getBlock().setType(Material.CHEST);
-				Chest chest = (Chest) c.getBlock().getState();
+				Chest chest = chests[r.nextInt(8)];
 				
 				while(amount > 0) {
 					Integer slot = r.nextInt(27);

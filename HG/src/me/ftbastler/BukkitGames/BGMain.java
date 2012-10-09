@@ -605,7 +605,7 @@ public class BGMain extends JavaPlugin {
 		this.QUIT_MSG = Boolean.valueOf(true);
 
 		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
-			BGCornucopia.spawnChests();
+			BGCornucopia.spawnItems();
 		
 		if (SQL_USE) {
 			PreparedStatement statement = null;
