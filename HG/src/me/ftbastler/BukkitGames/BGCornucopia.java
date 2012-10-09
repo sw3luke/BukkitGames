@@ -129,13 +129,15 @@ public class BGCornucopia {
 					c.add(-8 + r.nextInt(16), 1, -8 + r.nextInt(16));
 				}
 				
+				c.getBlock().setType(Material.CHEST);
+				Chest chest = (Chest) c.getBlock().getState();
+				
 				while(amount > 0) {
-					c.getBlock().setType(Material.CHEST);
-					Chest chest = (Chest) c.getBlock().getState();
 					chest.getInventory().addItem(i);
-					chest.update();
 					amount--;
 				}
+				
+				chest.update();
 			} else {
 				while(amount > 0) {
 					Bukkit.getServer().getWorld("world").dropItemNaturally(c, i).setPickupDelay(20 * 5);

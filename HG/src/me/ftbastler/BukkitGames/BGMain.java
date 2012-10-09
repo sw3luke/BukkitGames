@@ -205,14 +205,14 @@ public class BGMain extends JavaPlugin {
 			
 			if(FEAST) {
 				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 3)
-					feasts.announceFeast(3);
+					BGFeast.announceFeast(3);
 				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 2)
-					feasts.announceFeast(2);
+					BGFeast.announceFeast(2);
 				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 1)
-					feasts.announceFeast(1);
+					BGFeast.announceFeast(1);
 				
 				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME)
-					feasts.spawnFeast();
+					BGFeast.spawnFeast();
 			}
 			
 			if (GAME_RUNNING_TIME == (BGMain.this.END_GAME_TIME - 1)) {

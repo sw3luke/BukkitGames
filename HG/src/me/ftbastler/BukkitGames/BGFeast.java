@@ -15,16 +15,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class BGFeast {
 
-	private BGMain plugin;
-	private Block mainBlock = null;
-	private Integer radius = 8;
-	private Logger log = Logger.getLogger("Minecraft");
+	private static BGMain plugin;
+	private static Block mainBlock = null;
+	private static Integer radius = 8;
+	private static Logger log = Logger.getLogger("Minecraft");
 	
 	public BGFeast(BGMain plugin) {	
-		this.plugin = plugin;
+		BGFeast.plugin = plugin;
 	}
 	
-	public void announceFeast(Integer time) {
+	public static void announceFeast(Integer time) {
 		if(mainBlock == null) {
 			do {
 				mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
@@ -42,7 +42,7 @@ public class BGFeast {
 		BGChat.printInfoChat("Feast will spawn in " + time + " minute" + s + " at X: " + df.format(mainBlock.getLocation().getX()) + " | Y: " + df.format(mainBlock.getLocation().getY()) + " | Z: " + df.format(mainBlock.getLocation().getZ()));
 	}
 	
-	public void spawnFeast() {
+	public static void spawnFeast() {
 		if(mainBlock == null)
 			announceFeast(0);
 		
@@ -99,13 +99,15 @@ public class BGFeast {
 					c.add(-8 + r.nextInt(16), 1, -8 + r.nextInt(16));
 				}
 				
+				c.getBlock().setType(Material.CHEST);
+				Chest chest = (Chest) c.getBlock().getState();
+				
 				while(amount > 0) {
-					c.getBlock().setType(Material.CHEST);
-					Chest chest = (Chest) c.getBlock().getState();
 					chest.getInventory().addItem(i);
-					chest.update();
 					amount--;
 				}
+				
+				chest.update();
 			} else {
 				while(amount > 0) {
 					Bukkit.getServer().getWorld("world").dropItemNaturally(c, i).setPickupDelay(20 * 5);
@@ -115,7 +117,7 @@ public class BGFeast {
 		}
 	}
 	
-	public Boolean isFeastBlock(Block b) {		
+	public static Boolean isFeastBlock(Block b) {		
 		if(!plugin.FEAST)
 			return false;
 
@@ -125,7 +127,7 @@ public class BGFeast {
 		return false;
 	}
 	
-	private void createFeast(Material m) {
+	private static void createFeast(Material m) {
 		Location loc = mainBlock.getLocation();
 		Integer r = radius;
 	               

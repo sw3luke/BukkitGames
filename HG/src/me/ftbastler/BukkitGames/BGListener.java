@@ -613,7 +613,7 @@ public class BGListener implements Listener {
 			}
 		}
 		
-		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || plugin.feasts.isFeastBlock(event.getBlock())) && p.getGameMode() != GameMode.CREATIVE) {
+		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock())) && p.getGameMode() != GameMode.CREATIVE) {
 			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
 			event.setCancelled(true);
 		}
@@ -631,11 +631,10 @@ public class BGListener implements Listener {
 		
 		Block block = event.getBlockPlaced();
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.CROPS) {
-			
 			block.setData(CropState.RIPE.getData());
 		}
 		
-		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || plugin.feasts.isFeastBlock(event.getBlock())) && p.getGameMode() != GameMode.CREATIVE) {
+		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock())) && p.getGameMode() != GameMode.CREATIVE) {
 			BGChat.printPlayerChat(p, "§cYou can't place a block here!");
 			event.setCancelled(true);
 		}
