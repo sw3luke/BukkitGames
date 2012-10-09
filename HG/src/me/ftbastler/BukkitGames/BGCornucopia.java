@@ -108,7 +108,7 @@ public class BGCornucopia {
 		Location loc = block.getLocation();
 		loc.setY(loc.getY()+1);
 		Block newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		while(newBlock.getType() != Material.AIR) {
+		while(loc.getY() < 256) {
 			newBlock.setType(Material.AIR);
 			loc.setY(loc.getY()+1);
 			newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
