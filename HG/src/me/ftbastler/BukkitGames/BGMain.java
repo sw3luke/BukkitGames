@@ -279,6 +279,9 @@ public class BGMain extends JavaPlugin {
 		command = new BGCommand(this);
 		vanish = new BGVanish(this);
 		sign = new BGSign(this);
+		feasts = new BGFeast(this);
+		cornucopia = new BGCornucopia(this);
+		reward = new BGReward(this);
 		
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
 		BGCommand bgcmd = new BGCommand(this);
@@ -393,16 +396,12 @@ public class BGMain extends JavaPlugin {
 		}
 		
 		if(FEAST) {
-			this.FEAST_SPAWN_TIME = Integer.valueOf(BGFiles.feastconf.getInt("SPAWN_TIME"));
-			feasts = new BGFeast(this);
+			FEAST_SPAWN_TIME = Integer.valueOf(BGFiles.feastconf.getInt("SPAWN_TIME"));
 		}
 		
 		if(CORNUCOPIA) {
-			cornucopia = new BGCornucopia(this);
 			BGCornucopia.createCorn();
 		}
-		
-		reward = new BGReward(this);
 		
 		if(BGMain.WORLDRADIUS.intValue() < 50) {
 			log.warning("[BukkitGames] Wordlborder radius has to be 50 or higher!");

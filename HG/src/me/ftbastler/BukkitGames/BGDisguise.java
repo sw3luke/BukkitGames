@@ -25,7 +25,6 @@ public class BGDisguise extends JavaPlugin{
 	public BGDisguise(BGMain plugin) {
 		
 		this.plugin = plugin;
-		
 		dcapi = DisguiseCraft.getAPI();
 	}
 	
