@@ -36,7 +36,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BGMain extends JavaPlugin {
-	Logger log = Logger.getLogger("Minecraft");
+	Logger log;
 	
 	public BGChat chat;
 	public BGCommand command;
@@ -51,6 +51,7 @@ public class BGMain extends JavaPlugin {
 	public BGFiles files;
 	public BGCornucopia cornucopia;
 	public BGFeast feasts;
+	private static BGMain plugin;
 
 	public String HELP_MESSAGE = null;
 	public String SERVER_FULL_MSG = "";
@@ -169,7 +170,7 @@ public class BGMain extends JavaPlugin {
 			} else {
 				BGChat.printTimeChat("");
 				BGChat.printTimeChat("Invincibility was worn off.");
-				log.info("[BukkitGames] Game phase: 3 - Fighting");
+				log.info("Game phase: 3 - Fighting");
 				if(SHOW_TIPS) {
 					BGChat.printTipChat();
 				}
@@ -228,7 +229,7 @@ public class BGMain extends JavaPlugin {
 					w.setDifficulty(Difficulty.HARD);
 					w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
 					BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
-					log.info("[BukkitGames] Game phase: 4 - Final");
+					log.info("Game phase: 4 - Final");
 					BGMain.this.endgame();
 				}
 			}
@@ -246,21 +247,24 @@ public class BGMain extends JavaPlugin {
 	};
 
 	public void onLoad() {
-		this.log.info("[BukkitGames] Deleting old world.");
+		plugin = this;
+		log = getPluginLogger();
+		
+		this.log.info("Deleting old world.");
 		Bukkit.getServer().unloadWorld("world", false);
 		deleteDir(new File("world"));
 
 		this.REGEN_WORLD = getConfig().getBoolean("REGEN_WORLD");
 		if (this.REGEN_WORLD == false) {
-			this.log.info("[BukkitGames] Copying saved world.");
+			this.log.info("Copying saved world.");
 			try {
 				copyDirectory(new File(this.getDataFolder(), "world"),
 						new File("world"));
 			} catch (IOException e) {
-				log.warning("[BukkitGames] Error: " + e.toString());
+				log.warning("Error: " + e.toString());
 			}
 		} else {
-			this.log.info("[BukkitGames] Generating new world.");
+			this.log.info("Generating new world.");
 		}
 	}
 
@@ -290,53 +294,53 @@ public class BGMain extends JavaPlugin {
 		if (this.getCommand("help") != null) 
 			this.getCommand("help").setExecutor(bgcmd); 
 		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand help returns null");
+			console.sendMessage(ChatColor.RED+"getCommand help returns null");
 
 		if (this.getCommand("kit") != null) 
 			this.getCommand("kit").setExecutor(bgcmd); 
 		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand kit returns null");
+			console.sendMessage(ChatColor.RED+"getCommand kit returns null");
 
 		if (this.getCommand("kitinfo") != null) 
 			this.getCommand("kitinfo").setExecutor(bgcmd); 
 		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand kitinfo returns null");
+			console.sendMessage(ChatColor.RED+"getCommand kitinfo returns null");
 
 		if (this.getCommand("start") != null) 
 			this.getCommand("start").setExecutor(bgcmd); 
 		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand start returns null");
+			console.sendMessage(ChatColor.RED+"getCommand start returns null");
 
 		if (this.getCommand("gamemaker") != null) 
 			this.getCommand("gamemaker").setExecutor(bgcmd); 
 		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand gamemaker returns null");
+			console.sendMessage(ChatColor.RED+"getCommand gamemaker returns null");
 
 		if (this.getCommand("spawn") != null) 
 			this.getCommand("spawn").setExecutor(bgcmd); 
 		else 
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand spawn returns null");
+			console.sendMessage(ChatColor.RED+"getCommand spawn returns null");
 		
 		if (this.getCommand("coin") != null)
 			this.getCommand("coin").setExecutor(bgcmd);
 		else
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand coin returns null");
+			console.sendMessage(ChatColor.RED+"getCommand coin returns null");
 		
 		if (this.getCommand("fbattle") != null)
 			this.getCommand("fbattle").setExecutor(bgcmd);
 		else
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand fbattle returns null");
+			console.sendMessage(ChatColor.RED+"getCommand fbattle returns null");
 		
 		if (this.getCommand("bgversion") != null)
 			this.getCommand("bgversion").setExecutor(bgcmd);
 		else
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgversion returns null");
+			console.sendMessage(ChatColor.RED+"getCommand bgversion returns null");
 		if(this.getCommand("bgdownload") != null)
 			this.getCommand("bgdownload").setExecutor(bgcmd);
 		else
-			console.sendMessage(ChatColor.RED+"[BukkitGames] getCommand bgdownload returns null");
+			console.sendMessage(ChatColor.RED+"getCommand bgdownload returns null");
 
-		log.info("[BukkitGames] Loading configuration options.");
+		log.info("Loading configuration options.");
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		this.DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
 		this.SIMP_REW = Boolean.valueOf(getConfig().getBoolean("SIMPLE_REWARD"));
@@ -386,12 +390,12 @@ public class BGMain extends JavaPlugin {
 		
 		
 		if (ADV_ABI) {
-			log.info("[BukkitGames] Enabeling the AdvancedAbilities.");
+			log.info("Enabeling the AdvancedAbilities.");
 			dis = new BGDisguise(this);
 		}
 		
 		if(!SQL_USE && ADV_REW) {
-			log.warning("[BukkitGames] MySQL has to be enabled for AdvancedReward, turning AR off.");
+			log.warning("MySQL has to be enabled for AdvancedReward, turning AR off.");
 			this.ADV_REW = false;
 		}
 		
@@ -404,11 +408,11 @@ public class BGMain extends JavaPlugin {
 		}
 		
 		if(BGMain.WORLDRADIUS.intValue() < 50) {
-			log.warning("[BukkitGames] Wordlborder radius has to be 50 or higher!");
+			log.warning("Wordlborder radius has to be 50 or higher!");
 			getServer().getPluginManager().disablePlugin(this);
 		}
 
-		log.info("[BukkitGames] Getting winner of last game.");
+		log.info("Getting winner of last game.");
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(new File(getDataFolder(),"leaderboard.yml")));
@@ -427,7 +431,7 @@ public class BGMain extends JavaPlugin {
 		try {
 			br.close();
 		} catch (IOException e) {
-			this.log.warning(e.toString());
+			log.warning(e.toString());
 		}
 
 		this.LAST_WINNER = merke;
@@ -467,11 +471,10 @@ public class BGMain extends JavaPlugin {
 		this.timer1.scheduleAtFixedRate(this.task1, 0L, 1000L);
 
 		PluginDescriptionFile pdfFile = getDescription();
-		this.log.info("[BukkitGames] Plugin enabled");
-		this.log.info("[BukkitGames] Author: " + pdfFile.getAuthors());
-		this.log.info("[BukkitGames] Version: " + pdfFile.getVersion());
+		this.log.info("Plugin enabled");
+		this.log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
 		
-		log.info("[BukkitGames] Game phase: 1 - Waiting");
+		log.info("Game phase: 1 - Waiting");
 	}
 
 	public void onDisable() {
@@ -495,9 +498,11 @@ public class BGMain extends JavaPlugin {
 			p.kickPlayer(ChatColor.YELLOW + "Server is restarting!");
 		}
 		
-		this.log.info("[BukkitGames] Plugin disabled");
-		this.log.info("[BukkitGames] Author: " + pdfFile.getAuthors());
-		this.log.info("[BukkitGames] Version: " + pdfFile.getVersion());
+		Bukkit.getServer().unloadWorld("world", false);
+		
+		this.log.info("Plugin disabled");
+		this.log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
+		
 		Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(), this.STOP_CMD);
 	}
 
@@ -586,7 +591,7 @@ public class BGMain extends JavaPlugin {
 	}
 
 	public void startgame() {
-		log.info("[BukkitGames] Game phase: 2 - Starting");
+		log.info("Game phase: 2 - Starting");
 		this.timer1.cancel();
 		this.timer3.scheduleAtFixedRate(this.task3, 3000, 1000);
 
@@ -826,33 +831,33 @@ public class BGMain extends JavaPlugin {
 			r.close();
 			return PL_ID;
 		} catch (SQLException ex) {
-			System.err.println("[BukkitGames] Error with following query: "
+			System.err.println("Error with following query: "
 					+ "SELECT `ID`, `NAME` FROM `PLAYERS` WHERE `NAME` = '"
 					+ playername + "' ;");
-			System.err.println("[BukkitGames] MySQL-Error: " + ex.getMessage());
+			System.err.println("MySQL-Error: " + ex.getMessage());
 			return null;
 		} catch (NullPointerException ex) {
 			System.err
-					.println("[BukkitGames] Error while performing a query. (NullPointerException)");
+					.println("Error while performing a query. (NullPointerException)");
 			return null;
 		}
 	}
 
 	public void SQLconnect() {
 		try {
-			System.out.println("[BukkitGames] Connecting to MySQL database...");
+			System.out.println("Connecting to MySQL database...");
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String conn = "jdbc:mysql://" + SQL_HOST + ":" + SQL_PORT + "/"
 					+ SQL_DATA;
 			con = DriverManager.getConnection(conn, SQL_USER, SQL_PASS);
 		} catch (ClassNotFoundException ex) {
-			System.err.println("[BukkitGames] No MySQL driver found!");
+			System.err.println("No MySQL driver found!");
 		} catch (SQLException ex) {
 			System.err
-					.println("[BukkitGames] Error while fetching MySQL connection!");
+					.println("Error while fetching MySQL connection!");
 		} catch (Exception ex) {
 			System.err
-					.println("[BukkitGames] Unknown error while fetchting MySQL connection.");
+					.println("Unknown error while fetchting MySQL connection.");
 		}
 	}
 
@@ -866,31 +871,31 @@ public class BGMain extends JavaPlugin {
 			stmt.executeUpdate(sql);
 			stmt.close();
 		} catch (SQLException ex) {
-			System.err.println("[BukkitGames] Error with following query: "
+			System.err.println("Error with following query: "
 					+ sql);
-			System.err.println("[BukkitGames] MySQL-Error: " + ex.getMessage());
+			System.err.println("MySQL-Error: " + ex.getMessage());
 		} catch (NullPointerException ex) {
 			System.err
-					.println("[BukkitGames] Error while performing a query. (NullPointerException)");
+					.println("Error while performing a query. (NullPointerException)");
 		}
 	}
 
 	public void SQLdisconnect() {
 		try {
 			System.out
-					.println("[BukkitGames] Disconnecting from MySQL database...");
+					.println("Disconnecting from MySQL database...");
 			con.close();
 		} catch (SQLException ex) {
 			System.err
-					.println("[BukkitGames] Error while closing the connection...");
+					.println("Error while closing the connection...");
 		} catch (NullPointerException ex) {
 			System.err
-					.println("[BukkitGames] Error while closing the connection...");
+					.println("Error while closing the connection...");
 		}
 
 		if(!SQL_DSC){
 			
-			log.info("[BukkitGames] Reconnecting with MySQL database...");
+			log.info("Reconnecting with MySQL database...");
 			SQLconnect();
 		}
 	}
@@ -912,20 +917,23 @@ public class BGMain extends JavaPlugin {
 			r.close();
 			return PL_ID;
 		} catch (SQLException ex) {
-			System.err.println("[BukkitGames] Error with following query: "
+			System.err.println("Error with following query: "
 					+ "SELECT `POINTS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
 					+ playerID + " ;");
-			System.err.println("[BukkitGames] MySQL-Error: " + ex.getMessage());
+			System.err.println("MySQL-Error: " + ex.getMessage());
 			return null;
 		} catch (NullPointerException ex) {
 			System.err
-					.println("[BukkitGames] Error while performing a query. (NullPointerException)");
+					.println("Error while performing a query. (NullPointerException)");
 			return null;
 		}
 	}
 	
-	public File  getPFile() {
-		
+	public static Logger getPluginLogger() {
+		return plugin.getLogger();
+	}
+	
+	public File getPFile() {
 		return getFile();
 	}
 }

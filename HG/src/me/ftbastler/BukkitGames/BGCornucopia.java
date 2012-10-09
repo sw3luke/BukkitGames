@@ -17,7 +17,7 @@ public class BGCornucopia {
 	private static BGMain plugin;
 	private static Block mainBlock;
 	private static Integer radius = 10;
-	private static Logger log = Logger.getLogger("Minecraft");
+	private static Logger log = BGMain.getPluginLogger();
 	
 	public BGCornucopia(BGMain plugin) {
 		BGCornucopia.plugin = plugin;
@@ -42,7 +42,7 @@ public class BGCornucopia {
 		Location loc = mainBlock.getLocation();
 		Integer r = radius;
 	               
-		log.info("[BukkitGames] Generating the cornucopia.");	    
+		log.info("Generating the cornucopia.");	    
 	    
 	    for (double x = -r; x <= r; x++) {
 	        for (double z = -r; z <= r; z++) {
@@ -133,7 +133,10 @@ public class BGCornucopia {
 				Chest chest = (Chest) c.getBlock().getState();
 				
 				while(amount > 0) {
-					chest.getInventory().addItem(i);
+					Integer slot = r.nextInt(27);
+					if(chest.getInventory().getItem(slot) != null)
+						i.setAmount(i.getAmount() + 1);
+					chest.getInventory().setItem(slot, i);
 					amount--;
 				}
 				

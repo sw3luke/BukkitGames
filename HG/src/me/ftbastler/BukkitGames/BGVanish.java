@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 public class BGVanish {
 	private static BGMain plugin;
-	Logger log = Logger.getLogger("Minecraft");
+	Logger log = BGMain.getPluginLogger();
 	static ArrayList<String> vanished = new ArrayList<String>();
 
 	public BGVanish(BGMain ins) {

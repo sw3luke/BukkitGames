@@ -18,7 +18,7 @@ public class BGFeast {
 	private static BGMain plugin;
 	private static Block mainBlock = null;
 	private static Integer radius = 8;
-	private static Logger log = Logger.getLogger("Minecraft");
+	private static Logger log = BGMain.getPluginLogger();
 	private static Boolean spawned = false;
 	
 	public BGFeast(BGMain plugin) {	
@@ -133,7 +133,7 @@ public class BGFeast {
 		Location loc = mainBlock.getLocation();
 		Integer r = radius;
 	               
-		log.info("[BukkitGames] Generating feast.");	    
+		log.info("Generating feast.");	    
 	    
 	    for (double x = -r; x <= r; x++) {
 	        for (double z = -r; z <= r; z++) {

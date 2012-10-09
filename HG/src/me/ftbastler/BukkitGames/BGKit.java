@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,17 +16,20 @@ import org.bukkit.potion.PotionEffectType;
 
 public class BGKit {
 	private static BGMain plugin;
-	static Logger log = Logger.getLogger("Minecraft");
+	static Logger log = BGMain.getPluginLogger();
 	static HashMap<Player, String> KIT = new HashMap<Player, String>();
 	public static ArrayList<String> kits = new ArrayList<String>();
 
-	public BGKit(BGMain instan) {
-		plugin = instan;
+	public BGKit(BGMain instance) {
+		plugin = instance;
 		
 		List<String> kitList = BGFiles.kitconf.getStringList("KITS");
 		for(String kit : kitList) {
 			kit = kit.toLowerCase();
-			kits.add(kit);
+			if(kit == "default")
+				log.warning("There can not be a kit with the name 'default'!");
+			else
+				kits.add(kit);
 		}
 	}
 
@@ -41,9 +45,10 @@ public class BGKit {
 				p.getInventory().addItem(
 						new ItemStack[] { new ItemStack(Material.COMPASS, 1) });
 			}
+			
 			if (plugin.DEFAULT_KIT) {
-				
 				ConfigurationSection def = BGFiles.kitconf.getConfigurationSection("default");
+				setKitDisplayName(p, "Default");
 				
 				List<String> kititems = def.getStringList("ITEMS");
 				for (String item : kititems) {
@@ -206,6 +211,7 @@ public class BGKit {
 
 	public static void setKit(Player player, String kitname) {
 		kitname = kitname.toLowerCase();
+		kitname = kitname.replace(".", "");
 		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname);
 
 		if (kit == null  && !kits.contains(kitname)) {
@@ -221,34 +227,38 @@ public class BGKit {
 				KIT.remove(player);
 			}
 
-			kitname = kitname.replace(".", "");
 			KIT.put(player, kitname);
 			char[] stringArray = kitname.toCharArray();
 			stringArray[0] = Character.toUpperCase(stringArray[0]);
 			kitname = new String(stringArray);
 			BGChat.printPlayerChat(player, "You have chosen " + kitname
 					+ " as your kit.");
+			
+			setKitDisplayName(player, kitname);
 
-			if (plugin.winner(player))
-				player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.GOLD
-						+ player.getName() + ChatColor.WHITE);
-			else if (player.hasPermission("bg.admin.color")
-					|| player.hasPermission("bg.admin.*"))
-				player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.RED
-						+ player.getName() + ChatColor.WHITE);
-			else if (player.hasPermission("bg.vip.color")
-					|| player.hasPermission("bg.vip.*"))
-				player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.BLUE
-						+ player.getName() + ChatColor.WHITE);
-			else
-				player.setDisplayName("§8[" + kitname + "] §r"
-						+ ChatColor.WHITE + player.getName() + ChatColor.WHITE);
 		} else {
 			BGChat.printPlayerChat(player, plugin.NO_KIT_MSG);
 			return;
 		}
 	}
 
+	private static void setKitDisplayName(Player player, String kitname) {
+		if (plugin.winner(player))
+			player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.GOLD
+					+ player.getName() + ChatColor.WHITE);
+		else if (player.hasPermission("bg.admin.color")
+				|| player.hasPermission("bg.admin.*"))
+			player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.RED
+					+ player.getName() + ChatColor.WHITE);
+		else if (player.hasPermission("bg.vip.color")
+				|| player.hasPermission("bg.vip.*"))
+			player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.BLUE
+					+ player.getName() + ChatColor.WHITE);
+		else
+			player.setDisplayName("§8[" + kitname + "] §r"
+					+ ChatColor.WHITE + player.getName() + ChatColor.WHITE);
+	}
+	
 	public static Boolean hasAbility(Player player, Integer ability) {
 		
 		if (!KIT.containsKey(player)) {

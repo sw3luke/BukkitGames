@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class BGCommand implements CommandExecutor {
-	Logger log = Logger.getLogger("Minecraft");
+	Logger log = BGMain.getPluginLogger();
 	private BGMain plugin;
 
 	public BGCommand(BGMain plugin) {
@@ -18,7 +18,7 @@ public class BGCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			this.log.info("[BukkitGames] This command can only be accessed by players!");
+			this.log.info("This command can only be accessed by players!");
 			return true;
 		}
 		Player p = (Player) sender;
@@ -467,19 +467,18 @@ public class BGCommand implements CommandExecutor {
 		}
 		
 		if(cmd.getName().equalsIgnoreCase("bgversion")) {
-			
 			if(p.hasPermission("bg.admin.check")) {
-				
+				if(plugin.getDescription().getVersion().contains("-DEV")) {
+					BGChat.printPlayerChat(p, "§7Current DEV-version of The BukkitGames: " + plugin.getDescription().getVersion());
+					return true;
+				}
 				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-				
 				if (update) {
 					String newversion = updater.getLatestVersionString();
-					long size = updater.getFileSize();
-					BGChat.printPlayerChat(p, "§aUpdate available: " + newversion + " (" + size + " bytes). §r/bgdownload");
-					
-				}else {
-					BGChat.printPlayerChat(p, "§7Curren version of The BukkitGames: " + plugin.getDescription().getVersion());
+					BGChat.printPlayerChat(p, "§aUpdate available: " + newversion + " §r/bgdownload");
+				} else {
+					BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + plugin.getDescription().getVersion());
 				}
 			} else {
 				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
@@ -488,21 +487,18 @@ public class BGCommand implements CommandExecutor {
 		}
 		
 		if(cmd.getName().equalsIgnoreCase("bgdownload")) {
-			
 			if(p.hasPermission("bg.admin.download")) {
-				
 				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				
 				if(update) {
-					
-					BGChat.printPlayerChat(p, "§7Starting download of the new version...");
+					BGChat.printPlayerChat(p, "§7Downloading new version...");
 					Updater download = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
 					
 					if(download.getResult() == Updater.UpdateResult.SUCCESS)
 						BGChat.printPlayerChat(p, "§aDownload complete! §7Regenerate all config files!");
 					else
-						BGChat.printPlayerChat(p, "§cOoops! Something went wrong. See console error log!");
+						BGChat.printPlayerChat(p, "§cOops! Something went wrong. See console error log!");
 				}else {
 					
 					BGChat.printPlayerChat(p, "§7There is no update available to download!");

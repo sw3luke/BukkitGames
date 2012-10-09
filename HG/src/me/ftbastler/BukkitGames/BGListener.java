@@ -64,7 +64,7 @@ import org.bukkit.util.Vector;
 import pgDev.bukkit.DisguiseCraft.Disguise.MobType;
 
 public class BGListener implements Listener {
-	Logger log = Logger.getLogger("Minecraft");
+	Logger log = BGMain.getPluginLogger();
 	private BGMain plugin;
 	private String last_quit;
 	private String last_headshot;
@@ -505,7 +505,7 @@ public class BGListener implements Listener {
 			p.setPlayerListName(p.getName());
 			p.setDisplayName(p.getName());
 		}
-
+		
 		//Creating a written book.
 		List<String> pages = BGFiles.bookconf.getStringList("content");
 		List<String> content = new ArrayList<String>();
@@ -548,25 +548,21 @@ public class BGListener implements Listener {
 		}
 		
 		if (plugin.ADV_REW) {
-			
 			Integer PL_ID = plugin.getPlayerID(playerName);
-			
 			if (PL_ID == null) {
-				
 				plugin.reward.createUser(playerName);
 			}
 		}
 		
 		if(p.hasPermission("bg.admin.check")) {
+			if(!plugin.getDescription().getVersion().contains("-DEV")) {
+				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			
-			Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, true);
-			
-			boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-			
-			if (update) {
-				String newversion = updater.getLatestVersionString();
-				long size = updater.getFileSize();
-				BGChat.printPlayerChat(p, "§bUpdate available: " + newversion + " (" + size + " bytes) §r/bgdownload");
+				if (update) {
+					String newversion = updater.getLatestVersionString();
+					BGChat.printPlayerChat(p, "§bUpdate available: " + newversion + " §r/bgdownload");
+				}
 			}
 		}
 	}

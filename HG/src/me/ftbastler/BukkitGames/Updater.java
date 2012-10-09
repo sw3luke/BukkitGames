@@ -7,13 +7,17 @@ import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
+
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -30,6 +34,8 @@ import org.bukkit.plugin.Plugin;
  * If you are unsure about these rules, please read the plugin submission guidelines: http://goo.gl/8iU5l
  * 
  * @author H31IX
+ * 
+ * Customized by the BukkitGames.
  */
 
 public class Updater 
@@ -50,6 +56,7 @@ public class Updater
     private static final int BYTE_SIZE = 1024; // Used for downloading files
     private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that downloads will be placed in
     private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS; // Used for determining the outcome of the update process
+    private Logger log = BGMain.getPluginLogger();
     
     // Strings for reading RSS
     private static final String TITLE = "title";
@@ -189,8 +196,8 @@ public class Updater
         catch (MalformedURLException ex) 
         {
             // The slug doesn't exist
-            plugin.getLogger().warning("The author of this plugin has misconfigured their Auto Update system");
-            plugin.getLogger().warning("The project slug added ('" + slug + "') is invalid, and does not exist on dev.bukkit.org");
+            log.warning("The author of this plugin has misconfigured their Auto Update system");
+            log.warning("The project slug added ('" + slug + "') is invalid, and does not exist on dev.bukkit.org");
             result = Updater.UpdateResult.FAIL_BADSLUG; // Bad slug! Bad!
         }
         if(url != null)
@@ -264,7 +271,7 @@ public class Updater
 
             byte[] data = new byte[BYTE_SIZE];
             int count;
-            if(announce) plugin.getLogger().info("About to download a new update: " + versionTitle);
+            if(announce) log.info("About to download a new update: " + versionTitle);
             long downloaded = 0;
             while ((count = in.read(data, 0, BYTE_SIZE)) != -1)
             {
@@ -273,7 +280,11 @@ public class Updater
                 int percent = (int) (downloaded * 100 / fileLength);
                 if(announce & (percent % 5 == 0))
                 {
-                    plugin.getLogger().info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
+                    log.info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
+                    for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+                    	if(p.hasPermission("bg.admin.download"))
+                    		BGChat.printPlayerChat(p, "§aDownloading update: " + percent + "% of " + fileLength + " bytes.");
+                    }
                 }
             }
             //Just a quick check to make sure we didn't leave any files from last time...
@@ -291,11 +302,20 @@ public class Updater
                 // Unzip
                 unzip(dFile.getCanonicalPath());
             }
-            if(announce) plugin.getLogger().info("Finished updating.");
+            
+            try {
+                if(announce) log.info("Copying old configs into 'plugins/" + updateFolder + "/BukkitGames_old/'.");
+                copyDirectory(plugin.getDataFolder(), new File("plugins/" + updateFolder + "/BukkitGames_old/"));
+            } catch (Exception ex) {
+            	log.warning(ex.getMessage());
+            }
+            
+            if(announce) log.info("Finished updating. Reloading server.");
+            Bukkit.getServer().reload();
         }
         catch (Exception ex)
         {
-            plugin.getLogger().warning("The auto-updater tried to download a new update, but was unsuccessful."); 
+            log.warning("The auto-updater tried to download a new update, but was unsuccessful."); 
             result = Updater.UpdateResult.FAIL_DOWNLOAD;
         }
         finally
@@ -316,6 +336,32 @@ public class Updater
             }
         }
     }
+	
+	private void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
+		if (sourceLocation.isDirectory()) {
+			if (!targetLocation.exists()) {
+				targetLocation.mkdir();
+			}
+
+			String[] children = sourceLocation.list();
+			for (int i = 0; i < children.length; i++) {
+				File sfile = new File(sourceLocation, children[i]);
+				File tfile = new File(targetLocation, children[i]);
+				copyDirectory(sfile, tfile);
+			}
+		} else {
+			InputStream in = new FileInputStream(sourceLocation);
+			OutputStream out = new FileOutputStream(targetLocation);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+			sourceLocation.delete();
+		}
+	}
     
     /**
      * Part of Zip-File-Extractor, modified by H31IX for use with Bukkit
@@ -405,7 +451,7 @@ public class Updater
         catch(IOException ex)
         {
             ex.printStackTrace();
-            plugin.getLogger().warning("The auto-updater tried to unzip a new update file, but was unsuccessful."); 
+            log.warning("The auto-updater tried to unzip a new update file, but was unsuccessful."); 
             result = Updater.UpdateResult.FAIL_DOWNLOAD;     
         } 
         new File(file).delete();
@@ -472,7 +518,7 @@ public class Updater
         catch (Exception ex)
         {
             ex.printStackTrace();
-            plugin.getLogger().warning("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
+            log.warning("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
             result = Updater.UpdateResult.FAIL_DBO;
             return null;            
         }
@@ -500,9 +546,9 @@ public class Updater
             else
             {
                 // The file's name did not contain the string 'vVersion'
-                plugin.getLogger().warning("The author of this plugin has misconfigured their Auto Update system");
-                plugin.getLogger().warning("Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
-                plugin.getLogger().warning("Please notify the author (" + plugin.getDescription().getAuthors().get(0) + ") of this error.");
+                log.warning("The author of this plugin has misconfigured their Auto Update system");
+                log.warning("Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
+                log.warning("Please notify the author (" + plugin.getDescription().getAuthors().get(0) + ") of this error.");
                 result = Updater.UpdateResult.FAIL_NOVERSION;
                 return false;
             }

@@ -10,7 +10,7 @@ public class BGFiles {
 	
 	private static BGMain plugin;
 	
-	Logger log = Logger.getLogger("Minecraft");
+	Logger log = BGMain.getPluginLogger();
 	
 	static FileConfiguration abconf;
 	static FileConfiguration bookconf;
@@ -101,7 +101,7 @@ public class BGFiles {
 		}
 		
 		if(creation > 0)
-			log.info("[BukkitGames] Created " + creation + " files.");
+			log.info("Created " + creation + " files.");
 		
 		
 		//Save files in variables
