@@ -120,7 +120,7 @@ public class BGCornucopia {
 		Block block;
 		
 		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
+		loc.setY(loc.getY()+2);
 		loc.setX(loc.getX()+1);
 		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
 		block.setType(Material.CHEST);
@@ -143,7 +143,7 @@ public class BGCornucopia {
 		chests[2] = (Chest) block.getState();
 		
 		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
+		loc.setY(loc.getY()+2);
 		loc.setX(loc.getX()-1);
 		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
 		block.setType(Material.CHEST);
@@ -168,14 +168,14 @@ public class BGCornucopia {
 		
 		
 		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
+		loc.setY(loc.getY()+2);
 		loc.setZ(loc.getZ()+1);
 		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
 		block.setType(Material.CHEST);
 		chests[6] = (Chest) block.getState();
 		
 		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
+		loc.setY(loc.getY()+2);
 		loc.setZ(loc.getZ()-1);
 		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
 		block.setType(Material.CHEST);
