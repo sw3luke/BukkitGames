@@ -98,14 +98,17 @@ public class BGFeast {
 			if(plugin.FEAST_CHESTS) {
 				while(c.getBlock().getType() == Material.CHEST) {
 					c = mainBlock.getLocation();
-					c.add(-8 + r.nextInt(16), 1, -8 + r.nextInt(16));
+					c.add(-radius + r.nextInt(16), 1, -radius + r.nextInt(16));
 				}
 				
 				c.getBlock().setType(Material.CHEST);
 				Chest chest = (Chest) c.getBlock().getState();
 				
 				while(amount > 0) {
-					chest.getInventory().addItem(i);
+					Integer slot = r.nextInt(27);
+					if(chest.getInventory().getItem(slot) != null)
+						i.setAmount(i.getAmount() + 1);
+					chest.getInventory().setItem(slot, i);
 					amount--;
 				}
 				
@@ -150,7 +153,7 @@ public class BGFeast {
 		Location loc = block.getLocation();
 		loc.setY(loc.getY()+1);
 		Block newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		while(loc.getY() < 256) {
+		while(loc.getY() < Bukkit.getServer().getWorld("world").getMaxHeight()) {
 			newBlock.setType(Material.AIR);
 			loc.setY(loc.getY()+1);
 			newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
