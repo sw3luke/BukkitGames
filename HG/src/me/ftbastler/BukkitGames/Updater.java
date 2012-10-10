@@ -304,8 +304,9 @@ public class Updater
             }
             
             try {
-                if(announce) log.info("Copying old configs into 'plugins/" + updateFolder + "/BukkitGames_old/'.");
-                copyDirectory(plugin.getDataFolder(), new File("plugins/" + updateFolder + "/BukkitGames_old/"));
+                if(announce) log.info("Moving old configs into 'plugins/" + updateFolder + "/The_BukkitGames-old/'.");
+                copyDirectory(plugin.getDataFolder(), new File("plugins/" + updateFolder + "/The_BukkitGames-old/"));
+                copy(plugin.getResource("auto_update.txt"), new File(plugin.getDataFolder(), "AUTO-UPDATE-INFO.txt"));
             } catch (Exception ex) {
             	log.warning(ex.getMessage());
             }
@@ -337,6 +338,21 @@ public class Updater
         }
     }
 	
+	public void copy(InputStream in, File file) {
+		try {
+			OutputStream out = new FileOutputStream(file);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			out.close();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+    
 	private void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
 		if (sourceLocation.isDirectory()) {
 			if (!targetLocation.exists()) {
