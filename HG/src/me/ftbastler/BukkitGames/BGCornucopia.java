@@ -67,10 +67,12 @@ public class BGCornucopia {
 		
 		Block block = loc.getBlock();
 		block.setType(m);
-		for(int i = 1; i < 4; i++) {
+		for(int i = 1; i < 3; i++) {
 			loc.setY(loc.getY() +1);
 			Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
 		}
+		loc.setY(loc.getY() +1);
+		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
 		
 		loc = mainBlock.getLocation();
 		loc.setY(loc.getY()+1);
@@ -108,7 +110,7 @@ public class BGCornucopia {
 		Location loc = block.getLocation();
 		loc.setY(loc.getY()+1);
 		Block newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		while(loc.getY() < 256) {
+		while(loc.getY() < Bukkit.getServer().getWorld("world").getMaxHeight()) {
 			newBlock.setType(Material.AIR);
 			loc.setY(loc.getY()+1);
 			newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
@@ -184,6 +186,8 @@ public class BGCornucopia {
 	
 	public static void spawnItems() {
 		List<String> items = BGFiles.cornconf.getStringList("ITEMS");
+		if(plugin.CORNUCOPIA_CHESTS)
+			spawnChests();
 		for(String item : items) {
 			String[] oneitem = item.split(",");
 			Random r = new Random();
@@ -219,29 +223,25 @@ public class BGCornucopia {
 				i.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(oneitem[4])), Integer.parseInt(oneitem[5]));
 						
 			Integer ra = radius;
-			Location c = mainBlock.getLocation();
-			c.add(-(ra/2) + r.nextInt(ra), 1, -(ra/2) + r.nextInt(ra));
 			
 			if(maxamount == minamount)
 				amount = maxamount;
 			else
 				amount = minamount + r.nextInt(maxamount - minamount + 1);
 			
-			if(plugin.CORNUCOPIA_CHESTS) {
-				spawnChests();
-				
-				Chest chest = chests[r.nextInt(8)];
-				
+			if(plugin.CORNUCOPIA_CHESTS) {				
 				while(amount > 0) {
+					Chest chest = chests[r.nextInt(8)];
 					Integer slot = r.nextInt(27);
 					if(chest.getInventory().getItem(slot) != null)
 						i.setAmount(i.getAmount() + 1);
 					chest.getInventory().setItem(slot, i);
+					chest.update();
 					amount--;
 				}
-				
-				chest.update();
 			} else {
+				Location c = mainBlock.getLocation();
+				c.add(-(ra/2) + r.nextInt(ra), 1, -(ra/2) + r.nextInt(ra));
 				while(amount > 0) {
 					Bukkit.getServer().getWorld("world").dropItemNaturally(c, i).setPickupDelay(20 * 5);
 					amount--;
