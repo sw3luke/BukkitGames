@@ -268,8 +268,12 @@ public class BGListener implements Listener {
 			if ((shooter instanceof Player)) {
 				Player player = (Player) shooter;
 				if (BGKit.hasAbility(player, Integer.valueOf(1))) {
-					Bukkit.getServer().getWorld("world")
-							.createExplosion(arrow.getLocation(), 2.0F);
+					if(BGFeast.isFeastBlock(arrow.getLocation().getBlock()) || BGCornucopia.isCornucopiaBlock(arrow.getLocation().getBlock())) {
+						BGChat.printPlayerChat(player, "§cYou can't destroy this block!");
+						arrow.remove();
+						return;
+					}
+					Bukkit.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F);
 					arrow.remove();
 				} else {
 					return;
