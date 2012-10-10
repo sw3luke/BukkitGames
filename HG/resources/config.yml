@@ -13,7 +13,7 @@ TIME:
   
 # Define the messages.
 MESSAGE:
-  WORLD_BORDER: You have reached the Worldborder!
+  WORLD_BORDER: You have reached the WorldBorder!
   SERVER_FULL: The server is full.
   GAME_PROGRESS: Game is in progress.
   MOTD_PROGRESS: Game is in progress.
@@ -26,25 +26,24 @@ MESSAGE:
 # Toggle the advanced chat-system. (HUD chat-system)
 ADVANCED_CHAT: true
 
-# Show this 6 tips throughout the game?
+# Show tips throughout the game?
 SHOW_TIPS: true 
   
-# No more than 6 tips displayed periodically throughout the game.
-TIP:
-  '1': Some kits have special abilities.
-  '2': This server runs the BukkitGames plugin.
-  '3': GameMakers are invisible!
-  '4': Get help by typing in /help.
-  '5': Get information about a kit with /kitinfo [KitName].
-  '6': This server runs the BukkitGames plugin.
+# Add a line for each tip you want to display.
+TIPS:
+  - 'Some kits have special abilities.'
+  - 'This server runs the BukkitGames plugin.'
+  - 'GameMakers are invisible!'
+  - 'Get help by typing in /help.'
+  - 'Get information about a kit with /kitinfo [KitName].'
   
-#Advcanced Abilities (DisguiseCraft needed!)
+# Advcanced Abilities (DisguiseCraft needed!)
 ADVANCED_ABILITIES: false
 
-#Spawn cornucopia on start (see cornucopia.yml)
+# Spawn cornucopia on start (see cornucopia.yml)
 CORNUCOPIA: true
 
-#Spawn feast (see feast.yml)
+# Spawn feast (see feast.yml)
 FEAST: true
 
 # Radius of the world...
@@ -75,17 +74,17 @@ REGEN_WORLD: true
 # If true, each player starts at a random spot. (May causes lag on some servers!)
 RANDOM_START: false
 
-#Simple Reward (Last Winner gets all Kits for one Round)
+# Simple Reward (Last Winner gets all Kits for one Round)
 SIMPLE_REWARD: true
 
-#Advanced Winner-Reward-System (Mysql Database needed!, Configuration in reward.yml)
+# Advanced Winner-Reward-System (Mysql Database needed!, Configuration in reward.yml)
 ADVANCED_REWARD: false
 
-#For one win Player get on Point (ADVANCED_REWARD must be enabled!)
-#How many points are needed for 1 Coin?
+# For one win Player get on Point (ADVANCED_REWARD must be enabled!)
+# How many points are needed for 1 Coin?
 POINTS_FOR_COIN: 5
 
-#If enabled, players can join server during the game and act like spectators
+# If enabled, players can join server during the game and act like spectators
 SPECTATOR_SYSTEM: false
 
 # Weather to use a MySQL database for statistics. (leaderboard.yml will still be used!)

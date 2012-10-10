@@ -381,12 +381,6 @@ public class BGMain extends JavaPlugin {
 		this.COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		this.AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		this.STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
-		BGChat.tip1 = getConfig().getString("TIP.1");
-		BGChat.tip2 = getConfig().getString("TIP.2");
-		BGChat.tip3 = getConfig().getString("TIP.3");
-		BGChat.tip4 = getConfig().getString("TIP.4");
-		BGChat.tip5 = getConfig().getString("TIP.5");
-		BGChat.tip6 = getConfig().getString("TIP.6");
 		
 		
 		if (ADV_ABI) {
