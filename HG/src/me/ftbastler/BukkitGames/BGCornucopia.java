@@ -28,11 +28,10 @@ public class BGCornucopia {
 		BGCornucopia.mainBlock = BGCornucopia.getCornSpawnBlock();
 		mainBlock.setType(Material.DIAMOND_BLOCK);
 		removeAbove(mainBlock);
-		
 		createFloor(Material.GOLD_BLOCK);
 		
 		if(plugin.CORNUCOPIA_CHESTS)
-			createPile(Material.DIAMOND_BLOCK);
+			createCornucopia();
 	}
 	
 	private static Block getCornSpawnBlock() {
@@ -60,46 +59,114 @@ public class BGCornucopia {
 	    
 	}
 	
-	private static void createPile(Material m) {
-		
+	/**
+	 * <b>Copyright</b> 2012 by ftbastler
+	 * @author ftbastler
+	*/
+	private static void createCornucopia() {
 		Location loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
+		loc.add(-3, 1, -3);
+		Integer curchest = 0;
 		
-		Block block = loc.getBlock();
-		block.setType(m);
-		for(int i = 1; i < 3; i++) {
-			loc.setY(loc.getY() +1);
-			Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
+		//-2: new layer; -1: new row; 0: air; 1: block; 
+		// 2: chest; 3: enchanting table; 4: fence
+		Integer[] co = {0, 0, 0, 0, 0, 0, 0, -1,
+						0, 4, 2, 1, 2, 4, 0, -1,
+						0, 2, 1, 1, 1, 2, 0, -1,
+						0, 1, 1, 1, 1, 1, 0, -1,
+						0, 2, 1, 1, 1, 2, 0, -1,
+						0, 4, 2, 1, 2, 4, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2,
+						
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 4, 0, 0, 0, 4, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 3, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 4, 0, 0, 0, 4, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2,
+						
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 4, 0, 0, 0, 4, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 4, 0, 0, 0, 4, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2,
+						
+						0, 0, 1, 1, 1, 0, 0, -1,
+						1, 1, 1, 1, 1, 1, 1, -1,
+						1, 1, 0, 0, 0, 1, 1, -1,
+						1, 1, 0, 0, 0, 1, 1, -1,
+						1, 1, 0, 0, 0, 1, 1, -1,
+						0, 1, 1, 1, 1, 1, 0, -1,
+						0, 0, 1, 1, 1, 0, 0, -2,
+						
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 1, 0, 0, 0, -1,
+						0, 0, 1, 1, 1, 0, 0, -1,
+						0, 1, 1, 0, 1, 1, 0, -1,
+						0, 0, 1, 1, 1, 0, 0, -1,
+						0, 0, 0, 1, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2,
+						
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 1, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2};
+		
+		for(Integer i : co) {
+			Material m = Material.AIR;
+			switch (i) {
+			case 0:
+				m = Material.AIR;
+				break;
+			case 1:
+				m = Material.IRON_BLOCK;
+				break;
+			case 2:
+				m = Material.CHEST;
+				break;
+			case 3:
+				m = Material.ENCHANTMENT_TABLE;
+				break;
+			case 4:
+				m = Material.FENCE;
+				break;
+			case -1:
+				break;
+			case -2:
+				break;
+			default:
+				log.warning("Illegal integer found while creating cornucopia: " + i.toString());
+				break;
+			}
+			
+			if(i == -1) {
+				loc.add(0, 0, 1);
+				loc.subtract(7, 0, 0);
+			} else if(i == -2) {
+				loc.add(0, 1, 0);
+				loc.subtract(7, 0, 6);
+			} else {
+				loc.getBlock().setType(m);
+				if(m == Material.CHEST) {
+					chests[curchest] = (Chest) loc.getBlock().getState();
+					if(curchest < 8) curchest++;
+				}
+				loc.add(1, 0, 0);
+			}
 		}
-		loc.setY(loc.getY() +1);
-		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setX(loc.getX()+1);
-		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setX(loc.getX()-1);
-		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setZ(loc.getZ()+1);
-		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setZ(loc.getZ()-1);
-		Bukkit.getServer().getWorld("world").getBlockAt(loc).setType(m);
 	}
 	
 	public static Boolean isCornucopiaBlock(Block b) {		
 		if(!plugin.CORNUCOPIA)
 			return false;
 
-		if(b.getLocation().distance(mainBlock.getLocation()) <= radius + 3)
+		if(b.getLocation().distance(mainBlock.getLocation()) <= radius + 5)
 			return true;
 
 		return false;
@@ -117,77 +184,8 @@ public class BGCornucopia {
 		}
 	}
 	
-	public static void spawnChests() {
-		Location loc;
-		Block block;
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+2);
-		loc.setX(loc.getX()+1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[0] = (Chest) block.getState();
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setX(loc.getX()+1);
-		loc.setZ(loc.getZ()+1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[1] = (Chest) block.getState();
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setX(loc.getX()+1);
-		loc.setZ(loc.getZ()-1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[2] = (Chest) block.getState();
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+2);
-		loc.setX(loc.getX()-1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[3] = (Chest) block.getState();
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setX(loc.getX()-1);
-		loc.setZ(loc.getZ()+1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[4] = (Chest) block.getState();
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+1);
-		loc.setX(loc.getX()-1);
-		loc.setZ(loc.getZ()-1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[5] = (Chest) block.getState();
-		
-		
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+2);
-		loc.setZ(loc.getZ()+1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[6] = (Chest) block.getState();
-		
-		loc = mainBlock.getLocation();
-		loc.setY(loc.getY()+2);
-		loc.setZ(loc.getZ()-1);
-		block = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		block.setType(Material.CHEST);
-		chests[7] = (Chest) block.getState();
-	}
-	
 	public static void spawnItems() {
 		List<String> items = BGFiles.cornconf.getStringList("ITEMS");
-		if(plugin.CORNUCOPIA_CHESTS)
-			spawnChests();
 		for(String item : items) {
 			String[] oneitem = item.split(",");
 			Random r = new Random();
