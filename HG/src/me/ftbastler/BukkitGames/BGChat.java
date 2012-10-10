@@ -1,5 +1,6 @@
 package me.ftbastler.BukkitGames;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,13 +12,8 @@ import org.bukkit.entity.Player;
 
 public class BGChat {
 	private static BGMain plugin;
-	static String tip1 = "";
-	static String tip2 = "";
-	static String tip3 = "";
-	static String tip4 = "";
-	static String tip5 = "";
-	static String tip6 = "";
-	static Integer TIP_COUNT = Integer.valueOf(0);
+	static Integer TIP_COUNT = 0;
+	static ArrayList<String> TIPS = new ArrayList<String>();
 
 	static String TIMER_MSG = ""; 
 	static String DEATH_MSG = ""; 
@@ -28,7 +24,7 @@ public class BGChat {
 	static HashMap<Player, String> KITINFO_CHAT = new HashMap<Player, String>();
 	static String[] CHAT_MSG = new String[6];
 	static HashMap<Integer, String> ABILITY_DESC = new HashMap<Integer, String>();
-
+	
 	static Boolean update = true;
 
 	public BGChat(BGMain ins) {
@@ -69,6 +65,10 @@ public class BGChat {
 		ABILITY_DESC.put(19, BGFiles.abconf.getString("AB.19.Desc"));
 		ABILITY_DESC.put(20, BGFiles.abconf.getString("AB.20.Desc"));
 		ABILITY_DESC.put(21, BGFiles.abconf.getString("AB.21.Desc"));
+		
+		List<String> tiplist = BGFiles.config.getStringList("TIPS");
+		for(String tip : tiplist)
+			TIPS.add(tip);
 		
 	}
 
@@ -279,34 +279,11 @@ public class BGChat {
 	}
 
 	public static void printTipChat() {
-		String tip = "";
-
-		switch (TIP_COUNT.intValue()) {
-		case 0:
-			tip = tip1;
-			TIP_COUNT = Integer.valueOf(TIP_COUNT.intValue() + 1);
-			break;
-		case 1:
-			tip = tip2;
-			TIP_COUNT = Integer.valueOf(TIP_COUNT.intValue() + 1);
-			break;
-		case 2:
-			tip = tip3;
-			TIP_COUNT = Integer.valueOf(TIP_COUNT.intValue() + 1);
-			break;
-		case 3:
-			tip = tip4;
-			TIP_COUNT = Integer.valueOf(TIP_COUNT.intValue() + 1);
-			break;
-		case 4:
-			tip = tip5;
-			TIP_COUNT = Integer.valueOf(TIP_COUNT.intValue() + 1);
-			break;
-		case 5:
-			tip = tip6;
-			TIP_COUNT = Integer.valueOf(0);
-		}
-
+		if(TIPS.size() - 1 < TIP_COUNT)
+			TIP_COUNT = 0;
+		
+		String tip = TIPS.get(TIP_COUNT);
+		TIP_COUNT++;
 		if (plugin.ADV_CHAT_SYSTEM) {
 			INFO_MSG = "[TIP] " + tip;
 			updateChat();
