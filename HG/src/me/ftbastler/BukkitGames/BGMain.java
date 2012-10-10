@@ -845,19 +845,17 @@ public class BGMain extends JavaPlugin {
 
 	public void SQLconnect() {
 		try {
-			System.out.println("Connecting to MySQL database...");
+			log.info("Connecting to MySQL database...");
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String conn = "jdbc:mysql://" + SQL_HOST + ":" + SQL_PORT + "/"
 					+ SQL_DATA;
 			con = DriverManager.getConnection(conn, SQL_USER, SQL_PASS);
 		} catch (ClassNotFoundException ex) {
-			System.err.println("No MySQL driver found!");
+			log.warning("No MySQL driver found!");
 		} catch (SQLException ex) {
-			System.err
-					.println("Error while fetching MySQL connection!");
+			log.warning("Error while fetching MySQL connection!");
 		} catch (Exception ex) {
-			System.err
-					.println("Unknown error while fetchting MySQL connection.");
+			log.warning("Unknown error while fetchting MySQL connection.");
 		}
 	}
 
@@ -871,30 +869,25 @@ public class BGMain extends JavaPlugin {
 			stmt.executeUpdate(sql);
 			stmt.close();
 		} catch (SQLException ex) {
-			System.err.println("Error with following query: "
+			log.warning("Error with following query: "
 					+ sql);
-			System.err.println("MySQL-Error: " + ex.getMessage());
+			log.warning("MySQL-Error: " + ex.getMessage());
 		} catch (NullPointerException ex) {
-			System.err
-					.println("Error while performing a query. (NullPointerException)");
+			log.warning("Error while performing a query. (NullPointerException)");
 		}
 	}
 
 	public void SQLdisconnect() {
 		try {
-			System.out
-					.println("Disconnecting from MySQL database...");
+			log.warning("Disconnecting from MySQL database...");
 			con.close();
 		} catch (SQLException ex) {
-			System.err
-					.println("Error while closing the connection...");
+			log.warning("Error while closing the connection...");
 		} catch (NullPointerException ex) {
-			System.err
-					.println("Error while closing the connection...");
+			log.warning("Error while closing the connection...");
 		}
 
 		if(!SQL_DSC){
-			
 			log.info("Reconnecting with MySQL database...");
 			SQLconnect();
 		}
@@ -917,14 +910,13 @@ public class BGMain extends JavaPlugin {
 			r.close();
 			return PL_ID;
 		} catch (SQLException ex) {
-			System.err.println("Error with following query: "
+			log.warning("Error with following query: "
 					+ "SELECT `POINTS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
 					+ playerID + " ;");
 			System.err.println("MySQL-Error: " + ex.getMessage());
 			return null;
 		} catch (NullPointerException ex) {
-			System.err
-					.println("Error while performing a query. (NullPointerException)");
+			log.warning("Error while performing a query. (NullPointerException)");
 			return null;
 		}
 	}
