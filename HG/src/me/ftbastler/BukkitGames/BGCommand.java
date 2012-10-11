@@ -468,10 +468,6 @@ public class BGCommand implements CommandExecutor {
 		
 		if(cmd.getName().equalsIgnoreCase("bgversion")) {
 			if(p.hasPermission("bg.admin.check")) {
-				if(plugin.getDescription().getVersion().contains("-DEV")) {
-					BGChat.printPlayerChat(p, "§7Current DEV-version of The BukkitGames: " + plugin.getDescription().getVersion());
-					return true;
-				}
 				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				if (update) {
