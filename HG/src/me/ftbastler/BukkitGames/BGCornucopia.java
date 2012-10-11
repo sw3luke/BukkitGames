@@ -231,6 +231,9 @@ public class BGCornucopia {
 				while(amount > 0) {
 					Chest chest = chests[r.nextInt(8)];
 					Integer slot = r.nextInt(27);
+					int maxtry = 0;
+					while(!chest.getInventory().getItem(slot).getType().equals(i.getType()) && maxtry < 1000)
+						slot = r.nextInt(27);
 					if(chest.getInventory().getItem(slot) != null)
 						i.setAmount(i.getAmount() + 1);
 					chest.getInventory().setItem(slot, i);
