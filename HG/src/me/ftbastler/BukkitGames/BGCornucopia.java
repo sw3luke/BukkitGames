@@ -156,7 +156,7 @@ public class BGCornucopia {
 				loc.subtract(7, 0, 6);
 			} else {
 				if (m == null){
-				
+					loc.add(1, 0, 0);
 				}else {
 					loc.getBlock().setType(m);
 					if(m == Material.CHEST) {
@@ -239,7 +239,8 @@ public class BGCornucopia {
 					Chest chest = chests[r.nextInt(8)];
 					Integer slot = r.nextInt(27);
 					int maxtry = 0;
-					while(!chest.getInventory().getItem(slot).getType().equals(i.getType()) && maxtry < 1000)
+					while(chest.getInventory().getItem(slot) !=null 
+							&&!chest.getInventory().getItem(slot).getType().equals(i.getType()) && maxtry < 1000)
 						slot = r.nextInt(27);
 					if(chest.getInventory().getItem(slot) != null)
 						i.setAmount(i.getAmount() + 1);
