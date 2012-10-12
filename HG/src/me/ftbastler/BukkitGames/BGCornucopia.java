@@ -69,7 +69,7 @@ public class BGCornucopia {
 		Integer curchest = 0;
 		
 		//-2: new layer; -1: new row; 0: air; 1: block; 
-		// 2: chest; 3: enchanting table; 4: fence
+		// 2: chest; 3: enchanting table; 4: fence; 5 : no change
 		Integer[] co = {0, 0, 0, 0, 0, 0, 0, -1,
 						0, 4, 2, 1, 2, 4, 0, -1,
 						0, 2, 1, 1, 1, 2, 0, -1,
@@ -136,6 +136,9 @@ public class BGCornucopia {
 			case 4:
 				m = Material.FENCE;
 				break;
+			case 5:
+				m = null;
+				break;
 			case -1:
 				break;
 			case -2:
@@ -152,12 +155,16 @@ public class BGCornucopia {
 				loc.add(0, 1, 0);
 				loc.subtract(7, 0, 6);
 			} else {
-				loc.getBlock().setType(m);
-				if(m == Material.CHEST) {
-					chests[curchest] = (Chest) loc.getBlock().getState();
-					if(curchest < 8) curchest++;
+				if (m == null){
+				
+				}else {
+					loc.getBlock().setType(m);
+					if(m == Material.CHEST) {
+						chests[curchest] = (Chest) loc.getBlock().getState();
+						if(curchest < 8) curchest++;
+					}
+					loc.add(1, 0, 0);
 				}
-				loc.add(1, 0, 0);
 			}
 		}
 	}

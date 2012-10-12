@@ -20,6 +20,7 @@ public class BGFeast {
 	private static Integer radius = 8;
 	private static Logger log = BGMain.getPluginLogger();
 	private static Boolean spawned = false;
+	private static Chest[] chests = new Chest[8];
 	
 	public BGFeast(BGMain plugin) {	
 		BGFeast.plugin = plugin;
@@ -50,6 +51,8 @@ public class BGFeast {
 		
 		DecimalFormat df = new DecimalFormat("##.#");
 		BGChat.printInfoChat("Feast spawned at X: " + df.format(mainBlock.getLocation().getX()) + " | Y: " + df.format(mainBlock.getLocation().getY()) + " | Z: " + df.format(mainBlock.getLocation().getZ()));
+		if(plugin.FEAST_CHESTS)
+			spawnChests();
 		
 		List<String> items = BGFiles.feastconf.getStringList("ITEMS");
 		for(String item : items) {
@@ -87,33 +90,28 @@ public class BGFeast {
 				i.addUnsafeEnchantment(Enchantment.getById(Integer.parseInt(oneitem[4])), Integer.parseInt(oneitem[5]));
 						
 			Integer ra = radius;
-			Location c = mainBlock.getLocation();
-			c.add(-(ra/2) + r.nextInt(ra), 1, -(ra/2) + r.nextInt(ra));
 			
 			if(maxamount == minamount)
 				amount = maxamount;
 			else
 				amount = minamount + r.nextInt(maxamount - minamount + 1);
 			
-			if(plugin.FEAST_CHESTS) {
-				while(c.getBlock().getType() == Material.CHEST) {
-					c = mainBlock.getLocation();
-					c.add(-radius + r.nextInt(16), 1, -radius + r.nextInt(16));
-				}
-				
-				c.getBlock().setType(Material.CHEST);
-				Chest chest = (Chest) c.getBlock().getState();
-				
+			if(plugin.CORNUCOPIA_CHESTS) {				
 				while(amount > 0) {
+					Chest chest = chests[r.nextInt(8)];
 					Integer slot = r.nextInt(27);
+					int maxtry = 0;
+					while(!chest.getInventory().getItem(slot).getType().equals(i.getType()) && maxtry < 1000)
+						slot = r.nextInt(27);
 					if(chest.getInventory().getItem(slot) != null)
 						i.setAmount(i.getAmount() + 1);
 					chest.getInventory().setItem(slot, i);
+					chest.update();
 					amount--;
 				}
-				
-				chest.update();
 			} else {
+				Location c = mainBlock.getLocation();
+				c.add(-(ra/2) + r.nextInt(ra), 1, -(ra/2) + r.nextInt(ra));
 				while(amount > 0) {
 					Bukkit.getServer().getWorld("world").dropItemNaturally(c, i).setPickupDelay(20 * 5);
 					amount--;
@@ -147,6 +145,150 @@ public class BGFeast {
 	        	}
 	        }
 	    }
+	    
+	    if(plugin.FEAST_CHESTS) {
+	    	createF();
+	    }
+	}
+	
+	private static void createF(){
+		Location loc = mainBlock.getLocation();
+		loc.add(-3, 1, -3);
+		Integer curchest = 0;
+		
+		//-2: new layer; -1: new row; 0: air; 1: block; 
+		// 2: chest; 3: enchanting table; 4: fence; 5 : no change
+		Integer[] co = {0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 1, 0, 0, 0, -1,
+						0, 0, 1, 1, 1, 0, 0, -1,
+						0, 1, 1, 1, 1, 1, 0, -1,
+						0, 0, 1, 1, 1, 0, 0, -1,
+						0, 0, 0, 1, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2,
+						
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 3, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2,};
+		
+		for(Integer i : co) {
+			Material m = Material.AIR;
+			switch (i) {
+			case 0:
+				m = Material.AIR;
+				break;
+			case 1:
+				m = Material.OBSIDIAN;
+				break;
+			case 2:
+				m = Material.CHEST;
+				break;
+			case 3:
+				m = Material.ENCHANTMENT_TABLE;
+				break;
+			case 4:
+				m = Material.FENCE;
+				break;
+			case 5:
+				m = null;
+				break;
+			case -1:
+				break;
+			case -2:
+				break;
+			default:
+				log.warning("Illegal integer found while creating Feast: " + i.toString());
+				break;
+			}
+			
+			if(i == -1) {
+				loc.add(0, 0, 1);
+				loc.subtract(7, 0, 0);
+			} else if(i == -2) {
+				loc.add(0, 1, 0);
+				loc.subtract(7, 0, 6);
+			} else {
+				if (m == null){
+				
+				}else {
+					loc.getBlock().setType(m);
+					if(m == Material.CHEST) {
+						chests[curchest] = (Chest) loc.getBlock().getState();
+						if(curchest < 8) curchest++;
+					}
+					loc.add(1, 0, 0);
+				}
+			}
+		}
+	}
+	
+	private static void spawnChests() {
+		Location loc = mainBlock.getLocation();
+		loc.add(-3, 1, -3);
+		Integer curchest = 0;
+		
+		//-2: new layer; -1: new row; 0: air; 1: block; 
+		// 2: chest; 3: enchanting table; 4: fence; 5 : no change
+		Integer[] co = {0, 0, 0, 0, 0, 0, 0, -1,
+						0, 0, 2, 5, 2, 0, 0, -1,
+						0, 2, 5, 5, 5, 2, 0, -1,
+						0, 5, 5, 5, 5, 5, 0, -1,
+						0, 2, 5, 5, 5, 2, 0, -1,
+						0, 0, 2, 5, 2, 0, 0, -1,
+						0, 0, 0, 0, 0, 0, 0, -2,};
+		
+		for(Integer i : co) {
+			Material m = Material.AIR;
+			switch (i) {
+			case 0:
+				m = Material.AIR;
+				break;
+			case 1:
+				m = Material.OBSIDIAN;
+				break;
+			case 2:
+				m = Material.CHEST;
+				break;
+			case 3:
+				m = Material.ENCHANTMENT_TABLE;
+				break;
+			case 4:
+				m = Material.FENCE;
+				break;
+			case 5:
+				m = null;
+				break;
+			case -1:
+				break;
+			case -2:
+				break;
+			default:
+				log.warning("Illegal integer found while creating Chests at Feast: " + i.toString());
+				break;
+			}
+			
+			if(i == -1) {
+				loc.add(0, 0, 1);
+				loc.subtract(7, 0, 0);
+			} else if(i == -2) {
+				loc.add(0, 1, 0);
+				loc.subtract(7, 0, 6);
+			} else {
+				if (m == null){
+				
+				}else {
+					loc.getBlock().setType(m);
+					if(m == Material.CHEST) {
+						chests[curchest] = (Chest) loc.getBlock().getState();
+						if(curchest < 8) curchest++;
+					}
+					loc.add(1, 0, 0);
+				}
+			}
+		}
 	}
 	
 	public static void removeAbove(Block block) {
