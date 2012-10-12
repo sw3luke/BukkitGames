@@ -153,48 +153,54 @@ public class BGListener implements Listener {
 			}
 		}
 			
-		if (BGKit.hasAbility(p, 11) && a == Action.RIGHT_CLICK_BLOCK && p.getItemInHand()
-				.getType() == Material.STONE_AXE) {
-			if(!thorList.contains(p)) {
-				thorList.add(p);
-				plugin.cooldown.thorCooldown(p);
-				Block block = event.getClickedBlock();
-				Location loc = block.getLocation();
-				World world = plugin.getServer().getWorld("world");
-				world.strikeLightning(loc);
-			}else {
-				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.11.Expired"));
-			}
-		}
-			
-		if (BGKit.hasAbility(p, 16) && p.getItemInHand()
-				.getType() == Material.APPLE && (a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {
-			
-			if(!ghostList.contains(p)) {
-				ghostList.add(p);
-				plugin.cooldown.ghostCooldown(p);
-					
-				Player[] players = plugin.getServer().getOnlinePlayers();
-					
-				plugin.cooldown.showPlayerCooldown(p, players);
-				if(p.getItemInHand().getAmount() == 1) {
-					p.getInventory().clear(p.getInventory().getHeldItemSlot());
+		try{
+			if (BGKit.hasAbility(p, 11) && a == Action.RIGHT_CLICK_BLOCK && p.getItemInHand()
+					.getType() == Material.STONE_AXE) {
+				if(!thorList.contains(p)) {
+					thorList.add(p);
+					plugin.cooldown.thorCooldown(p);
+					Block block = event.getClickedBlock();
+					Location loc = block.getLocation();
+					World world = plugin.getServer().getWorld("world");
+					world.strikeLightning(loc);
 				}else {
-					p.getItemInHand().setAmount(p.getItemInHand().getAmount() - 1);
+					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.11.Expired"));
 				}
-				for(Player player : players) {
-					if(player.getName().equals(p.getName())) {
-						continue;
-					}
-					if(BGKit.hasAbility(player, 21)) {
-						continue;
-					}
-					player.hidePlayer(p);
-				}
-				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.invisible"));
-			}else {
-				BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
 			}
+			
+			if (BGKit.hasAbility(p, 16) && p.getItemInHand()
+					.getType() == Material.APPLE && (a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {
+				
+				if(!ghostList.contains(p)) {
+					ghostList.add(p);
+					plugin.cooldown.ghostCooldown(p);
+					
+					Player[] players = plugin.getServer().getOnlinePlayers();
+					
+					plugin.cooldown.showPlayerCooldown(p, players);
+					if(p.getItemInHand().getAmount() == 1) {
+						p.getInventory().clear(p.getInventory().getHeldItemSlot());
+					}else {
+						p.getItemInHand().setAmount(p.getItemInHand().getAmount() - 1);
+					}
+					for(Player player : players) {
+						if(player.getName().equals(p.getName())) {
+							continue;
+						}
+						if(BGKit.hasAbility(player, 21)) {
+							continue;
+						}
+						player.hidePlayer(p);
+					}
+					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.invisible"));
+				}else {
+					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
+				}
+			}
+		}catch(NullPointerException e) {
+			
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 
 		if ((p.getItemInHand().getType() == Material.COMPASS & this.plugin.COMPASS
