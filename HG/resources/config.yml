@@ -77,10 +77,6 @@ RANDOM_START: false
 # Winner-Reward-System (Mysql Database needed!, Configuration in kit.yml)
 REWARD: false
 
-# For one win Player get on Point (ADVANCED_REWARD must be enabled!)
-# How many points are needed for 1 Coin?
-POINTS_FOR_COIN: 5
-
 # If enabled, players can join server during the game and act like spectators
 SPECTATOR_SYSTEM: false
 

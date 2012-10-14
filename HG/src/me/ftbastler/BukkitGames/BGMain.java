@@ -70,7 +70,6 @@ public class BGMain extends JavaPlugin {
 	public Integer MINIMUM_PLAYERS = Integer.valueOf(1);
 	public final Integer WINNER_PLAYERS = Integer.valueOf(1);
 	public Integer END_GAME_TIME = Integer.valueOf(25);
-	public Integer P_F_C = Integer.valueOf(5);
 	public final String WORLD_TEMPOARY_NAME = "world";
 	public Boolean REGEN_WORLD = false;
 	public Boolean RANDOM_START = false;
@@ -376,7 +375,6 @@ public class BGMain extends JavaPlugin {
 		COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.COUNTDOWN-SEC"));
 		this.FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.FINAL_COUNTDOWN-SEC"));
 		this.END_GAME_TIME = Integer.valueOf(getConfig().getInt("TIME.INCREASE_DIFFICULTY-MIN"));
-		this.P_F_C = Integer.valueOf(getConfig().getInt("POINTS_FOR_COIN"));
 		this.COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		this.AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		this.STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
