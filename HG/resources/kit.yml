@@ -31,6 +31,7 @@ KITS:
 #    - 0 [THE ID OF THE ABILITY - 0 IS NO ABILITY]
 #  POTION: 
 #    - POTION_ID,DURATION(IN SECONDS),AMPLIFIER [POTION_ID: 0 IS NO POTION, DURATION: 0 IS ENDLESS]
+#  COINS: 0 [THE PRICE FOR THE KIT (if Reward is enabled in the config file), 0 this kit can not be bought]
 
 barbarian:
   ITEMS:
@@ -39,6 +40,7 @@ barbarian:
     - 0
   POTION:
     - 0
+  COINS: 0
 miner:
   ITEMS:
     - '274,1,32,1'
@@ -47,6 +49,7 @@ miner:
     - 0
   POTION:
     - 2,0,1
+  COINS: 2
 fisherman:
   ITEMS:
     - '346,1'
@@ -57,6 +60,7 @@ fisherman:
     - 0
   POTION:
     - 0
+  COINS: 5
 beastmaster:
   ITEMS:
     - '383:95,3'
@@ -65,6 +69,7 @@ beastmaster:
     - 0
   POTION:
     - 18,30,1
+  COINS: 7
 enderman:
   ITEMS:
     - '368,5'
@@ -73,6 +78,7 @@ enderman:
     - 0
   POTION:
     - 0
+  COINS: 0
 pyro:
   ITEMS:
     - '259,1'
@@ -82,6 +88,7 @@ pyro:
   - 7
   POTION:
     - 0
+  COINS: 0
 poseidon:
   ITEMS:
     - '373:8195,1'
@@ -89,6 +96,7 @@ poseidon:
     - 5
   POTION:
     - 0
+  COINS: 0
 scout:
   ITEMS:
     - '373:8194,1'
@@ -96,6 +104,7 @@ scout:
     - 0
   POTION:
     - 8,0,0
+  COINS: 0
 snowman:
   ITEMS:
     - '332,5'
@@ -104,6 +113,7 @@ snowman:
     - 3
   POTION:
     - 0
+  COINS: 3
 chemist:
   ITEMS:
     - '373:16456,1'
@@ -113,6 +123,7 @@ chemist:
     - 0
   POTION:
     - 0
+  COINS: 4
 archer:
   ITEMS:
     - '261,1'
@@ -121,6 +132,7 @@ archer:
     - 9
   POTION:
     - 0
+  COINS: 0
 engineer:
   ITEMS:
     - '46,5'
@@ -129,3 +141,4 @@ engineer:
     - 0
   POTION:
     - 0
+  COINS: 8

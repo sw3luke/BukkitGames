@@ -557,7 +557,7 @@ public class BGListener implements Listener {
 			}
 		}
 		
-		if (plugin.ADV_REW) {
+		if (plugin.REW) {
 			Integer PL_ID = plugin.getPlayerID(playerName);
 			if (PL_ID == null) {
 				plugin.reward.createUser(playerName);

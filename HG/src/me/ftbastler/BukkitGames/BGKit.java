@@ -221,8 +221,7 @@ public class BGKit {
 
 		if (player.hasPermission("bg.kit." + kitname)
 				|| player.hasPermission("bg.kit.*")
-				|| (plugin.reward.playerNames.contains(player.getName())
-						& (plugin.reward.rewardKits.contains(kitname) || plugin.reward.rewardKits.contains("all")))) {
+				|| plugin.reward.BOUGHT_KITS.get(player.getName()).equals(kitname)) {
 			if (KIT.containsKey(player)) {
 				KIT.remove(player);
 			}
@@ -296,5 +295,19 @@ public class BGKit {
 	public static String getKit(Player player) {
 		String kitname = KIT.get(player);
 		return kitname;
+	}
+	
+	public static int getCoins(String kitName) {
+		
+		ConfigurationSection def = BGFiles.kitconf.getConfigurationSection(kitName);
+		
+		return def.getInt("COINS");
+	}
+	
+	public static boolean isKit(String kitName) {
+		
+		if(kits.contains(kitName))
+			return true;
+		return false;
 	}
 }

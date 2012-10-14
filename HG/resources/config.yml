@@ -74,8 +74,8 @@ REGEN_WORLD: true
 # If true, each player starts at a random spot. (May causes lag on some servers!)
 RANDOM_START: false
 
-# Advanced Winner-Reward-System (Mysql Database needed!, Configuration in reward.yml)
-ADVANCED_REWARD: false
+# Winner-Reward-System (Mysql Database needed!, Configuration in kit.yml)
+REWARD: false
 
 # For one win Player get on Point (ADVANCED_REWARD must be enabled!)
 # How many points are needed for 1 Coin?

@@ -89,7 +89,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean COMPASS = true;
 	public Boolean AUTO_COMPASS = false;
 	public Boolean ADV_ABI = false;
-	public Boolean ADV_REW = false;
+	public Boolean REW = false;
 	public Boolean DEATH_SIGNS = true;
 	public Boolean END_GAME_A = true;
 	public Boolean END_GAME_M = true;
@@ -369,7 +369,7 @@ public class BGMain extends JavaPlugin {
 		this.SQL_USER = getConfig().getString("USERNAME");
 		this.SQL_PASS = getConfig().getString("PASSWORD");
 		this.SQL_DATA = getConfig().getString("DATABASE");
-		this.ADV_REW = Boolean.valueOf(getConfig().getBoolean("ADVANCED_REWARD"));
+		this.REW = Boolean.valueOf(getConfig().getBoolean("REWARD"));
 		this.MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));
 		BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt("WORLD_BORDER_RADIUS"));
 		this.MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
@@ -387,9 +387,9 @@ public class BGMain extends JavaPlugin {
 			dis = new BGDisguise(this);
 		}
 		
-		if(!SQL_USE && ADV_REW) {
+		if(!SQL_USE && REW) {
 			log.warning("MySQL has to be enabled for AdvancedReward, turning AR off.");
-			this.ADV_REW = false;
+			this.REW = false;
 		}
 		
 		if(FEAST) {
@@ -456,7 +456,7 @@ public class BGMain extends JavaPlugin {
 			SQLquery("CREATE TABLE IF NOT EXISTS `GAMES` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `STARTTIME` datetime NOT NULL, `ENDTIME` datetime, `REF_WINNER` int(10), PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 			SQLquery("CREATE TABLE IF NOT EXISTS `PLAYERS` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `NAME` varchar(255) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 			SQLquery("CREATE TABLE IF NOT EXISTS `PLAYS` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10), `REF_GAME` int(10), `KIT` varchar(255), `DEATHTIME` datetime, `REF_KILLER` int(10), `DEATH_REASON` varchar(255), PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
-			SQLquery("CREATE TABLE IF NOT EXISTS `REWARD` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10) NOT NULL, `POINTS` int(10) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
+			SQLquery("CREATE TABLE IF NOT EXISTS `REWARD` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10) NOT NULL, `COINS` int(10) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 		}
 
 		Location loc = randomLocation(this.spawn.getChunk()).add(0.0D, 30.0D,0.0D);
@@ -754,14 +754,14 @@ public class BGMain extends JavaPlugin {
 							+ SQL_GAMEID + " ;");
 				}
 				
-				if(ADV_REW) {
+				if(REW) {
 					if (getPlayerID(winnername) == null) {
 						
 						reward.createUser(winnername);
-						reward.givePoints(winnername, 1);
+						reward.giveCoins(winnername, 1);
 					}else {
 						
-						reward.givePoints(winnername, 1);
+						reward.giveCoins(winnername, 1);
 					}
 				}
 				
@@ -886,11 +886,11 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 	
-	public Integer getPoints(Integer playerID) {
+	public Integer getCoins(Integer playerID) {
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet r = stmt
-					.executeQuery("SELECT `POINTS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
+					.executeQuery("SELECT `COINS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
 							+ playerID + " ;");
 			r.last();
 			if (r.getRow() == 0) {
@@ -904,7 +904,7 @@ public class BGMain extends JavaPlugin {
 			return PL_ID;
 		} catch (SQLException ex) {
 			log.warning("Error with following query: "
-					+ "SELECT `POINTS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
+					+ "SELECT `COINS`, `REF_PLAYER` FROM `REWARD` WHERE `REF_PLAYER` = "
 					+ playerID + " ;");
 			System.err.println("MySQL-Error: " + ex.getMessage());
 			return null;

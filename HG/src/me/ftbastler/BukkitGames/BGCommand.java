@@ -102,53 +102,49 @@ public class BGCommand implements CommandExecutor {
 		
 		if (cmd.getName().equalsIgnoreCase("coin")) {
 			
-			if (!plugin.ADV_REW) {
-				BGChat.printPlayerChat(p, "Advanced Reward System disabled!");
+			if (!plugin.REW) {
+				BGChat.printPlayerChat(p, "Reward System disabled!");
 				return true;
 			}
 			
-			int points = plugin.getPoints(plugin.getPlayerID(p.getName()));
-			int coins = (int) (points/plugin.P_F_C);
-			
-			String fsatz;
-			
-			if (plugin.reward.rewardKits.contains("all")) {
-				fsatz = "With 1 Coin you can use all VIP Kits!";
-			}else {
-				fsatz = "With 1 Coin you can use the ";
-				for (String kit : plugin.reward.rewardKits) {
-					fsatz = fsatz + kit + " ";
-				}
-				fsatz = fsatz + "VIP Kits!";
-			}
+			int coins = plugin.getCoins(plugin.getPlayerID(p.getName()));
 			
 			if (args.length == 0) {
-				BGChat.printPlayerChat(p, fsatz+
-										"\nFor "+ plugin.P_F_C +"  Points you get 1 Coin!"+
-										"\nYou get 1 Point for each time you win a game"+
+				BGChat.printPlayerChat(p,
+										"\nYou get 5 Coins for each time you win a game"+
+										"\nYou get 1 Coin for killing a player (only close combat)"+		
 										"\nCOINS: "+ coins +
-										"\nPOINTS: "+ points +
-										"\nType /coin use when you want to use a Coin!"+
-										"\nType /coin send points <player> <amount> to send other players points!"+
-										"\nType /coin send coins <player> <amount> to send other players coins");
+										"\nType /coin buy [kitName] when you want to buy a Kit!"+
+										"\nType /coin send <player> <amount> to send other players coins");
 				return true;
-			}else if (args.length > 4) {
+			}else if (args.length > 3) {
 				
 				BGChat.printPlayerChat(p, "Too much arrguments! Try /coin");
 				return true;
-			}else if (args[0].equalsIgnoreCase("use")) {
+			}else if (args[0].equalsIgnoreCase("buy")) {
+				
+				if(args.length < 2) {
+					BGChat.printPlayerChat(p, "Too few arrguments! Try /coin");
+					return true;
+				}
+				
+				String kitName = args[1];
 				
 				if (p.hasPermission("bg.kit.*")) {
 					
 					BGChat.printPlayerChat(p, "You don't need to use Coins you can use all Kits!");
-				}else if (plugin.reward.playerNames.contains(p.getName())) {
+				}else if (plugin.reward.BOUGHT_KITS.containsKey(p.getName())) {
 					
-					BGChat.printPlayerChat(p, "You have already used a coin this round!");
+					BGChat.printPlayerChat(p, "You have already bought a kit this round!");
 					return true;
-				}else if(coins >= 1) {
-					plugin.reward.coinUse(p.getName());
-					plugin.reward.takePoints(p.getName(), plugin.P_F_C);
-					BGChat.printPlayerChat(p, "Coin used!");
+				}else if (BGKit.isKit(kitName.toLowerCase()) == false) {
+					
+					BGChat.printPlayerChat(p, "This Kit does not exits!");
+					return true;
+				}else if(coins >= BGKit.getCoins(kitName.toLowerCase())) {
+					plugin.reward.coinUse(p.getName(), kitName.toLowerCase());
+					plugin.reward.takeCoins(p.getName(), BGKit.getCoins(kitName.toLowerCase()));
+					BGChat.printPlayerChat(p, "You bought the "+kitName+" Kit!");
 					if(plugin.ADV_CHAT_SYSTEM) {
 						BGChat.updateChat(p);
 					}
@@ -160,173 +156,96 @@ public class BGCommand implements CommandExecutor {
 				}
 			}else if (args[0].equalsIgnoreCase("send")) {
 				
-				if (args.length < 4) {
+				if (args.length < 3) {
 					
 					BGChat.printPlayerChat(p, "Too few arrguments! Try /coin");
 					return true;
 				}
-				if (args[1].equalsIgnoreCase("points")) {
+				if (plugin.getPlayerID(args[1]) == null) {
+						
+					BGChat.printPlayerChat(p, "Player was never on this server!");
+					return true;
+				}else {
+					
+					int zahl;
+					try{
+						
+						zahl = Integer.parseInt(args[2]);
+					}catch (Exception e) {
+						
+							BGChat.printPlayerChat(p, "Only Integers are possible!");
+							return true;
+					}
+					
+					if(zahl < 0) {
+							
+						BGChat.printPlayerChat(p, "Only positive Integers are possible!");
+						return true;
+					}
+						
+					if (zahl > coins) {
+						
+						BGChat.printPlayerChat(p, "You don't have enough Coins!");
+						return true;
+					}else {
+							
+						plugin.reward.sendCoins(p.getName(), args[1], zahl);
+							
+							if (plugin.getServer().getPlayer(args[1]) == null) {
+								
+								BGChat.printPlayerChat(p, "You have send " + zahl + " Coins to " + args[1] + "!");
+								return true;
+							}else {
+								
+								BGChat.printPlayerChat(p, "You have send " + zahl + " Coins to " + args[1] + "!");
+								BGChat.printPlayerChat(plugin.getServer().getPlayer(args[1]), "You have received " + zahl +" Coins from " + p.getName()+ "!");
+								return true;
+							}
+						
+						}
+					}
 				
-					if (plugin.getPlayerID(args[2]) == null) {
-					
-						BGChat.printPlayerChat(p, "Player was never on this server!");
-						return true;
-					}else {
-					
-						int zahl;
-						try{
-						
-							zahl = Integer.parseInt(args[3]);
-						}catch (Exception e) {
-						
-							BGChat.printPlayerChat(p, "Only Integers are possible!");
-							return true;
-						}
-						
-						if (zahl < 0) {
-							
-							BGChat.printPlayerChat(p, "Only positive Integers are possible!");
-							return true;
-						}
-					
-						if (zahl > points) {
-						
-							BGChat.printPlayerChat(p, "You don't have enough points!");
-							return true;
-						}else {
-							
-							plugin.reward.sendPoints(p.getName(), args[2], zahl);
-							
-							if (plugin.getServer().getPlayer(args[2]) == null) {
-								
-								BGChat.printPlayerChat(p, "You have send " + zahl + " Points to " + args[2] + "!");
-								return true;
-							}else {
-								
-								BGChat.printPlayerChat(p, "You have send " + zahl + " Points to " + args[2] + "!");
-								BGChat.printPlayerChat(plugin.getServer().getPlayer(args[2]), "You have received " + zahl +" Points from " + p.getName()+ "!");
-								return true;
-							}
-						
-						}
-					}
-				}
-				if (args[1].equalsIgnoreCase("coins")) {
-					
-					if (plugin.getPlayerID(args[2]) == null) {
-						
-						BGChat.printPlayerChat(p, "Player was never on this server!");
-						return true;
-					}else {
-					
-						int zahl;
-						try{
-						
-							zahl = Integer.parseInt(args[3]);
-						}catch (Exception e) {
-						
-							BGChat.printPlayerChat(p, "Only Integers are possible!");
-							return true;
-						}
-					
-						if(zahl < 0) {
-							
-							BGChat.printPlayerChat(p, "Only positive Integers are possible!");
-							return true;
-						}
-						
-						if (zahl * plugin.P_F_C > points) {
-						
-							BGChat.printPlayerChat(p, "You don't have enough Coins!");
-							return true;
-						}else {
-							
-							plugin.reward.sendCoins(p.getName(), args[2], zahl);
-							
-							if (plugin.getServer().getPlayer(args[2]) == null) {
-								
-								BGChat.printPlayerChat(p, "You have send " + zahl + " Coins to " + args[2] + "!");
-								return true;
-							}else {
-								
-								BGChat.printPlayerChat(p, "You have send " + zahl + " Coins to " + args[2] + "!");
-								BGChat.printPlayerChat(plugin.getServer().getPlayer(args[2]), "You have received " + zahl +" Coins from " + p.getName()+ "!");
-								return true;
-							}
-						
-						}
-					}
-				}
 			}else if(args[0].equalsIgnoreCase("give")) {
 					
 					if (p.hasPermission("bg.admin.give")) {	
-						if (args.length < 4) {
+						if (args.length < 3) {
 						
 							BGChat.printPlayerChat(p, "Too few arrguments!");
 							return true;
 						}
-						if (plugin.getPlayerID(args[2]) == null) {
+						if (plugin.getPlayerID(args[1]) == null) {
 						
 							BGChat.printPlayerChat(p, "Player was never on this server!");
 							return true;
 						}
-					
-						if (args[1].equalsIgnoreCase("points")) {
 						
-							int zahl;
-						
-							try {
 							
-								zahl = Integer.parseInt(args[3]);
-							}catch (Exception e) {
+						int zahl;
 							
-								BGChat.printPlayerChat(p, "Only Integers are possible!");
-								return true;
-							}
-							
-							if (zahl < 0) {
+						try {
 								
-								BGChat.printPlayerChat(p, "Only positive Integers are possible!");
-							}
-							
-							plugin.reward.givePoints(args[2], zahl);
-							BGChat.printPlayerChat(p, "You gave " + zahl + "Points to " + args[2] + "!");
-							if (plugin.getServer().getPlayer(args[2]) == null)
-								return true;
-							
-							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[2]), "You have received " + zahl + " Points!");
+							zahl = Integer.parseInt(args[2]);
+						}catch (Exception e) {
 								
+							BGChat.printPlayerChat(p, "Only Integers are possible!");
 							return true;
 						}
-						
-						if (args[1].equalsIgnoreCase("coins")) {
 							
-							int zahl;
-							
-							try {
+						if (zahl < 0) {
 								
-								zahl = Integer.parseInt(args[3]);
-							}catch (Exception e) {
-								
-								BGChat.printPlayerChat(p, "Only Integers are possible!");
-								return true;
-							}
+							BGChat.printPlayerChat(p, "Only positive Integers are possible!");
+						}
 							
-							if (zahl < 0) {
-								
-								BGChat.printPlayerChat(p, "Only positive Integers are possible!");
-							}
-							
-							plugin.reward.givePoints(args[2], zahl * plugin.P_F_C);
-							BGChat.printPlayerChat(p, "You gave " + zahl + "Coins to " + args[2] + "!");
+							plugin.reward.giveCoins(args[1], zahl);
+							BGChat.printPlayerChat(p, "You gave " + zahl + "Coins to " + args[1] + "!");
 							
 							if(plugin.getServer().getPlayer(args[2]) == null)
 								return true;
 							
-							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[2]), "You have received " + zahl + " Coins!");
+							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[1]), "You have received " + zahl + " Coins!");
 							
 							return true;
-						}
+						
 					}else {
 						
 						BGChat.printPlayerChat(p, "You don't have enough permissions!");
@@ -335,52 +254,22 @@ public class BGCommand implements CommandExecutor {
 			}else if(args[0].equalsIgnoreCase("take")) {
 					
 					if (p.hasPermission("bg.admin.take")) {	
-						if (args.length < 4) {
+						if (args.length < 3) {
 						
 							BGChat.printPlayerChat(p, "Too less arrguments!");
 							return true;
 						}
-						if (plugin.getPlayerID(args[2]) == null) {
+						if (plugin.getPlayerID(args[1]) == null) {
 						
 							BGChat.printPlayerChat(p, "Player was never on this server!");
 							return true;
 						}
-					
-						if (args[1].equalsIgnoreCase("points")) {
-						
-							int zahl;
-						
-							try {
-							
-								zahl = Integer.parseInt(args[3]);
-							}catch (Exception e) {
-							
-								BGChat.printPlayerChat(p, "Only Integers are possible!");
-								return true;
-							}
-							
-							if (zahl < 0) {
-								
-								BGChat.printPlayerChat(p, "Only positive Integers are possible!");
-							}
-							
-							plugin.reward.takePoints(args[2], zahl);
-							BGChat.printPlayerChat(p, "You took " + zahl + " Points from " + args[2] + "!");
-							if (plugin.getServer().getPlayer(args[2]) == null)
-								return true;
-							
-							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[2]), "You lost " + zahl + " Points!");
-								
-							return true;
-						}
-						
-						if (args[1].equalsIgnoreCase("coins")) {
 							
 							int zahl;
 							
 							try {
 								
-								zahl = Integer.parseInt(args[3]);
+								zahl = Integer.parseInt(args[2]);
 							}catch (Exception e) {
 								
 								BGChat.printPlayerChat(p, "Only Integers are possible!");
@@ -392,16 +281,15 @@ public class BGCommand implements CommandExecutor {
 								BGChat.printPlayerChat(p, "Only positive Integers are possible!");
 							}
 							
-							plugin.reward.takePoints(args[2], zahl * plugin.P_F_C);
-							BGChat.printPlayerChat(p, "You took " + zahl + " Coins from " + args[2] + "!");
+							plugin.reward.takeCoins(args[1], zahl);
+							BGChat.printPlayerChat(p, "You took " + zahl + " Coins from " + args[1] + "!");
 							
-							if(plugin.getServer().getPlayer(args[2]) == null)
+							if(plugin.getServer().getPlayer(args[1]) == null)
 								return true;
 							
-							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[2]), "You lost " + zahl + " Coins!");
+							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[1]), "You lost " + zahl + " Coins!");
 							
 							return true;
-						}
 					}else {
 						
 						BGChat.printPlayerChat(p, "You don't have enough permissions!");
@@ -422,11 +310,9 @@ public class BGCommand implements CommandExecutor {
 							return true;
 						}
 						
-						int points1 = plugin.getPoints(plugin.getPlayerID(args[1]));
-						int coins1 = (int) points1/plugin.P_F_C;
+						int coins1 = plugin.getCoins(plugin.getPlayerID(args[1]));
 						
 						BGChat.printPlayerChat(p, "This are the stats of " + args[1] + ":"+
-						"\nPOINTS: " + points1 +
 						"\nCOINS: " + coins1);
 					}else {
 						
