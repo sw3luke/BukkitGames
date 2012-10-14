@@ -90,14 +90,14 @@ public class BGMain extends JavaPlugin {
 	public Boolean AUTO_COMPASS = false;
 	public Boolean ADV_ABI = false;
 	public Boolean ADV_REW = false;
-	public Boolean SIMP_REW = true;
 	public Boolean DEATH_SIGNS = true;
 	public Boolean END_GAME_A = true;
 	public Boolean END_GAME_M = true;
 	public Boolean DEFAULT_KIT = false;
 	public Boolean CORNUCOPIA = true;
-	public Boolean CORNUCOPIA_ITEMS = true;
 	public Boolean CORNUCOPIA_CHESTS = false;
+
+	public Boolean CORNUCOPIA_ITEMS = true;
 	public Boolean FEAST = true;
 	public Boolean FEAST_CHESTS = false;
 	public Boolean SPECTATOR_SYSTEM = false;
@@ -343,7 +343,6 @@ public class BGMain extends JavaPlugin {
 		log.info("Loading configuration options.");
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		this.DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
-		this.SIMP_REW = Boolean.valueOf(getConfig().getBoolean("SIMPLE_REWARD"));
 		this.KIT_BUY_WEB = getConfig().getString("MESSAGE.KIT_BUY_WEBSITE");
 		this.SERVER_TITLE = getConfig().getString("MESSAGE.SERVER_TITLE");
 		this.HELP_MESSAGE = getConfig().getString("MESSAGE.HELP_MESSAGE");
@@ -798,7 +797,7 @@ public class BGMain extends JavaPlugin {
 	}
 
 	public boolean winner(Player p) {
-		if (LAST_WINNER == null || !SIMP_REW) {
+		if (LAST_WINNER == null) {
 			return false;
 		}
 		if (LAST_WINNER.equals(p.getName())) {

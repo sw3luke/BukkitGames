@@ -74,9 +74,6 @@ REGEN_WORLD: true
 # If true, each player starts at a random spot. (May causes lag on some servers!)
 RANDOM_START: false
 
-# Simple Reward (Last Winner gets all Kits for one Round)
-SIMPLE_REWARD: true
-
 # Advanced Winner-Reward-System (Mysql Database needed!, Configuration in reward.yml)
 ADVANCED_REWARD: false
 
