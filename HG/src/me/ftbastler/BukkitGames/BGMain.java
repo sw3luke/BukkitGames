@@ -91,6 +91,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean ADV_ABI = false;
 	public Boolean REW = false;
 	public Boolean DEATH_SIGNS = true;
+	public Boolean DEATH_SG_PROTECTED = true;
 	public Boolean END_GAME_A = true;
 	public Boolean END_GAME_M = true;
 	public Boolean DEFAULT_KIT = false;
@@ -352,6 +353,7 @@ public class BGMain extends JavaPlugin {
 		log.info("Loading configuration options.");
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		this.DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
+		this.DEATH_SG_PROTECTED = Boolean.valueOf(BGFiles.dsign.getBoolean("PROTECTED"));
 		this.KIT_BUY_WEB = getConfig().getString("MESSAGE.KIT_BUY_WEBSITE");
 		this.SERVER_TITLE = getConfig().getString("MESSAGE.SERVER_TITLE");
 		this.HELP_MESSAGE = getConfig().getString("MESSAGE.HELP_MESSAGE");

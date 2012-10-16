@@ -16,6 +16,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
@@ -607,6 +608,14 @@ public class BGListener implements Listener {
 		}
 
 		Block b = event.getBlock();
+		
+		if(b.getType().equals(Material.SIGN_POST)) {
+			
+			Sign sign = (Sign) b.getState();
+			if(plugin.sign.signs.contains(sign) & !p.hasPermission("bg.admin.editblocks"))
+				event.setCancelled(true);
+		}
+		
 		if (BGKit.hasAbility(p, 2) & b.getType() == Material.LOG) {
 			World w = Bukkit.getServer().getWorld(plugin.WORLD_TEMPOARY_NAME);
 			Double y = b.getLocation().getY() + 1;

@@ -1,5 +1,7 @@
 package me.ftbastler.BukkitGames;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,6 +13,8 @@ public class BGSign extends JavaPlugin{
 
 	@SuppressWarnings("unused")
 	private BGMain plugin;
+	
+	public ArrayList<Sign> signs = new ArrayList<Sign>();
 	
 	public BGSign(BGMain plugin) {
 		
@@ -51,5 +55,7 @@ public class BGSign extends JavaPlugin{
 			sign.setLine(3, foline);
 		
 		sign.update(true);
+		
+		signs.add(sign);
 	}
 }
