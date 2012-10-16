@@ -21,6 +21,7 @@ public class BGFiles {
 	static FileConfiguration rewardconf;
 	static FileConfiguration cornconf;
 	static FileConfiguration feastconf;
+	static FileConfiguration worldconf;
 
 	public BGFiles(BGMain main) {
 		
@@ -46,6 +47,7 @@ public class BGFiles {
 		File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
 		File cornFile = new File(plugin.getDataFolder(), "cornucopia.yml");
 		File feastFile = new File(plugin.getDataFolder(), "feast.yml");
+		File worldFile = new File(plugin.getDataFolder(), "world.yml");
 
 		Integer creation = 0;
 		
@@ -99,6 +101,11 @@ public class BGFiles {
 			plugin.copy(plugin.getResource("feast.yml"), feastFile);
 			creation++;
 		}
+		if(!worldFile.exists()) {
+			worldFile.getParentFile().mkdirs();
+			plugin.copy(plugin.getResource("world.yml"), worldFile);
+			creation++;
+		}
 		
 		if(creation > 0)
 			log.info("Created " + creation + " files.");
@@ -123,5 +130,7 @@ public class BGFiles {
 				new File(plugin.getDataFolder(), "cornucopia.yml"));
 		feastconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "feast.yml"));
+		worldconf = YamlConfiguration.loadConfiguration(
+				new File(plugin.getDataFolder(), "world.yml"));
 	}
 }

@@ -1,0 +1,8 @@
+# If you set REGEN_WORLD in the config.yml you can config your worlds here.
+# Add here all names of your world folder which are randomly chosen.
+# Add all this folder to "plugins/The BukkitGames".
+WORLDS:
+  - 'world1'
+  - 'world2'
+  - 'world3'
+  - 'seaworld'

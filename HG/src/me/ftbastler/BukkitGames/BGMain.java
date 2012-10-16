@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -104,6 +105,7 @@ public class BGMain extends JavaPlugin {
 	public Location spawn;
 	public String STOP_CMD = "";
 	public String LAST_WINNER = "";
+	public ArrayList<String> maps = new ArrayList<String>();
 	public static Integer COUNTDOWN = Integer.valueOf(0);
 	public Integer FINAL_COUNTDOWN = Integer.valueOf(0);
 	public Integer GAME_RUNNING_TIME = Integer.valueOf(0);
@@ -249,15 +251,29 @@ public class BGMain extends JavaPlugin {
 		plugin = this;
 		log = getPluginLogger();
 		
+		try {
+			files = new BGFiles(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		this.log.info("Deleting old world.");
 		Bukkit.getServer().unloadWorld("world", false);
 		deleteDir(new File("world"));
 
 		this.REGEN_WORLD = getConfig().getBoolean("REGEN_WORLD");
 		if (this.REGEN_WORLD == false) {
-			this.log.info("Copying saved world.");
+			List<String> mapnames = BGFiles.worldconf.getStringList("WORLDS");
+			for(String name : mapnames) {
+				maps.add(name);
+			}
+			
+			Random r = new Random();
+			String map = maps.get(r.nextInt(maps.size()));
+			
+			this.log.info("Copying saved world. ("+map+")");
 			try {
-				copyDirectory(new File(this.getDataFolder(), "world"),
+				copyDirectory(new File(this.getDataFolder(), map),
 						new File("world"));
 			} catch (IOException e) {
 				log.warning("Error: " + e.toString());
@@ -268,12 +284,6 @@ public class BGMain extends JavaPlugin {
 	}
 
 	public void onEnable() {
-		
-		try {
-			files = new BGFiles(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 		kit = new BGKit(this);
 		listener = new BGListener(this);
