@@ -5,7 +5,6 @@ website: http://dev.bukkit.org/server-mods/bukkitgames
 dev-url: http://dev.bukkit.org/server-mods/bukkitgames
 author: ftbastler
 startup: startup
-depend: [Vault]
 
 description: >
              The BukkitGames.
