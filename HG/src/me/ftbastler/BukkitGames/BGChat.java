@@ -339,7 +339,6 @@ public class BGChat {
 			if (plugin.HELP_MESSAGE != null && plugin.HELP_MESSAGE != "")
 				help_length = plugin.HELP_MESSAGE.length();
 
-			line++;
 			while (help_length > 50) {
 				line++;
 				help_length = help_length - 50;
@@ -372,11 +371,16 @@ public class BGChat {
 			String yourkits = "";
 			String otherkits = "";
 			for (String name : kitname) {
-				if (p.hasPermission("bg.kit." + name)
-						|| plugin.reward.BOUGHT_KITS.get(p.getName()).equals(kitname)) {
-					yourkits = name + ", " + yourkits;
+				if (p.hasPermission("bg.kit." + name) || (plugin.REW && plugin.reward.BOUGHT_KITS.get(p.getName()).equals(kitname))) {
+					if(yourkits == "")
+						yourkits = name;
+					else
+						yourkits = name + ", " + yourkits;
 				} else {
-					otherkits = name + ", " + otherkits;
+					if(otherkits == "")
+						otherkits = name;
+					else
+						otherkits = name + ", " + otherkits;
 				}
 			}
 			Integer otherline = otherkits.length();

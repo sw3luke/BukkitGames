@@ -2,7 +2,6 @@ package me.ftbastler.BukkitGames;
 
 import java.util.logging.Logger;
 
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,27 +34,6 @@ public class BGCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (cmd.getName().equalsIgnoreCase("gamemaker")) {
-			if (p.hasPermission("bg.admin.gamemaker")
-					|| p.hasPermission("bg.admin.*")) {
-				if (p.getGameMode() == GameMode.CREATIVE) {
-					p.setGameMode(GameMode.SURVIVAL);
-					BGVanish.makeVisible(p);
-
-					BGChat.printPlayerChat(p,
-							"§2You are no longer a GameMaker.");
-				} else {
-					p.setGameMode(GameMode.CREATIVE);
-					BGVanish.makeVanished(p);
-
-					BGChat.printPlayerChat(p, "§2You are now a GameMaker.");
-				}
-			} else
-				BGChat.printPlayerChat(p, "You are not allowed to do this.");
-
-			return true;
-		}
-
 		if (cmd.getName().equalsIgnoreCase("help")) {
 			BGChat.printHelpChat(p);
 			return true;
@@ -77,7 +55,7 @@ public class BGCommand implements CommandExecutor {
 					BGChat.printKitChat(p);
 					return true;
 				}
-				BGChat.printPlayerChat(p, "The game has already started!");
+				BGChat.printPlayerChat(p, "The game has already began!");
 				return true;
 			}
 			if (args.length != 1) {
@@ -91,7 +69,7 @@ public class BGCommand implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("spawn")) {
 			if (this.plugin.DENY_LOGIN.booleanValue()
 					& !(p.hasPermission("bg.admin.spawn") || p.hasPermission("bg.admin.*"))) {
-				BGChat.printPlayerChat(p, "The game has already started!");
+				BGChat.printPlayerChat(p, "The game has already began!");
 				return true;
 			} else {
 				p.teleport(plugin.getSpawn());

@@ -97,7 +97,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean DEFAULT_KIT = false;
 	public Boolean CORNUCOPIA = true;
 	public Boolean CORNUCOPIA_CHESTS = false;
-
+	
 	public Boolean CORNUCOPIA_ITEMS = true;
 	public Boolean FEAST = true;
 	public Boolean FEAST_CHESTS = false;
@@ -107,6 +107,7 @@ public class BGMain extends JavaPlugin {
 	public String STOP_CMD = "";
 	public String LAST_WINNER = "";
 	public ArrayList<String> maps = new ArrayList<String>();
+	public ArrayList<Player> spectators = new ArrayList<Player>();
 	public static Integer COUNTDOWN = Integer.valueOf(0);
 	public Integer FINAL_COUNTDOWN = Integer.valueOf(0);
 	public Integer GAME_RUNNING_TIME = Integer.valueOf(0);
@@ -321,11 +322,6 @@ public class BGMain extends JavaPlugin {
 		else 
 			console.sendMessage(ChatColor.RED+"getCommand start returns null");
 
-		if (this.getCommand("gamemaker") != null) 
-			this.getCommand("gamemaker").setExecutor(bgcmd); 
-		else 
-			console.sendMessage(ChatColor.RED+"getCommand gamemaker returns null");
-
 		if (this.getCommand("spawn") != null) 
 			this.getCommand("spawn").setExecutor(bgcmd); 
 		else 
@@ -391,14 +387,13 @@ public class BGMain extends JavaPlugin {
 		this.AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		this.STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
 		
-		
 		if (ADV_ABI) {
-			log.info("Enabeling the AdvancedAbilities.");
+			log.info("Enabeling the advanced abilities.");
 			dis = new BGDisguise(this);
 		}
 		
-		if(!SQL_USE && REW) {
-			log.warning("MySQL has to be enabled for AdvancedReward, turning AR off.");
+		if(REW && !SQL_USE) {
+			log.warning("MySQL has to be enabled for advanced reward, turning it off.");
 			this.REW = false;
 		}
 		
@@ -411,7 +406,7 @@ public class BGMain extends JavaPlugin {
 		}
 		
 		if(BGMain.WORLDRADIUS.intValue() < 50) {
-			log.warning("Wordlborder radius has to be 50 or higher!");
+			log.warning("Worldborder radius has to be 50 or higher!");
 			getServer().getPluginManager().disablePlugin(this);
 		}
 
@@ -482,6 +477,8 @@ public class BGMain extends JavaPlugin {
 
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = getDescription();
+		
+		Bukkit.getServer().getScheduler().cancelAllTasks();
 		
 		if (SQL_USE) {
 			if (SQL_GAMEID != null) {
@@ -577,7 +574,7 @@ public class BGMain extends JavaPlugin {
 		ArrayList<Player> gamers = new ArrayList<Player>();
 		Player[] list = Bukkit.getOnlinePlayers();
 		for (Player p : list) {
-			if (p.getGameMode() == GameMode.SURVIVAL) {
+			if (!plugin.isSpectator(p)) {
 				gamers.add(p);
 			}
 		}
@@ -672,7 +669,7 @@ public class BGMain extends JavaPlugin {
 			p.setExp(0);
 			BGKit.giveKit(p);
 
-			if (SQL_USE & p.getGameMode() == GameMode.SURVIVAL) {
+			if (SQL_USE & !plugin.isSpectator(p)) {
 				Integer PL_ID = getPlayerID(p.getName());
 				SQLquery("INSERT INTO `PLAYS` (`REF_PLAYER`, `REF_GAME`, `KIT`) VALUES ("
 						+ PL_ID
@@ -733,7 +730,7 @@ public class BGMain extends JavaPlugin {
 	}
 
 	public void checkwinner() {
-		if (getGamers().length <= this.WINNER_PLAYERS.intValue())
+		if (getGamers().length <= this.WINNER_PLAYERS)
 			if (getGamers().length == 0) {
 				this.timer2.cancel();
 				Bukkit.getServer().shutdown();
@@ -766,11 +763,9 @@ public class BGMain extends JavaPlugin {
 				
 				if(REW) {
 					if (getPlayerID(winnername) == null) {
-						
 						reward.createUser(winnername);
 						reward.giveCoins(winnername, 1);
-					}else {
-						
+					} else {
 						reward.giveCoins(winnername, 1);
 					}
 				}
@@ -922,6 +917,23 @@ public class BGMain extends JavaPlugin {
 			log.warning("Error while performing a query. (NullPointerException)");
 			return null;
 		}
+	}
+	
+	public Boolean isSpectator(Player p) {
+		return spectators.contains(p);
+	}
+	
+	public void addSpectator(Player p) {
+		spectators.add(p);
+		p.setGameMode(GameMode.CREATIVE);
+		BGVanish.makeVanished(p);
+		BGChat.printPlayerChat(p, "§eYou are a spectator!");
+	}
+	
+	public void remSpectator(Player p) {
+		spectators.remove(p);
+		p.setGameMode(GameMode.SURVIVAL);
+		BGVanish.makeVisible(p);
 	}
 	
 	public static Logger getPluginLogger() {

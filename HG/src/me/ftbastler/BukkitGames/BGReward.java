@@ -11,7 +11,6 @@ public class BGReward extends JavaPlugin{
 	public HashMap<String, String> BOUGHT_KITS = new HashMap<String, String>();
 	
 	public BGReward(BGMain plugin) {
-		
 		this.plugin = plugin;
 	}
 	
