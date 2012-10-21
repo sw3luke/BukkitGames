@@ -274,12 +274,11 @@ public class BGKit {
 				}
 				return false;
 			}else {
-				
 				return false;
 			}
 		}
 
-		String kitname = (String) KIT.get(player);
+		String kitname = getKit(player);
 		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname);
 
 		List<Integer> s = kit.getIntegerList("ABILITY");

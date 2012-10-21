@@ -771,12 +771,16 @@ public class BGListener implements Listener {
 		Entity damager = event.getDamager();
 		Entity defender = event.getEntity();
 		
-		if (this.plugin.DENY_DAMAGE_ENTITY.booleanValue()
-				& !(event.getEntity() instanceof Player)) {
+		if(damager instanceof Player)
+			if(plugin.isSpectator((Player) damager)) {
+				event.setCancelled(true);
+				return;
+			}
+		
+		if (this.plugin.DENY_DAMAGE_ENTITY & !(event.getEntity() instanceof Player)) {
 			return;
 		}
-		if (this.plugin.DENY_DAMAGE_PLAYER.booleanValue()
-				& event.getEntity() instanceof Player) {
+		if (this.plugin.DENY_DAMAGE_PLAYER & event.getEntity() instanceof Player) {
 			return;
 		}
 		if (event.getEntity().isDead()) {
