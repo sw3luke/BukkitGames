@@ -169,7 +169,7 @@ public class BGMain extends JavaPlugin {
 							+ BGMain.this.TIME(BGMain.this.FINAL_COUNTDOWN)
 							+ ".");
 				}
-				BGMain.this.FINAL_COUNTDOWN--;
+				FINAL_COUNTDOWN--;
 			} else {
 				BGChat.printTimeChat("");
 				BGChat.printTimeChat("Invincibility was worn off.");
@@ -180,11 +180,10 @@ public class BGMain extends JavaPlugin {
 				if(ADV_CHAT_SYSTEM && !SHOW_TIPS) {
 					BGChat.updateChat();
 				}
-				BGMain.this.DENY_DAMAGE_PLAYER = Boolean.valueOf(false);
-				BGMain.this.DEATH_MSG = Boolean.valueOf(true);
-				BGMain.this.timer3.cancel();
-				BGMain.this.timer2.scheduleAtFixedRate(BGMain.this.task2, 0L,
-						60000L);
+				DENY_DAMAGE_PLAYER = false;
+				DEATH_MSG = true;
+				timer3.cancel();
+				timer2.scheduleAtFixedRate(task2, 0, 60000);
 			}
 		}
 	};
@@ -595,14 +594,14 @@ public class BGMain extends JavaPlugin {
 		this.timer1.cancel();
 		this.timer3.scheduleAtFixedRate(this.task3, 3000, 1000);
 
-		this.DENY_LOGIN = Boolean.valueOf(true);
-		this.DENY_BLOCKBREAK = Boolean.valueOf(false);
-		this.DENY_BLOCKPLACE = Boolean.valueOf(false);
-		this.DENY_ITEMDROP = Boolean.valueOf(false);
-		this.DENY_ITEMPICKUP = Boolean.valueOf(false);
-		this.DENY_DAMAGE_ENTITY = Boolean.valueOf(false);
-		this.DENY_SHOOT_BOW = Boolean.valueOf(false);
-		this.QUIT_MSG = Boolean.valueOf(true);
+		this.DENY_LOGIN = true;
+		this.DENY_BLOCKBREAK = false;
+		this.DENY_BLOCKPLACE = false;
+		this.DENY_ITEMDROP = false;
+		this.DENY_ITEMPICKUP = false;
+		this.DENY_DAMAGE_ENTITY = false;
+		this.DENY_SHOOT_BOW = false;
+		this.QUIT_MSG = true;
 
 		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
 			BGCornucopia.spawnItems();
@@ -927,7 +926,7 @@ public class BGMain extends JavaPlugin {
 		spectators.add(p);
 		p.setGameMode(GameMode.CREATIVE);
 		BGVanish.makeVanished(p);
-		BGChat.printPlayerChat(p, "§eYou are a spectator!");
+		BGChat.printPlayerChat(p, "§eYou are now a spectator!");
 	}
 	
 	public void remSpectator(Player p) {

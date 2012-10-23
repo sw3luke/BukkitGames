@@ -111,7 +111,7 @@ public class BGCommand implements CommandExecutor {
 				if (p.hasPermission("bg.kit.*")) {
 					
 					BGChat.printPlayerChat(p, "You don't need to use Coins you can use all Kits!");
-				}else if (plugin.reward.BOUGHT_KITS.containsKey(p.getName())) {
+				}else if (plugin.REW && plugin.reward.BOUGHT_KITS.containsKey(p.getName())) {
 					
 					BGChat.printPlayerChat(p, "You have already bought a kit this round!");
 					return true;

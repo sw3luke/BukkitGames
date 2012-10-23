@@ -181,7 +181,7 @@ public class BGChat {
 			for (String name : kitname) {
 				if (player.hasPermission("bg.kit." + name)
 						|| player.hasPermission("bg.kit.*")
-						|| plugin.reward.BOUGHT_KITS.get(player.getName()).equals(kitname)) {
+						|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()).equals(kitname))) {
 					yourkits = name + ", " + yourkits;
 				} else {
 					otherkits = name + ", " + otherkits;
