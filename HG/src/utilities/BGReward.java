@@ -1,6 +1,8 @@
-package me.ftbastler.BukkitGames;
+package utilities;
 
 import java.util.HashMap;
+
+import main.BGMain;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

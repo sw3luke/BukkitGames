@@ -1,9 +1,11 @@
-package me.ftbastler.BukkitGames;
+package events;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import main.BGMain;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -60,6 +62,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import pgDev.bukkit.DisguiseCraft.Disguise.MobType;
+import utilities.BGChat;
+import utilities.BGCornucopia;
+import utilities.BGDisguise;
+import utilities.BGFeast;
+import utilities.BGFiles;
+import utilities.BGKit;
+import utilities.BGVanish;
+import utilities.CraftBook;
+import utilities.Updater;
 
 public class BGListener implements Listener {
 	Logger log = BGMain.getPluginLogger();

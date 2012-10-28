@@ -1,7 +1,9 @@
-package me.ftbastler.BukkitGames;
+package utilities;
 
 import java.io.File;
 import java.util.logging.Logger;
+
+import main.BGMain;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,16 +14,16 @@ public class BGFiles {
 	
 	Logger log = BGMain.getPluginLogger();
 	
-	static FileConfiguration abconf;
-	static FileConfiguration bookconf;
-	static FileConfiguration config;
-	static FileConfiguration dsign;
-	static FileConfiguration kitconf;
-	static FileConfiguration messageconf;
-	static FileConfiguration rewardconf;
-	static FileConfiguration cornconf;
-	static FileConfiguration feastconf;
-	static FileConfiguration worldconf;
+	public static FileConfiguration abconf;
+	public static FileConfiguration bookconf;
+	public static FileConfiguration config;
+	public static FileConfiguration dsign;
+	public static FileConfiguration kitconf;
+	public static FileConfiguration messageconf;
+	public static FileConfiguration rewardconf;
+	public static FileConfiguration cornconf;
+	public static FileConfiguration feastconf;
+	public static FileConfiguration worldconf;
 
 	public BGFiles(BGMain main) {
 		

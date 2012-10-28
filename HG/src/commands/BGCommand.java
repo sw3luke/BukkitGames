@@ -1,11 +1,17 @@
-package me.ftbastler.BukkitGames;
+package commands;
 
 import java.util.logging.Logger;
+
+import main.BGMain;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import utilities.BGChat;
+import utilities.BGKit;
+import utilities.Updater;
 
 public class BGCommand implements CommandExecutor {
 	Logger log = BGMain.getPluginLogger();

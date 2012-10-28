@@ -1,4 +1,4 @@
-package me.ftbastler.BukkitGames;
+package main;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,6 +24,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -35,6 +37,22 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import commands.BGCommand;
+
+import utilities.BGChat;
+import utilities.BGCooldown;
+import utilities.BGCornucopia;
+import utilities.BGDisguise;
+import utilities.BGFeast;
+import utilities.BGFiles;
+import utilities.BGKit;
+import utilities.BGReward;
+import utilities.BGSign;
+import utilities.BGVanish;
+import utilities.Border;
+
+import events.BGListener;
 
 public class BGMain extends JavaPlugin {
 	Logger log;

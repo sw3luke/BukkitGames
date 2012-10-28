@@ -1,6 +1,8 @@
-package me.ftbastler.BukkitGames;
+package utilities;
 
 import java.util.ArrayList;
+
+import main.BGMain;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

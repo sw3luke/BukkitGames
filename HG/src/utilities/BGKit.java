@@ -1,9 +1,11 @@
-package me.ftbastler.BukkitGames;
+package utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
+
+import main.BGMain;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
