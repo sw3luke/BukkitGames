@@ -730,24 +730,41 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		if(plugin.isSpectator(event.getPlayer())) {
-			BGChat.printPlayerChat(event.getPlayer(), "§cSpectators can't chat!");
-			event.setCancelled(true);
-			return;
+			if(plugin.ADV_CHAT_SYSTEM) {
+				BGChat.printPlayerChat(event.getPlayer(), "§cSpectators can't chat.");
+				event.setCancelled(true);			
+				return;
+			} else {
+				event.getRecipients().clear();
+				event.getRecipients().addAll(plugin.getSpectators());
+				event.getRecipients().addAll(getOnlineOps());
+				event.setFormat("§o[SPECTATORS] §r" + event.getFormat());
+			}
 		}
 			
 		if (plugin.ADV_CHAT_SYSTEM) {
 			String m = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
 			String s = ChatColor.stripColor(m);
-			if(s.length() <= 53)
+			if(s.length() <= 53) {
 				BGChat.playerChatMsg(m);
-			else
+				log.info("[CHAT] " + m);
+			} else {
 				BGChat.printPlayerChat(event.getPlayer(), "§cYour message is too long!");
+			}
 			event.setCancelled(true);
-		} else {
-			return;
 		}
 	}
 
+	private ArrayList<Player> getOnlineOps() {
+		ArrayList<Player> ops = new ArrayList<Player>();
+		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+			if(p.isOp())
+				ops.add(p);
+		}
+				
+		return ops;
+	}
+	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player p = event.getPlayer();

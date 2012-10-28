@@ -17,6 +17,7 @@ CHESTS: false
 # - '297,2,5,true'
 # Sword (with knockback enchantment), which maybe will be spawned:
 # - '268,1,1,false,19,1'
+
 ITEMS:
   - '268,1,1,false,19,1'
   - '298,1,1,false'

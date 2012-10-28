@@ -946,6 +946,10 @@ public class BGMain extends JavaPlugin {
 		return spectators.contains(p);
 	}
 	
+	public ArrayList<Player> getSpectators() {
+		return spectators;
+	}
+	
 	public void addSpectator(Player p) {
 		spectators.add(p);
 		p.setGameMode(GameMode.CREATIVE);
