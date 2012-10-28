@@ -4,8 +4,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import net.minecraft.server.EntityFireball;
-import net.minecraft.server.EntityLiving;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,11 +12,10 @@ import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -61,7 +58,6 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import pgDev.bukkit.DisguiseCraft.Disguise.MobType;
 
@@ -132,7 +128,9 @@ public class BGListener implements Listener {
 						new ItemStack[] { new ItemStack(Material.COOKIE, 1) });
 			}
 		}
-
+		
+		/*
+		 * TODO: Fix bug
 		if (a == Action.LEFT_CLICK_BLOCK || a == Action.LEFT_CLICK_AIR) {
 			if ((BGKit.hasAbility(p, Integer.valueOf(4)) & p.getItemInHand()
 					.getType() == Material.FIREBALL)) {
@@ -140,13 +138,9 @@ public class BGListener implements Listener {
 				EntityFireball fball;
 				CraftPlayer craftPlayer = (CraftPlayer) player;
 				EntityLiving playerEntity = craftPlayer.getHandle();
-				Vector lookat = player.getLocation().getDirection()
-						.multiply(10);
+				Vector lookat = player.getLocation().getDirection().multiply(10);
 				Location loc = player.getLocation();
-				fball = new EntityFireball(
-						((CraftWorld) player.getWorld()).getHandle(),
-						playerEntity, lookat.getX(), lookat.getY(),
-						lookat.getZ());
+				fball = new EntityFireball(((CraftWorld) player.getWorld()).getHandle(),playerEntity, lookat.getX(), lookat.getY(),lookat.getZ());
 				fball.locX = (loc.getX() + lookat.getX() / 5.0D + 0.25D);
 				fball.locY = (loc.getY() + player.getEyeHeight() / 2.0D + 0.5D);
 				fball.locZ = (loc.getZ() + lookat.getZ() / 5.0D);
@@ -158,7 +152,8 @@ public class BGListener implements Listener {
 										Material.FIREBALL, 1) });
 			}
 		}
-			
+		*/
+		
 		try{
 			if (BGKit.hasAbility(p, 11) && a == Action.RIGHT_CLICK_BLOCK && p.getItemInHand()
 					.getType() == Material.STONE_AXE) {
@@ -632,22 +627,27 @@ public class BGListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
+		
 		if ((this.plugin.DENY_BLOCKBREAK.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
 				|| !p.hasPermission("bg.admin.*")))) {
 			event.setCancelled(true);
 			return;
 		}
 
-		Block b = event.getBlock();
+		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock()))) {
+			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
+			event.setCancelled(true);
+			return;
+		}
 		
+		Block b = event.getBlock();
 		if(b.getType().equals(Material.SIGN_POST)) {
-			
 			Sign sign = (Sign) b.getState();
 			if(plugin.sign.signs.contains(sign) & !p.hasPermission("bg.admin.editblocks"))
 				event.setCancelled(true);
 		}
 		
-		if (BGKit.hasAbility(p, 2) & b.getType() == Material.LOG) {
+		if (BGKit.hasAbility(p, 2) && b.getType() == Material.LOG) {
 			World w = Bukkit.getServer().getWorld(plugin.WORLD_TEMPOARY_NAME);
 			Double y = b.getLocation().getY() + 1;
 			Location l = new Location(w, b.getLocation().getX(), y, b
@@ -657,13 +657,7 @@ public class BGListener implements Listener {
 				y++;
 				l.setY(y);
 			}
-		}
-		
-		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock()))) {
-			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
-			event.setCancelled(true);
-		}
-		
+		}		
 	}
 
 	@EventHandler
@@ -679,16 +673,42 @@ public class BGListener implements Listener {
 			return;
 		}
 		
+		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock()))) {
+			BGChat.printPlayerChat(p, "§cYou can't place a block here!");
+			event.setCancelled(true);
+			return;
+		}
+		
 		Block block = event.getBlockPlaced();
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.CROPS) {
 			block.setData(CropState.RIPE.getData());
 		}
-		
-		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock()))) {
-			BGChat.printPlayerChat(p, "§cYou can't place a block here!");
-			event.setCancelled(true);
+		if (BGKit.hasAbility(p, 10) && block.getType() == Material.SAPLING) {
+			TreeType t = getTree(block.getData());
+			Bukkit.getServer().getWorld("world").generateTree(block.getLocation(), t);
 		}
 	}
+	
+    public TreeType getTree(int data) {
+        TreeType tretyp = TreeType.TREE;
+        switch(data) {
+        case 0:
+            tretyp = TreeType.TREE;
+            break;
+        case 1:
+            tretyp = TreeType.REDWOOD;
+            break;
+        case 2:
+            tretyp = TreeType.BIRCH;
+            break;
+        case 3:
+            tretyp = TreeType.JUNGLE;
+            break;
+        default:
+            tretyp = TreeType.TREE;
+        }
+        return tretyp;
+    }
 	
 	@EventHandler
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
@@ -847,7 +867,7 @@ public class BGListener implements Listener {
 			}
 		}
 		
-		if (damager.getType() == EntityType.PLAYER) {
+		if (damager instanceof Player) {
 			
 			Player dam = (Player)damager;
 			if(BGKit.hasAbility(dam, 12)) {
@@ -975,11 +995,17 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		
 		Player dp = event.getEntity();
 		
+		if(!(dp instanceof Player))
+			return;
+		
+		if (plugin.isSpectator((Player) event.getEntity())) {
+			event.setDeathMessage(null);
+			return;
+		}
+		
 		if (plugin.DEATH_SIGNS) {
-			
 			Location loc = dp.getLocation().add(0, 1, 0);
 			String fl = BGFiles.dsign.getString("FIRST_LINE");
 			String sl = BGFiles.dsign.getString("SECOND_LINE");
@@ -1000,11 +1026,9 @@ public class BGListener implements Listener {
 		}
 		
 		
-		if(dp.getKiller() != null) {
-			
+		if(dp.getKiller() != null && dp.getKiller() instanceof Player) {
 			Player killer = dp.getKiller();
 			if(BGKit.hasAbility(killer, 14)) {
-				
 				if(killer.getFoodLevel() <= 14) {
 					killer.setFoodLevel(killer.getFoodLevel()+ 6);
 				}else {
@@ -1012,19 +1036,13 @@ public class BGListener implements Listener {
 				}
 			}
 		}
-		
-		if (plugin.isSpectator((Player) event.getEntity())) {
+
+		if (last_quit == event.getEntity().getName() || last_headshot == event.getEntity().getName()) {
 			event.setDeathMessage(null);
 			return;
 		}
 
-		if (last_quit == event.getEntity().getName()
-				|| last_headshot == event.getEntity().getName()) {
-			event.setDeathMessage(null);
-			return;
-		}
-
-		if ((event.getEntity() instanceof Player & this.plugin.DEATH_MSG)) {
+		if (plugin.DEATH_MSG) {
 			Player p = event.getEntity();
 
 			if (plugin.SQL_USE) {
@@ -1045,18 +1063,16 @@ public class BGListener implements Listener {
 						+ PL_ID
 						+ " AND `REF_GAME` = " + plugin.SQL_GAMEID + " ;");
 			}
-
-			p.kickPlayer(ChatColor.RED + event.getDeathMessage() + ".");
+			
 			Location light = p.getLocation();
-
+			p.kickPlayer(ChatColor.RED + event.getDeathMessage() + ".");
+			
 			BGChat.printDeathChat(event.getDeathMessage() + ".");
 			if (!plugin.ADV_CHAT_SYSTEM) {
-				BGChat.printDeathChat(this.plugin.getGamers().length
-						+ " players remaining.");
+				BGChat.printDeathChat(this.plugin.getGamers().length + " players remaining.");
 				BGChat.printDeathChat("");
 			}
-			Bukkit.getServer().getWorld("world")
-					.strikeLightningEffect(light.add(0.0D, 100.0D, 0.0D));
+			Bukkit.getServer().getWorld("world").strikeLightningEffect(light.add(0, 100, 0));
 		}
 
 		event.setDeathMessage(null);
@@ -1066,7 +1082,7 @@ public class BGListener implements Listener {
 	public void onEntityTarget(EntityTargetEvent event) {
 		Entity entity = event.getTarget();
 		if (entity != null) {
-			if (entity.getType() == EntityType.PLAYER) {
+			if (entity instanceof Player) {
 				Player player = (Player)entity;
 				if(BGKit.hasAbility(player, 20) && event.getReason() == TargetReason.CLOSEST_PLAYER) {
 					event.setCancelled(true);
