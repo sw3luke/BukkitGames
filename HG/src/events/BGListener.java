@@ -68,6 +68,7 @@ import utilities.BGDisguise;
 import utilities.BGFeast;
 import utilities.BGFiles;
 import utilities.BGKit;
+import utilities.BGTeam;
 import utilities.BGVanish;
 import utilities.CraftBook;
 import utilities.Updater;
@@ -223,6 +224,11 @@ public class BGListener implements Listener {
 				for (Entity e : entities) {
 					if ((!e.getType().equals(EntityType.PLAYER))|| plugin.isSpectator((Player) e))
 						continue;
+					if(plugin.TEAM) {
+						
+						if(BGTeam.isInTeam(p, ((Player) e).getName()))
+								continue;
+					}
 					p.setCompassTarget(e.getLocation());
 					Double distance = p.getLocation().distance(
 							e.getLocation());

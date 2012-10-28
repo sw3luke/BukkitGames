@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import utilities.BGChat;
 import utilities.BGKit;
+import utilities.BGTeam;
 import utilities.Updater;
 
 public class BGCommand implements CommandExecutor {
@@ -375,6 +376,93 @@ public class BGCommand implements CommandExecutor {
 				
 				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
 				
+				return true;
+			}
+		}
+		
+		if(cmd.getName().equalsIgnoreCase("team")) {
+			
+			if(!plugin.TEAM) {
+				
+				BGChat.printPlayerChat(p, "Team function is disabled!");
+				return true;
+			}
+			
+			if(!p.hasPermission("bg.team")) {
+				
+				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+				return true;
+			}
+			
+			if(args.length > 2) {
+				BGChat.printPlayerChat(p, "Too much arrguments! Try /team");
+				return true;
+			}
+			
+			if (args.length == 0) {
+				
+				BGChat.printPlayerChat(p, "Type /team add <player> to add a player to your team!" + '\n'+
+											"Type /team remove <player> to remove a player from your team!" + '\n'+
+											"Type /team list to get a list of all players in your team");
+				return true;
+			}
+			
+			if (args[0].equalsIgnoreCase("add")) {
+				
+				if(args.length < 2) {
+					
+					BGChat.printPlayerChat(p, "Too few arrguments! Try /team");
+					return true;
+				}
+				
+				if(plugin.getServer().getPlayer(args[1]) == null) {
+					
+					BGChat.printPlayerChat(p, "This player is not online!");
+				}
+				
+				BGTeam.addMember(p, args[1]);
+				return true;
+			}
+			
+			if (args[0].equalsIgnoreCase("remove")) {
+				
+				if(args.length < 2) {
+					
+					BGChat.printPlayerChat(p, "Too few arrguments! Try /team");
+					return true;
+				}
+				
+				if(!BGTeam.isInTeam(p, args[1])) {
+					
+					BGChat.printPlayerChat(p, "This player is not in your team!");
+					return true;
+				}
+				
+				BGTeam.removeMember(p, args[1]);
+				return true;
+			}
+			
+			if (args[0].equalsIgnoreCase("list")) {
+				
+				if(args.length < 1) {
+					
+					BGChat.printPlayerChat(p, "Too few arrguments! Try /team");
+					return true;
+				}
+				
+				if(args.length > 1) {
+					
+					BGChat.printPlayerChat(p, "Too much arrguments! Try /team");
+					return true;
+				}
+				
+				String text = "Your Team:";
+				for(String t : BGTeam.getTeamList(p)) {
+					
+					text += '\n' + "- " + t;
+				}
+				
+				BGChat.printPlayerChat(p, text);
 				return true;
 			}
 		}
