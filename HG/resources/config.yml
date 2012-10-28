@@ -61,6 +61,9 @@ COMPASS: true
 # Auto Update Compass (If true, may causes lag on the server!) COMPASS has to be enabled for this to work.
 AUTO_COMPASS: false
 
+# Team Function! If enabled players can add other players to their team!
+TEAM: true
+
 # Death signs mark Player death places! (Lines can be configured in deathsign.yml).
 DEATH_SIGNS: true
 

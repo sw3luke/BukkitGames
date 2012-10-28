@@ -115,6 +115,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean DEFAULT_KIT = false;
 	public Boolean CORNUCOPIA = true;
 	public Boolean CORNUCOPIA_CHESTS = false;
+	public Boolean TEAM = true;
 	
 	public Boolean CORNUCOPIA_ITEMS = true;
 	public Boolean FEAST = true;
@@ -362,6 +363,10 @@ public class BGMain extends JavaPlugin {
 			this.getCommand("bgdownload").setExecutor(bgcmd);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand bgdownload returns null");
+		if(this.getCommand("team") != null)
+			this.getCommand("team").setExecutor(bgcmd);
+		else
+			console.sendMessage(ChatColor.RED+"getCommand team returns null");
 
 		log.info("Loading configuration options.");
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
@@ -380,6 +385,7 @@ public class BGMain extends JavaPlugin {
 		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
 		this.FEAST_CHESTS = Boolean.valueOf(BGFiles.feastconf.getBoolean("CHESTS"));
 		this.SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
+		this.TEAM = Boolean.valueOf(getConfig().getBoolean("TEAM"));
 		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
 		this.GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
 		this.SERVER_FULL_MSG = getConfig().getString("MESSAGE.SERVER_FULL");

@@ -36,3 +36,6 @@ commands:
   bgdownload:
     description: Download the new update if available.
     usage: /<command>
+  team:
+    description: Team menu
+    usage: /<command>
