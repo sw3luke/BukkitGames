@@ -20,7 +20,6 @@ public class BGFiles {
 	public static FileConfiguration dsign;
 	public static FileConfiguration kitconf;
 	public static FileConfiguration messageconf;
-	public static FileConfiguration rewardconf;
 	public static FileConfiguration cornconf;
 	public static FileConfiguration feastconf;
 	public static FileConfiguration worldconf;
@@ -42,7 +41,6 @@ public class BGFiles {
 		File configFile = new File(plugin.getDataFolder(), "config.yml");
 		File kitFile = new File(plugin.getDataFolder(), "kit.yml");
 		File leaderboardFile = new File(plugin.getDataFolder(), "leaderboard.yml");
-		File rewardFile = new File(plugin.getDataFolder(), "reward.yml");
 		File deathSignFile = new File(plugin.getDataFolder(), "deathsign.yml");
 		File abilitiesFile = new File(plugin.getDataFolder(), "abilities.yml");
 		File bookFile = new File(plugin.getDataFolder(), "book.yml");
@@ -66,11 +64,6 @@ public class BGFiles {
 		if (!leaderboardFile.exists()) {
 			leaderboardFile.getParentFile().mkdirs();
 			plugin.copy(plugin.getResource("leaderboard.yml"), leaderboardFile);
-			creation++;
-		}
-		if (!rewardFile.exists()) {
-			rewardFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("reward.yml"), rewardFile);
 			creation++;
 		}
 		if (!deathSignFile.exists()) {
@@ -126,8 +119,6 @@ public class BGFiles {
 				new File(plugin.getDataFolder(), "kit.yml"));
 		messageconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "messages.yml"));
-		rewardconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "reward.yml"));
 		cornconf = YamlConfiguration.loadConfiguration(
 				new File(plugin.getDataFolder(), "cornucopia.yml"));
 		feastconf = YamlConfiguration.loadConfiguration(
