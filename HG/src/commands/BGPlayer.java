@@ -12,35 +12,23 @@ import org.bukkit.entity.Player;
 import utilities.BGChat;
 import utilities.BGKit;
 import utilities.BGTeam;
-import utilities.Updater;
 
-public class BGCommand implements CommandExecutor {
+public class BGPlayer implements CommandExecutor{
+
 	Logger log = BGMain.getPluginLogger();
 	private BGMain plugin;
-
-	public BGCommand(BGMain plugin) {
+	
+	public BGPlayer(BGMain plugin) {
 		this.plugin = plugin;
 	}
-
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
 		if (!(sender instanceof Player)) {
 			this.log.info("This command can only be accessed by players!");
 			return true;
 		}
 		Player p = (Player) sender;
-		if (cmd.getName().equalsIgnoreCase("start")) {
-			if (p.hasPermission("bg.admin.start")
-					|| p.hasPermission("bg.admin.*")) {
-				if (this.plugin.DENY_LOGIN.booleanValue())
-					BGChat.printPlayerChat(p, "The game has already begun!");
-				else
-					this.plugin.startgame();
-			} else {
-				BGChat.printPlayerChat(p, "You are not allowed to do this.");
-			}
-			return true;
-		}
-
 		if (cmd.getName().equalsIgnoreCase("help")) {
 			BGChat.printHelpChat(p);
 			return true;
@@ -307,79 +295,6 @@ public class BGCommand implements CommandExecutor {
 				}
 		}
 		
-		if (cmd.getName().equalsIgnoreCase("fbattle")) {
-			
-			if(p.hasPermission("bg.admin.fbattle")) {
-				
-				if(plugin.DENY_LOGIN) {
-					if(plugin.END_GAME_M) {
-						BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-						plugin.END_GAME_A = false;
-						plugin.cooldown.fbattleCooldown();
-						
-						return true;
-					}else {
-						BGChat.printPlayerChat(p, "You can not start the final battle because it will start soon!");
-						return true;
-					}
-				}else{
-					
-					BGChat.printPlayerChat(p, "§cThe game has not started yet!");
-					
-					return true;
-				}
-				
-			}else {
-				
-				BGChat.printPlayerChat(p, "You don't have enough Permissions!");
-				
-				return true;
-			}
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("bgversion")) {
-			if(p.hasPermission("bg.admin.check")) {
-				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-				if (update) {
-					String newversion = updater.getLatestVersionString();
-					BGChat.printPlayerChat(p, "§aUpdate available: " + newversion + " §r/bgdownload");
-				} else {
-					BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + plugin.getDescription().getVersion());
-				}
-			} else {
-				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
-				return true;
-			}
-		}
-		
-		if(cmd.getName().equalsIgnoreCase("bgdownload")) {
-			if(p.hasPermission("bg.admin.download")) {
-				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-				
-				if(update) {
-					BGChat.printPlayerChat(p, "§7Downloading new version...");
-					Updater download = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
-					
-					if(download.getResult() == Updater.UpdateResult.SUCCESS)
-						BGChat.printPlayerChat(p, "§aDownload complete! §7Regenerate all config files!");
-					else
-						BGChat.printPlayerChat(p, "§cOops! Something went wrong. See console error log!");
-				}else {
-					
-					BGChat.printPlayerChat(p, "§7There is no update available to download!");
-				}
-				
-				return true;
-			}else {
-				
-				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
-				
-				return true;
-			}
-		}
-		
 		if(cmd.getName().equalsIgnoreCase("team")) {
 			
 			if(!plugin.TEAM) {
@@ -466,6 +381,7 @@ public class BGCommand implements CommandExecutor {
 				return true;
 			}
 		}
-			return true;
+		
+		return true;
 	}
 }

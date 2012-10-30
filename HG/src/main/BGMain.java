@@ -38,7 +38,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import commands.BGCommand;
+import commands.BGConsole;
+import commands.BGPlayer;
 
 import utilities.BGChat;
 import utilities.BGCooldown;
@@ -58,7 +59,8 @@ public class BGMain extends JavaPlugin {
 	Logger log;
 	
 	public BGChat chat;
-	public BGCommand command;
+	public BGConsole consolecmd;
+	public BGPlayer player;
 	public BGCooldown cooldown;
 	public BGDisguise dis;
 	public BGKit kit;
@@ -310,7 +312,8 @@ public class BGMain extends JavaPlugin {
 		listener = new BGListener(this);
 		cooldown = new BGCooldown(this);
 		chat = new BGChat(this);
-		command = new BGCommand(this);
+		consolecmd = new BGConsole(this);
+		player = new BGPlayer(this);
 		vanish = new BGVanish(this);
 		sign = new BGSign(this);
 		feasts = new BGFeast(this);
@@ -318,54 +321,53 @@ public class BGMain extends JavaPlugin {
 		reward = new BGReward(this);
 		
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
-		BGCommand bgcmd = new BGCommand(this);
 		
 
 		if (this.getCommand("help") != null) 
-			this.getCommand("help").setExecutor(bgcmd); 
+			this.getCommand("help").setExecutor(player); 
 		else 
 			console.sendMessage(ChatColor.RED+"getCommand help returns null");
 
 		if (this.getCommand("kit") != null) 
-			this.getCommand("kit").setExecutor(bgcmd); 
+			this.getCommand("kit").setExecutor(player); 
 		else 
 			console.sendMessage(ChatColor.RED+"getCommand kit returns null");
 
 		if (this.getCommand("kitinfo") != null) 
-			this.getCommand("kitinfo").setExecutor(bgcmd); 
+			this.getCommand("kitinfo").setExecutor(player); 
 		else 
 			console.sendMessage(ChatColor.RED+"getCommand kitinfo returns null");
 
 		if (this.getCommand("start") != null) 
-			this.getCommand("start").setExecutor(bgcmd); 
+			this.getCommand("start").setExecutor(consolecmd); 
 		else 
 			console.sendMessage(ChatColor.RED+"getCommand start returns null");
 
 		if (this.getCommand("spawn") != null) 
-			this.getCommand("spawn").setExecutor(bgcmd); 
+			this.getCommand("spawn").setExecutor(player); 
 		else 
 			console.sendMessage(ChatColor.RED+"getCommand spawn returns null");
 		
 		if (this.getCommand("coin") != null)
-			this.getCommand("coin").setExecutor(bgcmd);
+			this.getCommand("coin").setExecutor(player);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand coin returns null");
 		
 		if (this.getCommand("fbattle") != null)
-			this.getCommand("fbattle").setExecutor(bgcmd);
+			this.getCommand("fbattle").setExecutor(consolecmd);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand fbattle returns null");
 		
 		if (this.getCommand("bgversion") != null)
-			this.getCommand("bgversion").setExecutor(bgcmd);
+			this.getCommand("bgversion").setExecutor(consolecmd);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand bgversion returns null");
 		if(this.getCommand("bgdownload") != null)
-			this.getCommand("bgdownload").setExecutor(bgcmd);
+			this.getCommand("bgdownload").setExecutor(consolecmd);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand bgdownload returns null");
 		if(this.getCommand("team") != null)
-			this.getCommand("team").setExecutor(bgcmd);
+			this.getCommand("team").setExecutor(player);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand team returns null");
 
