@@ -929,7 +929,7 @@ public class BGMain extends JavaPlugin {
 				r.close();
 				return null;
 			}
-			Integer PL_ID = r.getInt("points");
+			Integer PL_ID = r.getInt("COINS");
 			stmt.close();
 			r.close();
 			return PL_ID;

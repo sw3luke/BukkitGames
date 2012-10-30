@@ -603,7 +603,7 @@ public class BGListener implements Listener {
 		}
 		
 		if (plugin.REW) {
-			Integer PL_ID = plugin.getPlayerID(playerName);
+			Integer PL_ID = plugin.getCoins(plugin.getPlayerID(playerName));
 			if (PL_ID == null) {
 				plugin.reward.createUser(playerName);
 			}

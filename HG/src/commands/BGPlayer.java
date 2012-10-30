@@ -330,12 +330,23 @@ public class BGPlayer implements CommandExecutor{
 					return true;
 				}
 				
+				
+				
 				if(plugin.getServer().getPlayer(args[1]) == null) {
 					
 					BGChat.printPlayerChat(p, "This player is not online!");
 				}
 				
-				BGTeam.addMember(p, args[1]);
+				Player player = plugin.getServer().getPlayer(args[1]);
+				
+				if(BGTeam.isInTeam(p, player.getName())){
+					
+					BGChat.printPlayerChat(p, "This player is already in your team!");
+				}
+					
+				BGTeam.addMember(p, player.getName());
+				BGChat.printPlayerChat(p, "You added "+player.getName()+" to your team!");
+				
 				return true;
 			}
 			
@@ -354,6 +365,8 @@ public class BGPlayer implements CommandExecutor{
 				}
 				
 				BGTeam.removeMember(p, args[1]);
+				BGChat.printPlayerChat(p, "You removed "+args[1]+" from your team!" );
+				
 				return true;
 			}
 			
@@ -372,6 +385,14 @@ public class BGPlayer implements CommandExecutor{
 				}
 				
 				String text = "Your Team:";
+				
+				if(BGTeam.getTeamList(p) == null) {
+					
+					text += '\n' + "- No Player in your Team!";
+					BGChat.printPlayerChat(p, text);
+					return true;
+				}
+				
 				for(String t : BGTeam.getTeamList(p)) {
 					
 					text += '\n' + "- " + t;

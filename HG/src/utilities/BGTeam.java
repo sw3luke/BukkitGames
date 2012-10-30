@@ -22,6 +22,9 @@ public class BGTeam {
 	public static void addMember(Player player, String memberName) {
 		
 		ArrayList<String> members = teams.get(player);
+		if(members == null)
+			members = new ArrayList<String>();
+		
 		members.add(memberName);
 		teams.put(player, members);
 	}
@@ -29,23 +32,34 @@ public class BGTeam {
 	public static void removeMember(Player player, String memberName) {
 		
 		ArrayList<String> members = teams.get(player);
+		if(members == null)
+			return;
+		
 		members.remove(memberName);
 		teams.put(player, members);
 	}
 	
-	public static String[] getTeamList(Player player) {
+	public static ArrayList<String> getTeamList(Player player) {
 		
 		ArrayList<String> members = teams.get(player);
 		
-		return (String[]) members.toArray();
+		if(members == null)
+			return null;
+		
+		return members;
 	}
 	
 	public static boolean isInTeam(Player player, String memberName) {
 		
 		ArrayList<String> members = teams.get(player);
 		
-		if(members.contains(memberName))
-			return true;
+		
+		try{
+			if(members.contains(memberName))
+				return true;
+		}catch(NullPointerException e){
+			return false;
+		}
 		
 		return false;
 	}

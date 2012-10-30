@@ -223,7 +223,8 @@ public class BGKit {
 
 		if (player.hasPermission("bg.kit." + kitname)
 				|| player.hasPermission("bg.kit.*")
-				|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()).equals(kitname))) {
+				|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()) != null
+					&& plugin.reward.BOUGHT_KITS.get(player.getName()).equals(kitname))) {
 			if (KIT.containsKey(player)) {
 				KIT.remove(player);
 			}
