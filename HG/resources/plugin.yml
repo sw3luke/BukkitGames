@@ -1,5 +1,5 @@
 name: The BukkitGames
-main: me.ftbastler.BukkitGames.BGMain
+main: main.BGMain
 version: 1.7.2 DEV
 website: http://dev.bukkit.org/server-mods/bukkitgames
 dev-url: http://dev.bukkit.org/server-mods/bukkitgames
