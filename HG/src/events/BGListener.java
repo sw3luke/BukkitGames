@@ -363,6 +363,9 @@ public class BGListener implements Listener {
 	public void onEntityExplode(EntityExplodeEvent event) {
 		if (this.plugin.DENY_DAMAGE_ENTITY.booleanValue())
 			event.setCancelled(true);
+		
+		if((BGCornucopia.isCornucopiaBlock(event.getEntity().getLocation().getBlock()) || BGFeast.isFeastBlock(event.getEntity().getLocation().getBlock())))
+			event.setCancelled(true);
 	}
 
 	@EventHandler
@@ -377,8 +380,7 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
-		if(plugin.isSpectator(event.getPlayer()))
-			plugin.remSpectator(event.getPlayer());
+		plugin.remSpectator(event.getPlayer());
 		
 		if (this.plugin.DENY_LOGIN.booleanValue() || plugin.ADV_CHAT_SYSTEM)
 			event.setLeaveMessage(null);
@@ -524,7 +526,10 @@ public class BGListener implements Listener {
 		p.setExp(0);
 		
 		if (plugin.DENY_LOGIN) {
-			if (p.hasPermission("bg.admin.gamemaker") || p.hasPermission("bg.admin.*") || plugin.SPECTATOR_SYSTEM) {
+			if (p.hasPermission("bg.admin.gamemaker") || p.hasPermission("bg.admin.*")) {
+				plugin.addGameMaker(p);
+			}
+			if(plugin.SPECTATOR_SYSTEM) {
 				plugin.addSpectator(p);
 			}
 		} else {

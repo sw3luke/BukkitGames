@@ -127,6 +127,7 @@ public class BGMain extends JavaPlugin {
 	public String LAST_WINNER = "";
 	public ArrayList<String> maps = new ArrayList<String>();
 	public ArrayList<Player> spectators = new ArrayList<Player>();
+	public ArrayList<Player> gamemakers = new ArrayList<Player>();
 	public static Integer COUNTDOWN = Integer.valueOf(0);
 	public Integer FINAL_COUNTDOWN = Integer.valueOf(0);
 	public Integer GAME_RUNNING_TIME = Integer.valueOf(0);
@@ -942,7 +943,29 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 	
+	public void addGameMaker(Player p) {
+		spectators.remove(p);
+		gamemakers.add(p);
+		
+		p.setGameMode(GameMode.CREATIVE);
+		BGVanish.makeVanished(p);
+		BGChat.printPlayerChat(p, "§eYou are now a gamemaker!");
+	}
+	
+	public void remGameMaker(Player p) {
+		gamemakers.remove(p);
+		p.setGameMode(GameMode.SURVIVAL);
+		BGVanish.makeVisible(p);
+	}
+	
+	public Boolean isGameMaker(Player p) {
+		return gamemakers.contains(p);
+	}
+	
 	public Boolean isSpectator(Player p) {
+		if(isGameMaker(p))
+			return false;
+		
 		return spectators.contains(p);
 	}
 	
@@ -951,6 +974,9 @@ public class BGMain extends JavaPlugin {
 	}
 	
 	public void addSpectator(Player p) {
+		if(isGameMaker(p))
+			return;
+			
 		spectators.add(p);
 		p.setGameMode(GameMode.CREATIVE);
 		BGVanish.makeVanished(p);
