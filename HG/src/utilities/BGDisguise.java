@@ -203,6 +203,18 @@ public static MobType getMobType(EntityType entity) {
 			
 			return MobType.Zombie;
 		}
+		if (entity == EntityType.WITCH) {
+			
+			return MobType.Witch;
+		}
+		if (entity == EntityType.BAT) {
+			
+			return MobType.Bat;
+		}
+		if (entity == EntityType.WITHER) {
+			
+			return MobType.Wither;
+		}
 		return null;
 	}
 }
