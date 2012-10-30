@@ -600,7 +600,7 @@ public class BGMain extends JavaPlugin {
 		ArrayList<Player> gamers = new ArrayList<Player>();
 		Player[] list = Bukkit.getOnlinePlayers();
 		for (Player p : list) {
-			if (!plugin.isSpectator(p)) {
+			if (!plugin.isSpectator(p) || !plugin.isGameMaker(p)) {
 				gamers.add(p);
 			}
 		}
