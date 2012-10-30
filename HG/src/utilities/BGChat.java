@@ -184,7 +184,7 @@ public class BGChat {
 				if (player.hasPermission("bg.kit." + name)
 						|| player.hasPermission("bg.kit.*")
 						|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()) != null &&
-							plugin.reward.BOUGHT_KITS.get(player.getName()).equals(name))) {
+							plugin.reward.BOUGHT_KITS.get(player.getName()).equals(name.toLowerCase()))) {
 					yourkits = name + ", " + yourkits;
 				} else {
 					otherkits = name + ", " + otherkits;
@@ -375,7 +375,7 @@ public class BGChat {
 			String otherkits = "";
 			for (String name : kitname) {
 				if (p.hasPermission("bg.kit." + name) || (plugin.REW && plugin.reward.BOUGHT_KITS.get(p.getName()) != null
-					&& plugin.reward.BOUGHT_KITS.get(p.getName()).equals(name))) {
+					&& plugin.reward.BOUGHT_KITS.get(p.getName()).equals(name.toLowerCase()))) {
 					if(yourkits == "")
 						yourkits = name;
 					else
