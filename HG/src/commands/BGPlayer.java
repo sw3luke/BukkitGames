@@ -335,6 +335,7 @@ public class BGPlayer implements CommandExecutor{
 				if(plugin.getServer().getPlayer(args[1]) == null) {
 					
 					BGChat.printPlayerChat(p, "This player is not online!");
+					return true;
 				}
 				
 				Player player = plugin.getServer().getPlayer(args[1]);
@@ -342,6 +343,7 @@ public class BGPlayer implements CommandExecutor{
 				if(BGTeam.isInTeam(p, player.getName())){
 					
 					BGChat.printPlayerChat(p, "This player is already in your team!");
+					return true;
 				}
 					
 				BGTeam.addMember(p, player.getName());
