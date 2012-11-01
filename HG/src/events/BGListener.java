@@ -1074,6 +1074,9 @@ public class BGListener implements Listener {
 					killer.setFoodLevel(20);
 				}
 			}
+			if(plugin.REW){
+				plugin.reward.giveCoins(killer.getName(), 1);
+			}
 		}
 
 		if (last_quit == event.getEntity().getName() || last_headshot == event.getEntity().getName()) {

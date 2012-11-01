@@ -790,9 +790,9 @@ public class BGMain extends JavaPlugin {
 				if(REW) {
 					if (getPlayerID(winnername) == null) {
 						reward.createUser(winnername);
-						reward.giveCoins(winnername, 1);
+						reward.giveCoins(winnername, 5);
 					} else {
-						reward.giveCoins(winnername, 1);
+						reward.giveCoins(winnername, 5);
 					}
 				}
 				
