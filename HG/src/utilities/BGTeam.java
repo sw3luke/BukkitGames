@@ -45,6 +45,8 @@ public class BGTeam {
 		
 		if(members == null)
 			return null;
+		if(members.size() == 0)
+			return null;
 		
 		return members;
 	}
