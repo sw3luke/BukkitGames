@@ -109,10 +109,14 @@ public class BGPlayer implements CommandExecutor{
 				}else if (plugin.REW && plugin.reward.BOUGHT_KITS.containsKey(p.getName())) {
 					
 					BGChat.printPlayerChat(p, "You have already bought a kit this round!");
-					return true;
+					return true;					
 				}else if (BGKit.isKit(kitName.toLowerCase()) == false) {
 					
 					BGChat.printPlayerChat(p, "This Kit does not exits!");
+					return true;
+				}else if(BGKit.getCoins(kitName.toLowerCase()) == 0) {
+					
+					BGChat.printPlayerChat(p, "This Kit can not be bought!");
 					return true;
 				}else if(coins >= BGKit.getCoins(kitName.toLowerCase())) {
 					plugin.reward.coinUse(p.getName(), kitName.toLowerCase());

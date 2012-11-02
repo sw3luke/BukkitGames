@@ -277,6 +277,11 @@ public class BGChat {
 
 				}
 			}
+	
+			if(BGKit.getCoins(kitname.toLowerCase()) == 1)
+				player.sendMessage("§fCOSTS: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
+			else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
+				player.sendMessage("§fCOSTS: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");	
 		}
 	}
 
@@ -485,6 +490,11 @@ public class BGChat {
 
 				}
 			}
+			if(BGKit.getCoins(kitname.toLowerCase()) == 1)
+				p.sendMessage("§fCOSTS: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
+			else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
+				p.sendMessage("§fCOSTS: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");	
+			
 			if (PLAYER_MSG.containsKey(p))
 				line++;
 
