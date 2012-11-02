@@ -380,7 +380,12 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
-		plugin.remSpectator(event.getPlayer());
+		Player p = event.getPlayer();
+		
+		if(plugin.isGameMaker(p))
+			plugin.remGameMaker(p);
+		if(plugin.isSpectator(p))
+			plugin.remSpectator(p);
 		
 		if (this.plugin.DENY_LOGIN.booleanValue() || plugin.ADV_CHAT_SYSTEM)
 			event.setLeaveMessage(null);
@@ -528,8 +533,8 @@ public class BGListener implements Listener {
 		if (plugin.DENY_LOGIN) {
 			if (p.hasPermission("bg.admin.gamemaker") || p.hasPermission("bg.admin.*")) {
 				plugin.addGameMaker(p);
-			}
-			if(plugin.SPECTATOR_SYSTEM) {
+			
+			}else if(plugin.SPECTATOR_SYSTEM) {
 				plugin.addSpectator(p);
 			}
 		} else {
@@ -773,6 +778,12 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player p = event.getPlayer();
+		
+		if(plugin.isGameMaker(p)) {
+			event.setQuitMessage(null);
+			plugin.remGameMaker(p);
+			return;
+		}
 		
 		if (plugin.isSpectator(p)) {
 			event.setQuitMessage(null);
@@ -1037,10 +1048,7 @@ public class BGListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player dp = event.getEntity();
 		
-		if(!(dp instanceof Player))
-			return;
-		
-		if (plugin.isSpectator((Player) event.getEntity())) {
+		if (plugin.isSpectator(dp) || plugin.isGameMaker(dp)) {
 			event.setDeathMessage(null);
 			return;
 		}

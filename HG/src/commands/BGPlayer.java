@@ -33,6 +33,26 @@ public class BGPlayer implements CommandExecutor{
 			BGChat.printHelpChat(p);
 			return true;
 		}
+		
+		if(cmd.getName().equalsIgnoreCase("gamemaker")) {
+			
+			if(p.hasPermission("bg.admin.gamemaker")) {
+				
+				if(plugin.isGameMaker(p)) {
+					
+					plugin.remGameMaker(p);
+					BGChat.printPlayerChat(p, "§eYou are no longer a gamemaker!");
+					return true;
+				}else {
+					
+					plugin.addGameMaker(p);
+				}
+			}else {
+				
+				BGChat.printPlayerChat(p, "You don't have enough permissions!");
+				return true;
+			}
+		}
 
 		if (cmd.getName().equalsIgnoreCase("kitinfo")) {
 			if (args.length != 1) {

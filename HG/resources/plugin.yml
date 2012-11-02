@@ -39,3 +39,6 @@ commands:
   team:
     description: Team menu
     usage: /<command>
+  gamemaker:
+    description: Gamemaker Command
+    usage: /<command>

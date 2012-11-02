@@ -370,6 +370,10 @@ public class BGMain extends JavaPlugin {
 			this.getCommand("team").setExecutor(player);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand team returns null");
+		if(this.getCommand("gamemaker") != null)
+			this.getCommand("gamemaker").setExecutor(player);
+		else
+			console.sendMessage(ChatColor.RED+"getCommand gamemaker returns null");
 
 		log.info("Loading configuration options.");
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
@@ -600,7 +604,7 @@ public class BGMain extends JavaPlugin {
 		ArrayList<Player> gamers = new ArrayList<Player>();
 		Player[] list = Bukkit.getOnlinePlayers();
 		for (Player p : list) {
-			if (!plugin.isSpectator(p) || !plugin.isGameMaker(p)) {
+			if (!plugin.isSpectator(p) && !plugin.isGameMaker(p)) {
 				gamers.add(p);
 			}
 		}
