@@ -46,6 +46,7 @@ public class BGPlayer implements CommandExecutor{
 				}else {
 					
 					plugin.addGameMaker(p);
+					return true;
 				}
 			}else {
 				
