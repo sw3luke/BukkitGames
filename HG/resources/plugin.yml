@@ -42,3 +42,6 @@ commands:
   gamemaker:
     description: Gamemaker Command
     usage: /<command>
+  teleport:
+    description: Teleport Menu
+    usage: /<command>

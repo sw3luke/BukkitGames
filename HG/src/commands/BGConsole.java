@@ -38,7 +38,7 @@ public class BGConsole implements CommandExecutor {
 				else
 					this.plugin.startgame();
 			} else {
-				BGChat.printPlayerChat(p, "You are not allowed to do this.");
+				BGChat.printPlayerChat(p, "§cYou are not allowed to do this.");
 			}
 			return true;
 		}
@@ -67,16 +67,16 @@ public class BGConsole implements CommandExecutor {
 				}else{
 					
 					if(p != null)
-						BGChat.printPlayerChat(p, "§cThe game has not started yet!");
+						BGChat.printPlayerChat(p, "The game has not started yet!");
 					else
-						sender.sendMessage("§cThe game has not started yet!");
+						sender.sendMessage("The game has not started yet!");
 					
 					return true;
 				}
 				
 			}else {
 				
-				BGChat.printPlayerChat(p, "You don't have enough Permissions!");
+				BGChat.printPlayerChat(p, "§cYou don't have enough Permissions!");
 				
 				return true;
 			}
@@ -89,9 +89,9 @@ public class BGConsole implements CommandExecutor {
 				if (update) {
 					String newversion = updater.getLatestVersionString();
 					if(p != null)
-						BGChat.printPlayerChat(p, "§aUpdate available: " + newversion + " §r/bgdownload");
+						BGChat.printPlayerChat(p, "§6Update available: " + newversion + " §r/bgdownload");
 					else
-						sender.sendMessage("§aUpdate available: " + newversion + " §r/bgdownload");
+						sender.sendMessage("§6Update available: " + newversion + " §r/bgdownload");
 				} else {
 					if(p != null)
 						BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + plugin.getDescription().getVersion());
@@ -118,9 +118,9 @@ public class BGConsole implements CommandExecutor {
 					
 					if(download.getResult() == Updater.UpdateResult.SUCCESS) {
 						if(p != null)
-							BGChat.printPlayerChat(p, "§aDownload complete! §7Regenerate all config files!");
+							BGChat.printPlayerChat(p, "§6Download complete! §7Regenerate all config files!");
 						else
-							sender.sendMessage("§aDownload complete! §7Regenerate all config files!");
+							sender.sendMessage("§6Download complete! §7Regenerate all config files!");
 					} else {
 						if(p != null)
 							BGChat.printPlayerChat(p, "§cOops! Something went wrong. See console error log!");

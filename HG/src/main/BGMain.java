@@ -374,6 +374,10 @@ public class BGMain extends JavaPlugin {
 			this.getCommand("gamemaker").setExecutor(player);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand gamemaker returns null");
+		if(this.getCommand("teleport") != null)
+			this.getCommand("teleport").setExecutor(player);
+		else
+			console.sendMessage(ChatColor.RED+"getCommand teleport returns null");
 
 		log.info("Loading configuration options.");
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
