@@ -773,18 +773,19 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player p = event.getPlayer();
+		
+		if (plugin.isSpectator(p)) {
+			event.setQuitMessage(null);
+			plugin.remSpectator(p);
+			return;
+		}
+		
 		if (!plugin.DENY_LOGIN.booleanValue() & plugin.ADV_CHAT_SYSTEM) {
 			BGChat.printDeathChat("§e" + event.getQuitMessage());
 		}
 
 		if (this.plugin.DENY_LOGIN.booleanValue() || plugin.ADV_CHAT_SYSTEM) {
 			event.setQuitMessage(null);
-		}
-
-		if (plugin.isSpectator(p)) {
-			event.setQuitMessage(null);
-			plugin.remSpectator(p);
-			return;
 		}
 
 		if (this.plugin.QUIT_MSG.booleanValue() & !p.isDead()) {
