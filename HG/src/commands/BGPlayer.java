@@ -489,6 +489,10 @@ public class BGPlayer implements CommandExecutor{
 					p.teleport(loc);
 					return true;
 				}
+			}else {
+				
+				BGChat.printPlayerChat(p, "§eOnly Spectators and Gamemakers can use this!");
+				return true;
 			}
 		}
 		
