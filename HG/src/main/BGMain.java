@@ -906,6 +906,7 @@ public class BGMain extends JavaPlugin {
 			log.warning("Error with following query: "
 					+ sql);
 			log.warning("MySQL-Error: " + ex.getMessage());
+			SQLdisconnect();
 		} catch (NullPointerException ex) {
 			log.warning("Error while performing a query. (NullPointerException)");
 		}
