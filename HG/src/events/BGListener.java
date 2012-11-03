@@ -1048,6 +1048,7 @@ public class BGListener implements Listener {
 		}
 	}
 
+	
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player dp = event.getEntity();
