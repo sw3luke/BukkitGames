@@ -683,6 +683,8 @@ public class BGMain extends JavaPlugin {
 
 		Bukkit.getWorld("world").setDifficulty(Difficulty.HARD);
 		for (Player p : getPlayers()) {
+			if(this.isGameMaker(p) || this.isSpectator(p))
+				continue;
 			if (this.RANDOM_START == false) {
 				Random r = new Random();
 				Location startFrom = getSpawn();
