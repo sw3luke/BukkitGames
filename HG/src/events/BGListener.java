@@ -364,8 +364,12 @@ public class BGListener implements Listener {
 		if (this.plugin.DENY_DAMAGE_ENTITY.booleanValue())
 			event.setCancelled(true);
 		
-		if((BGCornucopia.isCornucopiaBlock(event.getEntity().getLocation().getBlock()) || BGFeast.isFeastBlock(event.getEntity().getLocation().getBlock())))
-			event.setCancelled(true);
+		try{
+			if((BGCornucopia.isCornucopiaBlock(event.getEntity().getLocation().getBlock()) || BGFeast.isFeastBlock(event.getEntity().getLocation().getBlock())))
+				event.setCancelled(true);
+		}catch (NullPointerException e){
+			
+		}
 	}
 
 	@EventHandler
