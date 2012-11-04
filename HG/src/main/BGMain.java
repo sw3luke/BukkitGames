@@ -349,7 +349,7 @@ public class BGMain extends JavaPlugin {
 			console.sendMessage(ChatColor.RED+"getCommand spawn returns null");
 		
 		if (this.getCommand("coin") != null)
-			this.getCommand("coin").setExecutor(player);
+			this.getCommand("coin").setExecutor(consolecmd);
 		else
 			console.sendMessage(ChatColor.RED+"getCommand coin returns null");
 		
