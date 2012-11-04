@@ -85,7 +85,8 @@ public class BGPlayer implements CommandExecutor{
 
 		if (cmd.getName().equalsIgnoreCase("spawn")) {
 			if (this.plugin.DENY_LOGIN.booleanValue()
-					& !(p.hasPermission("bg.admin.spawn") || p.hasPermission("bg.admin.*"))) {
+					& !p.hasPermission("bg.admin.spawn")
+					& !(plugin.isGameMaker(p) || plugin.isSpectator(p))) {
 				BGChat.printPlayerChat(p, "§eThe game has already began!");
 				return true;
 			} else {
