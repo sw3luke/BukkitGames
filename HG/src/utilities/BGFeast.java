@@ -148,27 +148,62 @@ public class BGFeast {
 	        	}
 	        }
 	    }
+	    
+	    spawnFramework();
 	}
 	
-	private static void spawnChests() {
+	private static void spawnFramework() {
 		Location loc = mainBlock.getLocation();
 		loc.add(-3, 1, -3);
 		Integer curchest = 0;
 		
 		//-2: new layer; -1: new row; 0: air; 1: block; 
-		// 2: chest; 3: enchanting table; 4: fence; 5 : no change
+		// 2: chest; 3: enchanting table; 4: fence; 5 : no change;
+		// 6: diamond_block; 7: beacon
 		Integer[] co = {0, 0, 0, 0, 0, 0, 0, -1,
-				0, 0, 2, 1, 2, 0, 0, -1,
-				0, 2, 1, 1, 1, 2, 0, -1,
+				0, 4, 0, 1, 0, 4, 0, -1,
+				0, 0, 1, 1, 1, 0, 0, -1,
 				0, 1, 1, 1, 1, 1, 0, -1,
-				0, 2, 1, 1, 1, 2, 0, -1,
-				0, 0, 2, 1, 2, 0, 0, -1,
+				0, 0, 1, 1, 1, 0, 0, -1,
+				0, 4, 0, 1, 0, 4, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -2,
+				
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 4, 0, 0, 0, 4, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 4, 0, 0, 0, 4, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -2,
+				
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 4, 0, 0, 0, 4, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 4, 0, 0, 0, 4, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -2,
+				
+				0, 0, 6, 6, 6, 0, 0, -1,
+				0, 6, 6, 6, 6, 6, 0, -1,
+				6, 6, 6, 6, 6, 6, 6, -1,
+				6, 6, 6, 6, 6, 6, 6, -1,
+				6, 6, 6, 6, 5, 6, 6, -1,
+				0, 6, 6, 6, 6, 6, 0, -1,
+				0, 0, 6, 6, 6, 0, 0, -2,
+				
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 0, 0, 6, 0, 0, 0, -1,
+				0, 0, 6, 6, 6, 0, 0, -1,
+				0, 6, 6, 6, 6, 6, 0, -1,
+				0, 0, 6, 6, 6, 0, 0, -1,
+				0, 0, 0, 6, 0, 0, 0, -1,
 				0, 0, 0, 0, 0, 0, 0, -2,
 				
 				0, 0, 0, 0, 0, 0, 0, -1,
 				0, 0, 0, 0, 0, 0, 0, -1,
 				0, 0, 0, 0, 0, 0, 0, -1,
-				0, 0, 0, 3, 0, 0, 0, -1,
+				0, 0, 0, 7, 0, 0, 0, -1,
 				0, 0, 0, 0, 0, 0, 0, -1,
 				0, 0, 0, 0, 0, 0, 0, -1,
 				0, 0, 0, 0, 0, 0, 0, -2,};
@@ -193,6 +228,93 @@ public class BGFeast {
 				break;
 			case 5:
 				m = null;
+				break;
+			case 6:
+				m = Material.DIAMOND_BLOCK;
+				break;
+			case 7:
+				m = Material.BEACON;
+				break;
+			case -1:
+				break;
+			case -2:
+				break;
+			default:
+				log.warning("Illegal integer found while creating Chests at Feast: " + i.toString());
+				break;
+			}
+			
+			if(i == -1) {
+				loc.add(0, 0, 1);
+				loc.subtract(7, 0, 0);
+			} else if(i == -2) {
+				loc.add(0, 1, 0);
+				loc.subtract(7, 0, 6);
+			} else {
+				if (m == null){
+					loc.add(1, 0, 0);
+				}else {
+					loc.getBlock().setType(m);
+					if(m == Material.CHEST) {
+						chests[curchest] = (Chest) loc.getBlock().getState();
+						if(curchest < 8) curchest++;
+					}
+					loc.add(1, 0, 0);
+				}
+			}
+		}
+	}
+	
+	private static void spawnChests() {
+		Location loc = mainBlock.getLocation();
+		loc.add(-3, 1, -3);
+		Integer curchest = 0;
+		
+		//-2: new layer; -1: new row; 0: air; 1: block; 
+		// 2: chest; 3: enchanting table; 4: fence; 5 : no change;
+		// 6: diamond_block; 7: beacon
+		Integer[] co = {0, 0, 0, 0, 0, 0, 0, -1,
+				0, 5, 2, 5, 2, 5, 0, -1,
+				0, 2, 5, 5, 5, 2, 0, -1,
+				0, 5, 5, 5, 5, 5, 0, -1,
+				0, 2, 5, 5, 5, 2, 0, -1,
+				0, 5, 2, 5, 2, 5, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -2,
+				
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 5, 0, 0, 0, 5, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 0, 0, 3, 0, 0, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -1,
+				0, 5, 0, 0, 0, 5, 0, -1,
+				0, 0, 0, 0, 0, 0, 0, -2,};
+		
+		for(Integer i : co) {
+			Material m = Material.AIR;
+			switch (i) {
+			case 0:
+				m = Material.AIR;
+				break;
+			case 1:
+				m = Material.OBSIDIAN;
+				break;
+			case 2:
+				m = Material.CHEST;
+				break;
+			case 3:
+				m = Material.ENCHANTMENT_TABLE;
+				break;
+			case 4:
+				m = Material.FENCE;
+				break;
+			case 5:
+				m = null;
+				break;
+			case 6:
+				m = Material.DIAMOND_BLOCK;
+				break;
+			case 7:
+				m = Material.BEACON;
 				break;
 			case -1:
 				break;

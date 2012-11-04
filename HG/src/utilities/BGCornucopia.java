@@ -72,6 +72,7 @@ public class BGCornucopia {
 		
 		//-2: new layer; -1: new row; 0: air; 1: block; 
 		// 2: chest; 3: enchanting table; 4: fence; 5 : no change
+		// 6: diamond_block; 7: beacon
 		Integer[] co = {0, 0, 0, 0, 0, 0, 0, -1,
 						0, 4, 2, 1, 2, 4, 0, -1,
 						0, 2, 1, 1, 1, 2, 0, -1,
@@ -97,7 +98,7 @@ public class BGCornucopia {
 						0, 0, 0, 0, 0, 0, 0, -2,
 						
 						0, 0, 1, 1, 1, 0, 0, -1,
-						1, 1, 1, 1, 1, 1, 1, -1,
+						0, 1, 1, 1, 1, 1, 0, -1,
 						1, 1, 0, 0, 0, 1, 1, -1,
 						1, 1, 0, 0, 0, 1, 1, -1,
 						1, 1, 0, 0, 0, 1, 1, -1,
