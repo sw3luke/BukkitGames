@@ -1059,7 +1059,7 @@ public class BGListener implements Listener {
 		}
 		
 		if (plugin.DEATH_SIGNS) {
-			Location loc = dp.getLocation().add(0, 1, 0);
+			Location loc = dp.getLocation();
 			String fl = BGFiles.dsign.getString("FIRST_LINE");
 			String sl = BGFiles.dsign.getString("SECOND_LINE");
 			String tl = BGFiles.dsign.getString("THIRD_LINE");
