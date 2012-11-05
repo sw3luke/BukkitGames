@@ -137,6 +137,8 @@ public class BGMain extends JavaPlugin {
 	public static Integer WORLDRADIUS = Integer.valueOf(250);
 	public Boolean SQL_USE = false;
 	public Integer FEAST_SPAWN_TIME = 30;
+	public Integer COINS_FOR_KILL = 1;
+	public Integer COINS_FOR_WIN = 5;
 
 	public Integer SQL_GAMEID = null;
 	public String SQL_HOST = null;
@@ -411,6 +413,8 @@ public class BGMain extends JavaPlugin {
 		this.SQL_PASS = getConfig().getString("PASSWORD");
 		this.SQL_DATA = getConfig().getString("DATABASE");
 		this.REW = Boolean.valueOf(getConfig().getBoolean("REWARD"));
+		this.COINS_FOR_KILL = Integer.valueOf(getConfig().getInt("COINS_FOR_KILL"));
+		this.COINS_FOR_WIN = Integer.valueOf(getConfig().getInt("COINS_FOR_WIN"));
 		this.MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));
 		BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt("WORLD_BORDER_RADIUS"));
 		this.MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
@@ -785,9 +789,19 @@ public class BGMain extends JavaPlugin {
 				} catch (Exception ex) {
 					this.log.warning(ex.toString());
 				}
-				
-				getGamers()[0].kickPlayer(ChatColor.GOLD
-						+ "You are the winner of this game!");
+				if(this.REW) {
+					String text = "You got ";
+					if(this.COINS_FOR_WIN == 1)
+						text += "1 Coin for winning the game!";
+					else
+						text += this.COINS_FOR_WIN+" Coins for winning the game!";
+					getGamers()[0].kickPlayer(ChatColor.GOLD
+							+ "You are the winner of this game!"+
+							'\n'+ text);
+				}else {
+					getGamers()[0].kickPlayer(ChatColor.GOLD
+							+ "You are the winner of this game!");
+				}
 				
 				if(SQL_USE) {
 					Integer PL_ID = getPlayerID(winnername);
@@ -800,9 +814,9 @@ public class BGMain extends JavaPlugin {
 				if(REW) {
 					if (getPlayerID(winnername) == null) {
 						reward.createUser(winnername);
-						reward.giveCoins(winnername, 5);
+						reward.giveCoins(winnername, plugin.COINS_FOR_WIN);
 					} else {
-						reward.giveCoins(winnername, 5);
+						reward.giveCoins(winnername, plugin.COINS_FOR_WIN);
 					}
 				}
 				

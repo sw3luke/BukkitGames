@@ -80,6 +80,12 @@ RANDOM_START: false
 # Winner-Reward-System (Mysql Database needed!, Configuration in kit.yml)
 REWARD: false
 
+# How many Coins you get for one kill? (Only effects when REWARD is enabled!)
+COINS_FOR_KILL: 1
+
+# How many Coins you get when you win a game? (Only effects when REWARD is enabled!)
+COINS_FOR_WIN: 5
+
 # If enabled, players can join server during the game and act like spectators
 SPECTATOR_SYSTEM: false
 

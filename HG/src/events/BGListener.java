@@ -896,6 +896,13 @@ public class BGListener implements Listener {
 										+ " was headshotted by " + p.getName()
 										+ ".");
 
+								if(plugin.REW){
+									plugin.reward.giveCoins(p.getName(), plugin.COINS_FOR_KILL);
+									if(plugin.COINS_FOR_KILL == 1)
+										BGChat.printPlayerChat(p, "You got 1 Coin for killing "+v.getName());
+									else
+										BGChat.printPlayerChat(p, "You got "+plugin.COINS_FOR_KILL+" Coins for killing "+v.getName());
+								}
 								if (plugin.SQL_USE) {
 									Integer PL_ID = plugin.getPlayerID(v
 											.getName());
@@ -1088,8 +1095,12 @@ public class BGListener implements Listener {
 					killer.setFoodLevel(20);
 				}
 			}
-			if(plugin.REW){
-				plugin.reward.giveCoins(killer.getName(), 1);
+			if(plugin.REW && last_headshot != dp.getName()){
+				plugin.reward.giveCoins(killer.getName(), plugin.COINS_FOR_KILL);
+				if(plugin.COINS_FOR_KILL == 1)
+					BGChat.printPlayerChat(killer, "You got 1 Coin for killing "+dp.getName());
+				else
+					BGChat.printPlayerChat(killer, "You got "+plugin.COINS_FOR_KILL+" Coins for killing "+dp.getName());
 			}
 		}
 

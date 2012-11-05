@@ -170,8 +170,8 @@ public class BGConsole implements CommandExecutor {
 			
 			if (args.length == 0) {
 				BGChat.printPlayerChat(p,
-										"§eYou get 5 Coins for each time you win a game"+
-										'\n'+"§eYou get 1 Coin for killing a player (only close combat)"+		
+										"§eYou get "+plugin.COINS_FOR_WIN+" Coins for each time you win a game"+
+										'\n'+"§eYou get "+plugin.COINS_FOR_KILL+" Coin for killing a player (only close combat)"+		
 										'\n'+"§eCOINS: "+ coins +
 										'\n'+"§eType /coin buy [kitName] when you want to buy a Kit!"+
 										'\n'+"§eType /coin send <player> <amount> to send other players coins");
