@@ -798,7 +798,7 @@ public class BGMain extends JavaPlugin {
 				} catch (Exception ex) {
 					this.log.warning(ex.toString());
 				}
-				if(this.REW) {
+				if(this.REW && this.COINS_FOR_WIN != 0) {
 					String text = "You got ";
 					if(this.COINS_FOR_WIN == 1)
 						text += "1 Coin for winning the game!";
