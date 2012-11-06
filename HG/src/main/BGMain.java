@@ -52,6 +52,7 @@ import utilities.BGReward;
 import utilities.BGSign;
 import utilities.BGVanish;
 import utilities.Border;
+import utilities.Metrics;
 
 import events.BGListener;
 
@@ -321,6 +322,14 @@ public class BGMain extends JavaPlugin {
 		feasts = new BGFeast(this);
 		cornucopia = new BGCornucopia(this);
 		reward = new BGReward(this);
+		
+		//Metrics
+		try{
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		}catch (IOException e) {
+			
+		}
 		
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
 		
