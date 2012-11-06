@@ -158,7 +158,7 @@ public class BGConsole implements CommandExecutor {
 			
 			int coins = 0;
 			
-			if( p == null && (args.length < 1) || (!args[0].equalsIgnoreCase("give") && !args[0].equalsIgnoreCase("take"))) {
+			if( (p == null && (args.length < 1)) || (args.length > 0 && (!args[0].equalsIgnoreCase("give") && !args[0].equalsIgnoreCase("take")))) {
 				
 				sender.sendMessage("§cThis command can only be accessed by players!");
 				return true;
