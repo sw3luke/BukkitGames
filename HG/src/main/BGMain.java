@@ -732,6 +732,8 @@ public class BGMain extends JavaPlugin {
 		}
 
 		Bukkit.getServer().getWorld("world").setTime(0L);
+		Bukkit.getServer().getWorld("world").setStorm(false);
+		Bukkit.getServer().getWorld("world").setThundering(false);
 		this.DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
 		if (ADV_CHAT_SYSTEM) {
 			BGChat.printInfoChat(" --- The games have begun! ---");
