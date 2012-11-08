@@ -182,6 +182,12 @@ public class BGConsole implements CommandExecutor {
 				return true;
 			}else if (args[0].equalsIgnoreCase("buy")) {
 				
+				if(plugin.isSpectator(p)) {
+					
+					BGChat.printPlayerChat(p, "§eYou can not buy a kit because you are a spectator!");
+					return true;
+				}
+				
 				if(args.length < 2) {
 					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /coin");
 					return true;
@@ -207,7 +213,7 @@ public class BGConsole implements CommandExecutor {
 				}else if(coins >= BGKit.getCoins(kitName.toLowerCase())) {
 					plugin.reward.coinUse(p.getName(), kitName.toLowerCase());
 					plugin.reward.takeCoins(p.getName(), BGKit.getCoins(kitName.toLowerCase()));
-					BGChat.printPlayerChat(p, "You bought the "+kitName+" Kit!");
+					BGChat.printPlayerChat(p, "§eYou bought the "+kitName+" Kit!");
 					if(plugin.ADV_CHAT_SYSTEM) {
 						BGChat.updateChat(p);
 					}
