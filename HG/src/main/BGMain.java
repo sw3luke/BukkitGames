@@ -329,7 +329,7 @@ public class BGMain extends JavaPlugin {
 			metrics.start();
 			log.info("Starting Plugin Metrics...");
 		}catch (IOException e) {
-			e.printStackTrace();
+			log.info("Error with Plugin Metrics!");
 		}
 		
 		ConsoleCommandSender console = Bukkit.getConsoleSender();
