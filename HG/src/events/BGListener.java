@@ -403,7 +403,8 @@ public class BGListener implements Listener {
 			event.setKickMessage(ChatColor.RED + plugin.GAME_IN_PROGRESS_MSG);
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, event.getKickMessage());
 		} else if (event.getResult() == Result.KICK_FULL) {
-			if (p.hasPermission("bg.vip.full") || p.hasPermission("bg.admin.full") || p.hasPermission("bg.admin.*")) {
+			if (p.hasPermission("bg.vip.full") || p.hasPermission("bg.admin.full") 
+					|| plugin.getServer().getMaxPlayers() > plugin.getServer().getOnlinePlayers().length - plugin.getGamemakers().size()) {
 				event.allow();
 			} else {
 				event.setKickMessage(ChatColor.RED + plugin.SERVER_FULL_MSG.replace("<players>", Integer.toString(Bukkit.getOnlinePlayers().length)));

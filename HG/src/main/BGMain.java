@@ -1012,6 +1012,10 @@ public class BGMain extends JavaPlugin {
 		return spectators;
 	}
 	
+	public ArrayList<Player> getGamemakers() {
+		return gamemakers;
+	}
+	
 	public void addSpectator(Player p) {
 		if(isGameMaker(p))
 			return;
