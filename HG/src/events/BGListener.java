@@ -21,6 +21,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -60,6 +61,7 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import pgDev.bukkit.DisguiseCraft.Disguise.MobType;
 import utilities.BGChat;
@@ -141,22 +143,14 @@ public class BGListener implements Listener {
 			}
 		}
 		
-		/*
-		 * TODO: Fix bug
 		if (a == Action.LEFT_CLICK_BLOCK || a == Action.LEFT_CLICK_AIR) {
-			if ((BGKit.hasAbility(p, Integer.valueOf(4)) & p.getItemInHand()
-					.getType() == Material.FIREBALL)) {
+			if (BGKit.hasAbility(p, Integer.valueOf(4)) && p.getItemInHand() != null && 
+					p.getItemInHand().getType().equals(Material.FIREBALL)) {
 				Player player = p;
-				EntityFireball fball;
-				CraftPlayer craftPlayer = (CraftPlayer) player;
-				EntityLiving playerEntity = craftPlayer.getHandle();
+				Fireball fire;
 				Vector lookat = player.getLocation().getDirection().multiply(10);
-				Location loc = player.getLocation();
-				fball = new EntityFireball(((CraftWorld) player.getWorld()).getHandle(),playerEntity, lookat.getX(), lookat.getY(),lookat.getZ());
-				fball.locX = (loc.getX() + lookat.getX() / 5.0D + 0.25D);
-				fball.locY = (loc.getY() + player.getEyeHeight() / 2.0D + 0.5D);
-				fball.locZ = (loc.getZ() + lookat.getZ() / 5.0D);
-				((CraftWorld) player.getWorld()).getHandle().addEntity(fball);
+				fire = player.getWorld().spawn(player.getLocation().add(lookat), Fireball.class);
+				fire.setShooter(player);
 
 				p.getInventory()
 						.removeItem(
@@ -164,7 +158,6 @@ public class BGListener implements Listener {
 										Material.FIREBALL, 1) });
 			}
 		}
-		*/
 		
 		try{
 			if (BGKit.hasAbility(p, 11) && a == Action.RIGHT_CLICK_BLOCK && p.getItemInHand()
