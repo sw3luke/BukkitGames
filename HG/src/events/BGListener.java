@@ -184,11 +184,7 @@ public class BGListener implements Listener {
 					Player[] players = plugin.getServer().getOnlinePlayers();
 					
 					plugin.cooldown.showPlayerCooldown(p, players);
-					if(p.getItemInHand().getAmount() == 1) {
-						p.getInventory().clear(p.getInventory().getHeldItemSlot());
-					}else {
-						p.getItemInHand().setAmount(p.getItemInHand().getAmount() - 1);
-					}
+					p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.APPLE, 1)});
 					for(Player player : players) {
 						if(player.getName().equals(p.getName())) {
 							continue;
