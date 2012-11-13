@@ -211,7 +211,7 @@ public class BGListener implements Listener {
 			for (int i = 0; i < 300; i++) {
 				List<Entity> entities = p.getNearbyEntities(i, 64.0D, i);
 				for (Entity e : entities) {
-					if ((!e.getType().equals(EntityType.PLAYER))|| plugin.isSpectator((Player) e))
+					if ((!e.getType().equals(EntityType.PLAYER))|| plugin.isSpectator((Player) e) || plugin.isGameMaker((Player) e))
 						continue;
 					if(plugin.TEAM) {
 						
