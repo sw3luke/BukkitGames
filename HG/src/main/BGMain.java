@@ -311,6 +311,8 @@ public class BGMain extends JavaPlugin {
 
 	public void onEnable() {
 		
+		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
+		
 		kit = new BGKit(this);
 		listener = new BGListener(this);
 		cooldown = new BGCooldown(this);
@@ -392,7 +394,6 @@ public class BGMain extends JavaPlugin {
 			console.sendMessage(ChatColor.RED+"getCommand teleport returns null");
 
 		log.info("Loading configuration options.");
-		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		this.DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
 		this.DEATH_SG_PROTECTED = Boolean.valueOf(BGFiles.dsign.getBoolean("PROTECTED"));
 		this.KIT_BUY_WEB = getConfig().getString("MESSAGE.KIT_BUY_WEBSITE");
