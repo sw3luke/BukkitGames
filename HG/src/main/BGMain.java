@@ -311,6 +311,8 @@ public class BGMain extends JavaPlugin {
 
 	public void onEnable() {
 		
+		plugin.getServer().getWorld("world").setDifficulty(Difficulty.PEACEFUL);
+		
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		
 		kit = new BGKit(this);
