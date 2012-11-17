@@ -524,6 +524,7 @@ public class BGMain extends JavaPlugin {
 		PluginDescriptionFile pdfFile = getDescription();
 		this.log.info("Plugin enabled");
 		this.log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
+		this.log.info("All rights reserved. This plugin is free to download. If you had to pay for it, contact us immediately!");
 		
 		log.info("Game phase: 1 - Waiting");
 	}

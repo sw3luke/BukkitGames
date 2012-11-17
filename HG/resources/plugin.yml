@@ -3,7 +3,7 @@ main: main.BGMain
 version: 1.7.7 DEV
 website: http://dev.bukkit.org/server-mods/bukkitgames
 dev-url: http://dev.bukkit.org/server-mods/bukkitgames
-author: ftbastler
+authors: [ftbastler, Galodystic]
 startup: startup
 
 description: >
