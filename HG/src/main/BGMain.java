@@ -128,7 +128,7 @@ public class BGMain extends JavaPlugin {
 	public Location spawn;
 	public String STOP_CMD = "";
 	public String LAST_WINNER = "";
-	public ArrayList<String> maps = new ArrayList<String>();
+	public HashMap<String, Integer> maps = new HashMap<String, Integer>();
 	public ArrayList<Player> spectators = new ArrayList<Player>();
 	public ArrayList<Player> gamemakers = new ArrayList<Player>();
 	public static Integer COUNTDOWN = Integer.valueOf(0);
@@ -294,21 +294,21 @@ public class BGMain extends JavaPlugin {
 		
 		if (!this.REGEN_WORLD || !(GEN_MAPS && r.nextBoolean())) {
 			List<String> mapnames = BGFiles.worldconf.getStringList("WORLDS");
-			for(String name : mapnames) {
-				maps.add(name);
-			}
 			
-			String map = maps.get(r.nextInt(maps.size()));
+			String map = mapnames.get(r.nextInt(mapnames.size()));
+			String[] splitmap = map.split(",");
 			
-			this.log.info("Copying saved world. ("+map+")");
+			this.log.info("Copying saved world. ("+splitmap[0]+")");
 			try {
-				copyDirectory(new File(this.getDataFolder(), map),
+				copyDirectory(new File(this.getDataFolder(), splitmap[0]),
 						new File("world"));
 			} catch (IOException e) {
 				log.warning("Error: " + e.toString());
 			}
+			BGMain.WORLDRADIUS = Integer.valueOf(Integer.parseInt(splitmap[1]));
 		} else {
 			this.log.info("Generating new world.");
+			BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt("WORLD_BORDER_RADIUS"));
 		}
 	}
 
@@ -431,8 +431,7 @@ public class BGMain extends JavaPlugin {
 		this.REW = Boolean.valueOf(getConfig().getBoolean("REWARD"));
 		this.COINS_FOR_KILL = Integer.valueOf(getConfig().getInt("COINS_FOR_KILL"));
 		this.COINS_FOR_WIN = Integer.valueOf(getConfig().getInt("COINS_FOR_WIN"));
-		this.MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));
-		BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt("WORLD_BORDER_RADIUS"));
+		this.MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));	
 		this.MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
 		COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.COUNTDOWN-SEC"));
 		this.FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.FINAL_COUNTDOWN-SEC"));
