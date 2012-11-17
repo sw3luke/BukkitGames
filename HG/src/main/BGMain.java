@@ -128,7 +128,6 @@ public class BGMain extends JavaPlugin {
 	public Location spawn;
 	public String STOP_CMD = "";
 	public String LAST_WINNER = "";
-	public HashMap<String, Integer> maps = new HashMap<String, Integer>();
 	public ArrayList<Player> spectators = new ArrayList<Player>();
 	public ArrayList<Player> gamemakers = new ArrayList<Player>();
 	public static Integer COUNTDOWN = Integer.valueOf(0);
@@ -292,7 +291,7 @@ public class BGMain extends JavaPlugin {
 		this.REGEN_WORLD = getConfig().getBoolean("REGEN_WORLD");
 		this.GEN_MAPS = BGFiles.worldconf.getBoolean("GEN_MAPS");
 		
-		if (!this.REGEN_WORLD || !(GEN_MAPS && r.nextBoolean())) {
+		if (!this.REGEN_WORLD && !(GEN_MAPS && r.nextBoolean())) {
 			List<String> mapnames = BGFiles.worldconf.getStringList("WORLDS");
 			
 			String map = mapnames.get(r.nextInt(mapnames.size()));
