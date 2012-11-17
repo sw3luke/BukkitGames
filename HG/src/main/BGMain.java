@@ -119,7 +119,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean CORNUCOPIA = true;
 	public Boolean CORNUCOPIA_CHESTS = false;
 	public Boolean TEAM = true;
-	
+	public Boolean GEN_MAPS = false;
 	public Boolean CORNUCOPIA_ITEMS = true;
 	public Boolean FEAST = true;
 	public Boolean FEAST_CHESTS = false;
@@ -287,14 +287,17 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().unloadWorld("world", false);
 		deleteDir(new File("world"));
 
+		Random r = new Random();
+		
 		this.REGEN_WORLD = getConfig().getBoolean("REGEN_WORLD");
-		if (this.REGEN_WORLD == false) {
+		this.GEN_MAPS = BGFiles.worldconf.getBoolean("GEN_MAPS");
+		
+		if (!this.REGEN_WORLD || !(GEN_MAPS && r.nextBoolean())) {
 			List<String> mapnames = BGFiles.worldconf.getStringList("WORLDS");
 			for(String name : mapnames) {
 				maps.add(name);
 			}
 			
-			Random r = new Random();
 			String map = maps.get(r.nextInt(maps.size()));
 			
 			this.log.info("Copying saved world. ("+map+")");
