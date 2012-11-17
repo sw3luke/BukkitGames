@@ -363,7 +363,7 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-		if(plugin.isSpectator(event.getPlayer())) {
+		if(plugin.isSpectator(event.getPlayer()) || plugin.isGameMaker(event.getPlayer())) {
 			event.setCancelled(true);
 			return;
 		}
