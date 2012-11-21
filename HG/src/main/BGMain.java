@@ -25,17 +25,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import net.minecraft.server.Packet62NamedSoundEffect;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -168,9 +166,7 @@ public class BGMain extends JavaPlugin {
 					BGChat.printTimeChat("The game will start in "
 							+ BGMain.this.TIME(BGMain.COUNTDOWN) + ".");
 					for (Player pl : getGamers()) {
-						String sound = "random.click";
-						Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect(sound, pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), 1.0F, (byte)1);
-						((CraftPlayer) pl).getHandle().netServerHandler.sendPacket(packet);
+						pl.playSound(pl.getLocation(), Sound.CLICK, 1.0F, (byte) 1);
 					}
 				}
 
@@ -200,9 +196,7 @@ public class BGMain extends JavaPlugin {
 							+ BGMain.this.TIME(BGMain.this.FINAL_COUNTDOWN)
 							+ ".");
 					for (Player pl : getGamers()) {
-						String sound = "random.click";
-						Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect(sound, pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), 1.0F, (byte)1);
-						((CraftPlayer) pl).getHandle().netServerHandler.sendPacket(packet);
+						pl.playSound(pl.getLocation(), Sound.CLICK, 1.0F, (byte) 1);
 					}
 				}
 				FINAL_COUNTDOWN--;
@@ -210,6 +204,9 @@ public class BGMain extends JavaPlugin {
 				BGChat.printTimeChat("");
 				BGChat.printTimeChat("Invincibility was worn off.");
 				log.info("Game phase: 3 - Fighting");
+				for (Player pl : getGamers()) {
+					pl.playSound(pl.getLocation(), Sound.ANVIL_LAND, 1.0F, (byte) 1);
+				}
 				if(SHOW_TIPS) {
 					BGChat.printTipChat();
 				}
@@ -820,9 +817,7 @@ public class BGMain extends JavaPlugin {
 				}
 				
 				Player pl = getGamers()[0];
-				String sound = "random.levelup";
-				Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect(sound, pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), 1.0F, (byte)1);
-				((CraftPlayer) pl).getHandle().netServerHandler.sendPacket(packet);
+				pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1.0F, (byte) 1);
 				
 				if(this.REW && this.COINS_FOR_WIN != 0) {
 					String text = "You got ";
