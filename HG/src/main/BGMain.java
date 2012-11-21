@@ -25,6 +25,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
+import net.minecraft.server.Packet62NamedSoundEffect;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,6 +35,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -165,6 +167,11 @@ public class BGMain extends JavaPlugin {
 				} else if (BGMain.COUNTDOWN < 10) {
 					BGChat.printTimeChat("The game will start in "
 							+ BGMain.this.TIME(BGMain.COUNTDOWN) + ".");
+					for (Player pl : getGamers()) {
+						String sound = "random.click";
+						Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect(sound, pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), 1.0F, (byte)1);
+						((CraftPlayer) pl).getHandle().netServerHandler.sendPacket(packet);
+					}
 				}
 
 				BGMain.COUNTDOWN--;
@@ -192,6 +199,11 @@ public class BGMain extends JavaPlugin {
 					BGChat.printTimeChat("Invincibility wears off in "
 							+ BGMain.this.TIME(BGMain.this.FINAL_COUNTDOWN)
 							+ ".");
+					for (Player pl : getGamers()) {
+						String sound = "random.click";
+						Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect(sound, pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), 1.0F, (byte)1);
+						((CraftPlayer) pl).getHandle().netServerHandler.sendPacket(packet);
+					}
 				}
 				FINAL_COUNTDOWN--;
 			} else {
@@ -806,6 +818,12 @@ public class BGMain extends JavaPlugin {
 				} catch (Exception ex) {
 					this.log.warning(ex.toString());
 				}
+				
+				Player pl = getGamers()[0];
+				String sound = "random.levelup";
+				Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect(sound, pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), 1.0F, (byte)1);
+				((CraftPlayer) pl).getHandle().netServerHandler.sendPacket(packet);
+				
 				if(this.REW && this.COINS_FOR_WIN != 0) {
 					String text = "You got ";
 					if(this.COINS_FOR_WIN == 1)
