@@ -1,0 +1,47 @@
+name: The BukkitGames
+main: main.BGMain
+version: 1.7.7 DEV
+website: http://dev.bukkit.org/server-mods/bukkitgames
+dev-url: http://dev.bukkit.org/server-mods/bukkitgames
+author: ftbastler
+startup: startup
+
+description: >
+             The BukkitGames.
+commands:
+  help:
+    description: Help.
+    usage: /<command>
+  kit:
+    description: Kits.
+    usage: /<command>
+  kitinfo:
+    description: Kits info.
+    usage: /<command> [kitName]
+  start:
+    description: Start.
+    usage: /<command>
+  spawn:
+    description: Spawn.
+    usage: /<command>
+  coin:
+    description: Coin Menu.
+    usage: /<command>
+  fbattle:
+    description: Final battle.
+    usage: /<command>
+  bgversion:
+    description: Displays the current version and checks for updates.
+    usage: /<command>
+  bgdownload:
+    description: Download the new update if available.
+    usage: /<command>
+  team:
+    description: Team menu
+    usage: /<command>
+  gamemaker:
+    description: Gamemaker Command
+    usage: /<command>
+  teleport:
+    description: Teleport Menu
+    usage: /<command>

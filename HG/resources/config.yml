@@ -1,0 +1,100 @@
+TIME:
+# Max game length in minutes
+  MAX_GAME-MIN: 90
+  
+# Final battle takes place after ... minutes
+  INCREASE_DIFFICULTY-MIN: 50
+  
+# Countdown to the start of the game
+  COUNTDOWN-SEC: 300
+  
+# Duration of invincibility.
+  FINAL_COUNTDOWN-SEC: 60
+  
+# Define the messages.
+MESSAGE:
+  WORLD_BORDER: You have reached the WorldBorder!
+  SERVER_FULL: The server is full.
+  GAME_PROGRESS: Game is in progress.
+  MOTD_PROGRESS: Game is in progress.
+  MOTD_COUNTDOWN: Game begins in <time>.
+  NO_KIT_PERMISSION: You are not allowed to use this kit.
+  HELP_MESSAGE: For help, visit tinyurl.com/HGHelp
+  SERVER_TITLE: BukkitGames HG Server
+  KIT_BUY_WEBSITE: Ask operator.
+
+# Toggle the advanced chat-system. (HUD chat-system)
+ADVANCED_CHAT: true
+
+# Show tips throughout the game?
+SHOW_TIPS: true 
+  
+# Add a line for each tip you want to display.
+TIPS:
+  - 'Some kits have special abilities.'
+  - 'This server runs the BukkitGames plugin.'
+  - 'GameMakers are invisible!'
+  - 'Get help by typing in /help.'
+  - 'Get information about a kit with /kitinfo [KitName].'
+  
+# Advcanced Abilities (DisguiseCraft needed!)
+ADVANCED_ABILITIES: false
+
+# Spawn cornucopia on start (see cornucopia.yml)
+CORNUCOPIA: true
+
+# Spawn feast (see feast.yml)
+FEAST: true
+
+# Radius of the world...
+WORLD_BORDER_RADIUS: 300
+
+# Minimum of players to start with.
+MINIMUM_PLAYERS_START: 5
+
+# Users which did not choose a kit, get the default kit (can be configured in the kit.yml)
+DEFAULT_KIT: false
+
+# Enable or disable compass feature.
+COMPASS: true
+
+# Auto Update Compass (If true, may causes lag on the server!) COMPASS has to be enabled for this to work.
+AUTO_COMPASS: false
+
+# Team Function! If enabled players can add other players to their team!
+TEAM: true
+
+# Death signs mark Player death places! (Lines can be configured in deathsign.yml).
+DEATH_SIGNS: true
+
+# What should the server run in order to restart the server?
+RESTART_SERVER_COMMAND: 'stop'
+
+# Regenerate world? (true: every round there will be a new world/ false: see world.yml for configs).
+REGEN_WORLD: true
+
+# If false, all players start the game at the spawn.
+# If true, each player starts at a random spot. (May causes lag on some servers!)
+RANDOM_START: false
+
+# Winner-Reward-System (Mysql Database needed!, Configuration in kit.yml)
+REWARD: false
+
+# How many Coins you get for one kill? (Only effects when REWARD is enabled!)
+COINS_FOR_KILL: 1
+
+# How many Coins you get when you win a game? (Only effects when REWARD is enabled!)
+COINS_FOR_WIN: 5
+
+# If enabled, players can join server during the game and act like spectators
+SPECTATOR_SYSTEM: false
+
+# Weather to use a MySQL database for statistics. (leaderboard.yml will still be used!)
+MYSQL: false
+
+# Fill in the information for the database if you set "MYSQL" to true.
+HOST: ''
+PORT: ''
+USERNAME: ''
+PASSWORD: ''
+DATABASE: ''
