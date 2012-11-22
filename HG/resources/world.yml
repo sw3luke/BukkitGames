@@ -1,7 +1,0 @@
-# If you set REGEN_WORLD in the config.yml to false, you can config your worlds here.
-# All world folders have to be located in "/plugins/The BukkitGames/".
-# Add the name of each folder here. A random world of these will be selected upon start.
-WORLDS:
-  - 'world'
-  - 'world1'
-  - 'world2'
