@@ -63,7 +63,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import pgDev.bukkit.DisguiseCraft.Disguise.MobType;
+import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
+
 import utilities.BGChat;
 import utilities.BGCornucopia;
 import utilities.BGDisguise;
@@ -988,9 +989,9 @@ public class BGListener implements Listener {
 			
 			EntityType mob = defender.getType();
 			
-			if (BGKit.hasAbility(dam, 17) && BGDisguise.getMobType(mob) != null && plugin.ADV_ABI) {
+			if (BGKit.hasAbility(dam, 17) && BGDisguise.getDisguiseType(mob) != null && plugin.ADV_ABI) {
 				
-				MobType mt = BGDisguise.getMobType(mob);
+				DisguiseType mt = BGDisguise.getDisguiseType(mob);
 				plugin.dis.disguise(dam, mt);
 			}
 			
