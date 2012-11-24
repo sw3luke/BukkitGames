@@ -6,21 +6,20 @@ import main.BGMain;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import pgDev.bukkit.DisguiseCraft.DisguiseCraft;
 import pgDev.bukkit.DisguiseCraft.api.DisguiseCraftAPI;
 import pgDev.bukkit.DisguiseCraft.disguise.Disguise;
 import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
-public class BGDisguise extends JavaPlugin{
+public class BGDisguise {
 
-	
+	@SuppressWarnings("unused")
 	private BGMain plugin;
 	
 	public DisguiseCraftAPI dcapi;
 	
-	public ArrayList<Player> disList = new ArrayList<Player>();
+	public ArrayList<String> disList = new ArrayList<String>();
 	
 	public BGDisguise(BGMain plugin) {
 		
@@ -34,13 +33,11 @@ public class BGDisguise extends JavaPlugin{
 			Disguise dis = new Disguise(dcapi.newEntityID(), mob);
 			dcapi.disguisePlayer(player, dis);
 			BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.17.disguise"));
-			hidePlayer(player);
-			disList.add(player);
+			disList.add(player.getName());
 		}else {
 			Disguise dis = dcapi.getDisguise(player);
 			dis.setType(mob);
 			dcapi.changePlayerDisguise(player, dis);
-			hidePlayer(player);
 		}
 	}
 	
@@ -49,28 +46,11 @@ public class BGDisguise extends JavaPlugin{
 		if (dcapi.isDisguised(player)) {
 			dcapi.undisguisePlayer(player);
 			BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.17.undisguise"));
-			showPlayer(player);
-			disList.remove(player);
+			disList.remove(player.getName());
 		}
 	}
 	
-	public void hidePlayer(Player player) {
-		
-		for(Player p : plugin.getServer().getOnlinePlayers()) {
-			if (p.getName().equals(player.getName())) {
-				continue;
-			}
-			p.hidePlayer(player);
-		}
-	}
-	
-	public void showPlayer(Player player) {
-		for(Player p : plugin.getServer().getOnlinePlayers()) {
-			p.showPlayer(player);
-		}
-	}
-	
-public static DisguiseType getDisguiseType(EntityType entity) {
+	public static DisguiseType getDisguiseType(EntityType entity) {
 		
 		if (entity == EntityType.BLAZE) {
 			
