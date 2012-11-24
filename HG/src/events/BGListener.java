@@ -17,7 +17,6 @@ import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -663,10 +662,10 @@ public class BGListener implements Listener {
 		}
 		
 		Block b = event.getBlock();
-		if(b.getType().equals(Material.SIGN_POST)) {
-			Sign sign = (Sign) b.getState();
-			if(plugin.sign.signs.contains(sign) & !p.hasPermission("bg.admin.editblocks"))
+		
+		if(plugin.DEATH_SG_PROTECTED && plugin.sign.signs.contains(b.getLocation())) {
 				event.setCancelled(true);
+				return;
 		}
 		
 		if (BGKit.hasAbility(p, 2) && b.getType() == Material.LOG) {

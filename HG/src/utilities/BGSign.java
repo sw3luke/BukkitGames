@@ -16,7 +16,7 @@ public class BGSign extends JavaPlugin{
 	@SuppressWarnings("unused")
 	private BGMain plugin;
 	
-	public ArrayList<Sign> signs = new ArrayList<Sign>();
+	public ArrayList<Location> signs = new ArrayList<Location>();
 	
 	public BGSign(BGMain plugin) {
 		
@@ -59,7 +59,7 @@ public class BGSign extends JavaPlugin{
 		
 			sign.update(true);
 		
-			signs.add(sign);
+			signs.add(sign.getLocation());
 		}catch (Exception e) {
 			
 		}
