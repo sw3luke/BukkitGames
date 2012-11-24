@@ -121,8 +121,10 @@ public class BGMain extends JavaPlugin {
 	public Boolean TEAM = true;
 	public Boolean GEN_MAPS = false;
 	public Boolean CORNUCOPIA_ITEMS = true;
+	public Boolean CORNUCOPIA_PROTECTED = true;
 	public Boolean FEAST = true;
 	public Boolean FEAST_CHESTS = false;
+	public Boolean FEAST_PROTECTED = true;
 	public Boolean SPECTATOR_SYSTEM = false;
 	Boolean SQL_DSC = false;
 	public Location spawn;
@@ -419,8 +421,10 @@ public class BGMain extends JavaPlugin {
 		this.CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
 		this.CORNUCOPIA_ITEMS = Boolean.valueOf(BGFiles.cornconf.getBoolean("ITEM_SPAWN"));
 		this.CORNUCOPIA_CHESTS = Boolean.valueOf(BGFiles.cornconf.getBoolean("CHESTS"));
+		this.CORNUCOPIA_PROTECTED = Boolean.valueOf(BGFiles.cornconf.getBoolean("PROTECTED"));
 		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
 		this.FEAST_CHESTS = Boolean.valueOf(BGFiles.feastconf.getBoolean("CHESTS"));
+		this.FEAST_PROTECTED = Boolean.valueOf(BGFiles.feastconf.getBoolean("PROTECTED"));
 		this.SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
 		this.TEAM = Boolean.valueOf(getConfig().getBoolean("TEAM"));
 		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");

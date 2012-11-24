@@ -1,6 +1,7 @@
 package utilities;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -24,6 +25,8 @@ public class BGFeast {
 	private static Boolean spawned = false;
 	private static Chest[] chests = new Chest[8];
 	
+	private static ArrayList<Location> fblocks = new ArrayList<Location>();
+	
 	public BGFeast(BGMain plugin) {	
 		BGFeast.plugin = plugin;
 	}
@@ -34,6 +37,7 @@ public class BGFeast {
 				mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
 			} while (!plugin.inBorder(mainBlock.getLocation()));
 			mainBlock.setType(Material.NETHERRACK);
+			fblocks.add(mainBlock.getLocation());
 			removeAbove(mainBlock);
 			createFeast(Material.SOUL_SAND);
 			spawned = true;
@@ -127,7 +131,7 @@ public class BGFeast {
 		if(!plugin.FEAST || !spawned)
 			return false;
 
-		if(b.getLocation().distance(mainBlock.getLocation()) <= radius + 3)
+		if(fblocks.contains(b.getLocation()))
 			return true;
 
 		return false;
@@ -145,6 +149,7 @@ public class BGFeast {
 	        	if(l.distance(loc) <= r && l.getBlock().getType() != Material.NETHERRACK) {
 	        		removeAbove(l.getBlock());
 	        		l.getBlock().setType(m);
+	        		fblocks.add(l);
 	        	}
 	        }
 	    }
@@ -155,7 +160,6 @@ public class BGFeast {
 	private static void spawnFramework() {
 		Location loc = mainBlock.getLocation();
 		loc.add(-3, 1, -3);
-		Integer curchest = 0;
 		
 		//-2: new layer; -1: new row; 0: air; 1: block; 
 		// 2: chest; 3: enchanting table; 4: fence; 5 : no change;
@@ -255,10 +259,7 @@ public class BGFeast {
 					loc.add(1, 0, 0);
 				}else {
 					loc.getBlock().setType(m);
-					if(m == Material.CHEST) {
-						chests[curchest] = (Chest) loc.getBlock().getState();
-						if(curchest < 8) curchest++;
-					}
+					fblocks.add(loc);
 					loc.add(1, 0, 0);
 				}
 			}
@@ -336,6 +337,7 @@ public class BGFeast {
 					loc.add(1, 0, 0);
 				}else {
 					loc.getBlock().setType(m);
+					fblocks.add(loc);
 					if(m == Material.CHEST) {
 						chests[curchest] = (Chest) loc.getBlock().getState();
 						if(curchest < 8) curchest++;

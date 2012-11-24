@@ -8,6 +8,9 @@ SPAWN_TIME: 30
 # Whether to spawn the items in chests or not
 CHESTS: false
 
+# Do you want that players can not destroy blocks from feast?
+PROTECTED: true
+
 # Layout for a item line:
 # - 'ITEM_ID:DURABILITY,MIN_AMOUNT,MAX_AMOUNT,MUST_SPAWN,ENCHANTMENT_ID,ENCHANTMENT_LEVEL'
 #

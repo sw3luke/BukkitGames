@@ -1,5 +1,6 @@
 package utilities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -22,6 +23,8 @@ public class BGCornucopia {
 	private static Logger log = BGMain.getPluginLogger();
 	private static Chest[] chests = new Chest[8];
 	
+	private static ArrayList<Location> cblocks = new ArrayList<Location>();
+	
 	public BGCornucopia(BGMain plugin) {
 		BGCornucopia.plugin = plugin;
 	}
@@ -29,6 +32,7 @@ public class BGCornucopia {
 	public static void createCorn() {
 		BGCornucopia.mainBlock = BGCornucopia.getCornSpawnBlock();
 		mainBlock.setType(Material.DIAMOND_BLOCK);
+		cblocks.add(mainBlock.getLocation());
 		removeAbove(mainBlock);
 		createFloor(Material.GOLD_BLOCK);
 		
@@ -55,6 +59,7 @@ public class BGCornucopia {
 	        	if(l.distance(loc) <= r && l.getBlock().getType() != Material.DIAMOND_BLOCK) {
 	        		removeAbove(l.getBlock());
 	        		l.getBlock().setType(m);
+	        		cblocks.add(l);
 	        	}
 	        }
 	    }
@@ -162,6 +167,7 @@ public class BGCornucopia {
 					loc.add(1, 0, 0);
 				}else {
 					loc.getBlock().setType(m);
+					cblocks.add(loc);
 					if(m == Material.CHEST) {
 						chests[curchest] = (Chest) loc.getBlock().getState();
 						if(curchest < 8) curchest++;
@@ -176,7 +182,7 @@ public class BGCornucopia {
 		if(!plugin.CORNUCOPIA)
 			return false;
 
-		if(b.getLocation().distance(mainBlock.getLocation()) <= radius + 5)
+		if(cblocks.contains(b.getLocation()))
 			return true;
 
 		return false;

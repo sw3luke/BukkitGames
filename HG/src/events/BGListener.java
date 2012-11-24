@@ -655,7 +655,7 @@ public class BGListener implements Listener {
 			return;
 		}
 
-		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock()))) {
+		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
 			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
 			event.setCancelled(true);
 			return;
@@ -690,12 +690,6 @@ public class BGListener implements Listener {
 		}
 		if ((this.plugin.DENY_BLOCKPLACE.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
 				|| !p.hasPermission("bg.admin.*")))) {
-			event.setCancelled(true);
-			return;
-		}
-		
-		if((BGCornucopia.isCornucopiaBlock(event.getBlock()) || BGFeast.isFeastBlock(event.getBlock()))) {
-			BGChat.printPlayerChat(p, "§cYou can't place a block here!");
 			event.setCancelled(true);
 			return;
 		}

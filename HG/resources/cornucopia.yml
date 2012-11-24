@@ -9,6 +9,9 @@ ITEM_SPAWN: true
 # Whether to spawn the items in chests or not
 CHESTS: false
 
+# If you want that players can not destroy blocks from cornucopia?
+PROTECTED: true
+
 # Layout for a item line:
 # - 'ITEM_ID:DURABILITY,MIN_AMOUNT,MAX_AMOUNT,MUST_SPAWN,ENCHANTMENT_ID,ENCHANTMENT_LEVEL'
 #
