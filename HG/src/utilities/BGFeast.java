@@ -256,10 +256,11 @@ public class BGFeast {
 				loc.subtract(7, 0, 6);
 			} else {
 				if (m == null){
+					fblocks.add(loc.getBlock().getLocation());
 					loc.add(1, 0, 0);
 				}else {
 					loc.getBlock().setType(m);
-					fblocks.add(loc);
+					fblocks.add(loc.getBlock().getLocation());
 					loc.add(1, 0, 0);
 				}
 			}
@@ -334,10 +335,11 @@ public class BGFeast {
 				loc.subtract(7, 0, 6);
 			} else {
 				if (m == null){
+					fblocks.add(loc.getBlock().getLocation());
 					loc.add(1, 0, 0);
 				}else {
 					loc.getBlock().setType(m);
-					fblocks.add(loc);
+					fblocks.add(loc.getBlock().getLocation());
 					if(m == Material.CHEST) {
 						chests[curchest] = (Chest) loc.getBlock().getState();
 						if(curchest < 8) curchest++;
