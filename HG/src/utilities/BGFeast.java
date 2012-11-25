@@ -231,7 +231,6 @@ public class BGFeast {
 				m = Material.FENCE;
 				break;
 			case 5:
-				m = null;
 				break;
 			case 6:
 				m = Material.DIAMOND_BLOCK;
@@ -254,15 +253,13 @@ public class BGFeast {
 			} else if(i == -2) {
 				loc.add(0, 1, 0);
 				loc.subtract(7, 0, 6);
-			} else {
-				if (m == null){
+			} else if(i == 5){
+				loc.add(1, 0, 0);
+			}else {
+				loc.getBlock().setType(m);
+				if(i != 0)
 					fblocks.add(loc.getBlock().getLocation());
-					loc.add(1, 0, 0);
-				}else {
-					loc.getBlock().setType(m);
-					fblocks.add(loc.getBlock().getLocation());
-					loc.add(1, 0, 0);
-				}
+				loc.add(1, 0, 0);
 			}
 		}
 	}
@@ -310,7 +307,6 @@ public class BGFeast {
 				m = Material.FENCE;
 				break;
 			case 5:
-				m = null;
 				break;
 			case 6:
 				m = Material.DIAMOND_BLOCK;
@@ -333,19 +329,17 @@ public class BGFeast {
 			} else if(i == -2) {
 				loc.add(0, 1, 0);
 				loc.subtract(7, 0, 6);
-			} else {
-				if (m == null){
+			} else if(i == 5){
+				loc.add(1, 0, 0);
+			}else {
+				loc.getBlock().setType(m);
+				if(i != 0)
 					fblocks.add(loc.getBlock().getLocation());
-					loc.add(1, 0, 0);
-				}else {
-					loc.getBlock().setType(m);
-					fblocks.add(loc.getBlock().getLocation());
-					if(m == Material.CHEST) {
-						chests[curchest] = (Chest) loc.getBlock().getState();
-						if(curchest < 8) curchest++;
-					}
-					loc.add(1, 0, 0);
+				if(m == Material.CHEST) {
+					chests[curchest] = (Chest) loc.getBlock().getState();
+					if(curchest < 8) curchest++;
 				}
+				loc.add(1, 0, 0);
 			}
 		}
 	}
