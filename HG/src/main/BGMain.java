@@ -113,8 +113,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean REW = false;
 	public Boolean DEATH_SIGNS = true;
 	public Boolean DEATH_SG_PROTECTED = true;
-	public Boolean END_GAME_A = true;
-	public Boolean END_GAME_M = true;
+	public Boolean END_GAME = true;
 	public Boolean DEFAULT_KIT = false;
 	public Boolean CORNUCOPIA = true;
 	public Boolean CORNUCOPIA_CHESTS = false;
@@ -254,22 +253,15 @@ public class BGMain extends JavaPlugin {
 			}
 			
 			if (GAME_RUNNING_TIME == (BGMain.this.END_GAME_TIME - 1)) {
-				if(END_GAME_A) {
+				if(END_GAME) {
 					BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-					END_GAME_M = false; 
+					
+					timer4.schedule(task4, 60000);
+					
+					END_GAME = false; 
 				}			
             }
-			
-			if (GAME_RUNNING_TIME == BGMain.this.END_GAME_TIME) {
-				if(END_GAME_A) {
-					World w = Bukkit.getWorld("world");
-					w.setDifficulty(Difficulty.HARD);
-					w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
-					BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
-					log.info("Game phase: 4 - Final");
-					BGMain.this.endgame();
-				}
-			}
+
 
 			if (GAME_RUNNING_TIME.intValue() == MAX_GAME_RUNNING_TIME
 					.intValue() - 1) {
@@ -283,6 +275,20 @@ public class BGMain extends JavaPlugin {
 		}
 	};
 
+	public final Timer timer4 = new Timer();
+	public TimerTask task4 = new TimerTask(){
+		
+		public void run() {
+			
+			World w = Bukkit.getWorld("world");
+			w.setDifficulty(Difficulty.HARD);
+			w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
+			BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
+			log.info("Game phase: 4 - Final");
+			BGMain.this.endgame();
+		}
+	};
+	
 	public void onLoad() {
 		plugin = this;
 		log = getPluginLogger();

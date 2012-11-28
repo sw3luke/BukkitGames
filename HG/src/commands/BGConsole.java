@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import main.BGMain;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,20 +50,17 @@ public class BGConsole implements CommandExecutor {
 			if(sender.hasPermission("bg.admin.fbattle")) {
 				
 				if(plugin.DENY_LOGIN) {
-					if(plugin.END_GAME_M) {
-						if(p != null)
-							BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-						else
-							sender.sendMessage("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-						plugin.END_GAME_A = false;
-						plugin.cooldown.fbattleCooldown();
+					if(plugin.END_GAME) {
+						BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
+						plugin.END_GAME = false;
+						plugin.timer4.schedule(plugin.task4, 60000);
 						
 						return true;
 					}else {
 						if(p != null)
-							BGChat.printPlayerChat(p, "You can not start the final battle because it will start soon!");
+							BGChat.printPlayerChat(p, ChatColor.RED+"You can not start the final battle because it will start soon!");
 						else
-							sender.sendMessage("You can not start the final battle because it will start soon!");
+							sender.sendMessage(ChatColor.RED+"You can not start the final battle because it will start soon!");
 						return true;
 					}
 				}else{

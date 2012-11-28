@@ -111,19 +111,4 @@ public class BGCooldown extends JavaPlugin {
 		Timer timer = new Timer();
 		timer.schedule(action, BGFiles.abconf.getInt("AB.11.Cooldown") * 1000);
 	}
-	
-	public void fbattleCooldown() {
-		
-		TimerTask action = new TimerTask() {
-			
-			public void run() {
-				
-				BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
-				plugin.endgame();
-			}
-		};
-		
-		Timer timer = new Timer();
-		timer.schedule(action, 60000);
-	}
 }
