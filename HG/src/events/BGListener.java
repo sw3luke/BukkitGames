@@ -700,6 +700,12 @@ public class BGListener implements Listener {
 			return;
 		}
 		
+		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
+			BGChat.printPlayerChat(p, "§cYou can't place this block!");
+			event.setCancelled(true);
+			return;
+		}
+		
 		Block block = event.getBlockPlaced();
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.CROPS) {
 			block.setData(CropState.RIPE.getData());
