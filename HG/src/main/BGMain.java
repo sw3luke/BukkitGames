@@ -729,7 +729,14 @@ public class BGMain extends JavaPlugin {
 				Random r = new Random();
 				Location startFrom = getSpawn();
 				Location loc = startFrom.clone();
-				loc.add((r.nextBoolean() ? 1 : -1) * r.nextInt(6), 60, (r.nextBoolean() ? 1 : -1) * r.nextInt(6));
+				int addx;
+				int addy;
+				do {
+					
+					addx = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
+					addy = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
+				}while((Math.abs(addx)+Math.abs(addy)) < 5);
+				loc.add(addx, 60, addy);
 				loc.setY(getServer().getWorld("world").getHighestBlockYAt(loc) + 1.5);
 				p.teleport(loc);
 			} else {
