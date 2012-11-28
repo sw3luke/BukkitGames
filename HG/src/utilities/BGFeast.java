@@ -355,4 +355,8 @@ public class BGFeast {
 		}
 	}
 	
+	public static Block getMainBlock() {
+		
+		return mainBlock;
+	}
 }

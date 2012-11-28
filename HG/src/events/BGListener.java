@@ -359,6 +359,12 @@ public class BGListener implements Listener {
 		}catch (NullPointerException e){
 			
 		}
+		try{
+			if((event.getEntity().getLocation().distance(BGCornucopia.getMainBlock().getLocation()) < 16 ) || (event.getEntity().getLocation().distance(BGFeast.getMainBlock().getLocation()) < 16 ))
+				event.setCancelled(true);
+		}catch (NullPointerException e) {
+			
+		}
 	}
 
 	@EventHandler

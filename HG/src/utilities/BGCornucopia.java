@@ -266,4 +266,9 @@ public class BGCornucopia {
 			}
 		}
 	}
+	
+	public static Block getMainBlock() {
+		
+		return mainBlock;
+	}
  }
