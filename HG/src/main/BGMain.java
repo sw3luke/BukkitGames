@@ -110,6 +110,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean COMPASS = true;
 	public Boolean AUTO_COMPASS = false;
 	public Boolean ADV_ABI = false;
+	public Boolean SIMP_REW = false;
 	public Boolean REW = false;
 	public Boolean DEATH_SIGNS = true;
 	public Boolean DEATH_SG_PROTECTED = true;
@@ -446,6 +447,7 @@ public class BGMain extends JavaPlugin {
 		this.SQL_USER = getConfig().getString("USERNAME");
 		this.SQL_PASS = getConfig().getString("PASSWORD");
 		this.SQL_DATA = getConfig().getString("DATABASE");
+		this.SIMP_REW = getConfig().getBoolean("SIMPLE_REWARD");
 		this.REW = Boolean.valueOf(getConfig().getBoolean("REWARD"));
 		this.COINS_FOR_KILL = Integer.valueOf(getConfig().getInt("COINS_FOR_KILL"));
 		this.COINS_FOR_WIN = Integer.valueOf(getConfig().getInt("COINS_FOR_WIN"));

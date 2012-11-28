@@ -77,6 +77,9 @@ REGEN_WORLD: true
 # If true, each player starts at a random spot. (May causes lag on some servers!)
 RANDOM_START: false
 
+# Last Winner gets alle Kits in the next round only on local server! (no Mysql is needed!)
+SIMPLE_REWARD: false
+
 # Winner-Reward-System (Mysql Database needed!, Configuration in kit.yml)
 REWARD: false
 
