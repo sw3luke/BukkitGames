@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import utilities.BGChat;
+import utilities.BGFBattle;
 import utilities.BGKit;
 import utilities.Updater;
 
@@ -53,6 +54,7 @@ public class BGConsole implements CommandExecutor {
 					if(plugin.END_GAME) {
 						BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
 						plugin.END_GAME = false;
+						BGFBattle.createBattle();
 						plugin.timer4.schedule(plugin.task4, 60000);
 						
 						return true;

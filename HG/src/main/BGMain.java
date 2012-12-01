@@ -45,6 +45,7 @@ import utilities.BGChat;
 import utilities.BGCooldown;
 import utilities.BGCornucopia;
 import utilities.BGDisguise;
+import utilities.BGFBattle;
 import utilities.BGFeast;
 import utilities.BGFiles;
 import utilities.BGKit;
@@ -257,9 +258,11 @@ public class BGMain extends JavaPlugin {
 				if(END_GAME) {
 					BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
 					
-					timer4.schedule(task4, 60000);
+					END_GAME = false;
 					
-					END_GAME = false; 
+					BGFBattle.createBattle();
+					
+					timer4.schedule(task4, 60000);
 				}			
             }
 
@@ -267,7 +270,6 @@ public class BGMain extends JavaPlugin {
 			if (GAME_RUNNING_TIME.intValue() == MAX_GAME_RUNNING_TIME
 					.intValue() - 1) {
 				BGChat.printInfoChat("Final battle! 1 minute left.");
-				BGMain.this.endgame();
 			}
 
 			if (GAME_RUNNING_TIME.intValue() >= MAX_GAME_RUNNING_TIME
@@ -286,7 +288,7 @@ public class BGMain extends JavaPlugin {
 			w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
 			BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
 			log.info("Game phase: 4 - Final");
-			BGMain.this.endgame();
+			BGFBattle.teleportGamers();
 		}
 	};
 	
@@ -801,17 +803,6 @@ public class BGMain extends JavaPlugin {
 		int newY = Bukkit.getWorld("world").getHighestBlockYAt(loc);
 		loc.setY(newY);
 		return loc;
-	}
-
-	public void endgame() {
-		Bukkit.getServer().getWorld("world").loadChunk(getSpawn().getChunk());
-		for (Player p : getPlayers()) {
-			Random r = new Random();
-			Location loc = getSpawn();
-			loc.add((r.nextBoolean() ? 1 : -1) * r.nextInt(3), 60, (r.nextBoolean() ? 1 : -1) * r.nextInt(3));
-			loc.setY(getServer().getWorld("world").getHighestBlockYAt(loc) + 1.5);
-			p.teleport(loc);
-		}
 	}
 
 	public void checkwinner() {
