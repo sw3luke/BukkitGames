@@ -13,7 +13,6 @@ import main.BGMain;
 
 public class BGFBattle {
 
-	@SuppressWarnings("unused")
 	private static BGMain plugin;
 	
 	private static Block mainBlock;
@@ -29,7 +28,9 @@ public class BGFBattle {
 	
 	public static void createBattle() {
 		
-		mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
+		do{
+			mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
+		}while(!plugin.inBorder(mainBlock.getLocation()));
 		
 		Location loc = mainBlock.getLocation();
 		
