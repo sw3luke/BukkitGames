@@ -111,4 +111,33 @@ public class BGCooldown extends JavaPlugin {
 		Timer timer = new Timer();
 		timer.schedule(action, BGFiles.abconf.getInt("AB.11.Cooldown") * 1000);
 	}
+	
+	public void timeCooldown(final Player player) {
+		
+		TimerTask action = new TimerTask() {
+			
+			public void run() {
+				
+				plugin.listener.timeList.remove(player);
+			}
+		};
+		
+		Timer timer = new Timer();
+		timer.schedule(action, BGFiles.abconf.getInt("AB.22.Cooldown")*1000);
+	}
+	
+	public void freezeCooldown(final Player player) {
+		
+		TimerTask action = new TimerTask(){
+			
+			public void run() {
+				
+				plugin.listener.freezeList.remove(player);
+				BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.22.unfrozen"));
+			}
+		};
+		
+		Timer timer = new Timer();
+		timer.schedule(action, BGFiles.abconf.getInt("AB.22.Duration")*1000);
+	}
 }

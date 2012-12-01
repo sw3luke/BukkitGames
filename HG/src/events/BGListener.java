@@ -86,6 +86,8 @@ public class BGListener implements Listener {
 	public ArrayList<Player> thiefList = new ArrayList<Player>();
 	public ArrayList<Player> ghostList = new ArrayList<Player>();
 	public ArrayList<Player> thorList = new ArrayList<Player>();
+	public ArrayList<Player> timeList = new ArrayList<Player>();
+	public ArrayList<Player> freezeList = new ArrayList<Player>();
 
 	
 	public BGListener(BGMain instance) {
@@ -197,6 +199,43 @@ public class BGListener implements Listener {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.invisible"));
 				}else {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
+				}
+			}
+			if(BGKit.hasAbility(p, 22) && !plugin.DENY_DAMAGE_PLAYER &&
+					p.getItemInHand().getType() == Material.WATCH &&
+					(a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {
+				
+				if(!timeList.contains(p)) {
+					timeList.add(p);
+					plugin.cooldown.timeCooldown(p);
+					
+					p.getInventory().removeItem(new ItemStack[] {new ItemStack(Material.WATCH,1)});
+					
+					int radius = BGFiles.abconf.getInt("AB.22.radius");
+					
+					List<Entity> entities = p.getNearbyEntities(radius+30, radius+30, radius+30);
+					for(Entity e : entities) {
+						
+						if(!e.getType().equals(EntityType.PLAYER) || plugin.isSpectator((Player)e) || plugin.isGameMaker((Player) e))
+							continue;
+						Player target = (Player) e;
+						if(plugin.TEAM) {
+							
+							if(BGTeam.isInTeam(p, target.getName()))
+								continue;
+						}
+						if(p.getLocation().distance(target.getLocation()) < radius) {
+							
+							freezeList.add(target);
+							String text = BGFiles.abconf.getString("AB.22.target");
+							text = text.replace("<player>", p.getName());
+							BGChat.printPlayerChat(target, text);
+							plugin.cooldown.freezeCooldown(target);
+						}	
+					}
+					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.22.success"));
+				}else {
+					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.22.Expired"));
 				}
 			}
 		}catch(NullPointerException e) {
@@ -489,13 +528,18 @@ public class BGListener implements Listener {
 							.getNearbyEntities(5, 5, 5);
 					for (Entity target : nearbyEntities) {
 						if (target instanceof Player) {
-							if(!plugin.isSpectator((Player) target)) {
+							if(plugin.isSpectator((Player) target) || plugin.isGameMaker((Player) target))
+								continue;
 							Player t = (Player) target;
+							if(plugin.TEAM) {
+								
+								if(BGTeam.isInTeam(p, t.getName()))
+									continue;
+							}
 							if (t.isSneaking())
 								t.damage(e.getDamage() / 2, e.getEntity());
 							else
 								t.damage(e.getDamage(), e.getEntity());
-						}
 						}
 					}
 				}
@@ -1158,5 +1202,15 @@ public class BGListener implements Listener {
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if(event.getMessage().contains("/me"))
 			event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void freezePlayers(PlayerMoveEvent event) {
+		Player p = event.getPlayer();
+		
+		if(freezeList.contains(p)) {
+			event.setCancelled(true);
+			BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.22.move"));
+		}
 	}
 }

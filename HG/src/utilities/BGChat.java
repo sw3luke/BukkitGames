@@ -67,6 +67,7 @@ public class BGChat {
 		ABILITY_DESC.put(19, BGFiles.abconf.getString("AB.19.Desc"));
 		ABILITY_DESC.put(20, BGFiles.abconf.getString("AB.20.Desc"));
 		ABILITY_DESC.put(21, BGFiles.abconf.getString("AB.21.Desc"));
+		ABILITY_DESC.put(22, BGFiles.abconf.getString("AB.22.Desc"));
 		
 		List<String> tiplist = BGFiles.config.getStringList("TIPS");
 		for(String tip : tiplist)

@@ -67,4 +67,14 @@ AB:
     Desc: Mobs don't attack you until you attack them first.
   '21':
     Desc: You can see people with Ghost Ability.
+  '22':
+    Desc: You can freeze other players!
+    radius: 30
+    Duration: 10
+    Cooldown: 180
+    Expired: Cooldown has not expired!
+    success: Have all the players have been frozen in a radius of 30 blocks!
+    target: 'The time has been frozen by <player> for 10 seconds!'
+    move: You are still frozen!
+    unfrozen: You are no longer frozen!
   
