@@ -288,7 +288,7 @@ public class BGMain extends JavaPlugin {
 			w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
 			BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
 			log.info("Game phase: 4 - Final");
-			BGFBattle.teleportGamers();
+			BGFBattle.teleportGamers(getGamers());
 		}
 	};
 	

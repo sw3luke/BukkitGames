@@ -13,6 +13,7 @@ import main.BGMain;
 
 public class BGFBattle {
 
+	@SuppressWarnings("unused")
 	private static BGMain plugin;
 	
 	private static Block mainBlock;
@@ -148,9 +149,8 @@ public class BGFBattle {
 		}
 	}
 	
-	public static void teleportGamers() {
+	public static void teleportGamers(Player[] players) {
 		
-		Player[] players = plugin.getGamers();
 		for(Player p : players) {
 			
 			Random r = new Random();
@@ -159,5 +159,13 @@ public class BGFBattle {
 			
 			p.teleport(loc);
 		}
+	}
+	
+	public static boolean isBattleBlock(Block block) {
+		
+		if(fblocks.contains(block.getLocation()))
+			return true;
+		
+		return false;
 	}
 }

@@ -67,6 +67,7 @@ import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 import utilities.BGChat;
 import utilities.BGCornucopia;
 import utilities.BGDisguise;
+import utilities.BGFBattle;
 import utilities.BGFeast;
 import utilities.BGFiles;
 import utilities.BGKit;
@@ -705,7 +706,7 @@ public class BGListener implements Listener {
 			return;
 		}
 
-		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
+		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
 			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
 			event.setCancelled(true);
 			return;
@@ -744,7 +745,7 @@ public class BGListener implements Listener {
 			return;
 		}
 		
-		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
+		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
 			BGChat.printPlayerChat(p, "§cYou can't place this block!");
 			event.setCancelled(true);
 			return;
