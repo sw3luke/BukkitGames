@@ -796,12 +796,15 @@ public class BGMain extends JavaPlugin {
 	public static Location getRandomLocation() {
 		Random random = new Random();
 		Location startFrom = Bukkit.getWorld("world").getSpawnLocation();
-		Location loc = startFrom.clone();
-		loc.add((random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS),
+		Location loc;
+		do{
+			loc = startFrom.clone();
+			loc.add((random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS),
 				60,
 				(random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS));
-		int newY = Bukkit.getWorld("world").getHighestBlockYAt(loc);
-		loc.setY(newY);
+			int newY = Bukkit.getWorld("world").getHighestBlockYAt(loc);
+			loc.setY(newY);
+		}while(!plugin.inBorder(loc));
 		return loc;
 	}
 
