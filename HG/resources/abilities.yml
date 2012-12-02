@@ -68,7 +68,7 @@ AB:
   '21':
     Desc: You can see people with Ghost Ability.
   '22':
-    Desc: You can freeze other players!
+    Desc: You can freeze other players with a watch!
     radius: 30
     Duration: 10
     Cooldown: 180
