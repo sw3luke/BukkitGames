@@ -7,10 +7,12 @@ import java.util.List;
 import main.BGMain;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class BGChat {
 	private static BGMain plugin;
@@ -166,6 +168,8 @@ public class BGChat {
 	}
 
 	public static void printKitChat(Player player) {
+		if(!plugin.ITEM_MENU) {
+			
 		if (plugin.ADV_CHAT_SYSTEM) {
 			KIT_CHAT.put(player, true);
 			updateChat();
@@ -200,6 +204,110 @@ public class BGChat {
 					+ plugin.KIT_BUY_WEB);
 			player.sendMessage("");
 		}
+		
+		} else {
+			
+			 List<String> kitname = BGFiles.kitconf.getStringList("KITS");
+			 Integer invsize = 9;
+			 for(int i=0; i<=10; i++) {
+				 if((i*9) >= kitname.size()) {
+					 invsize = invsize + i*9;
+					 break;
+				 }
+			 }
+			 
+			 final Player pl = player;
+			 IconMenu menu = new IconMenu("Select a kit   (More kits: " + plugin.KIT_BUY_WEB + ")", invsize, new IconMenu.OptionClickEventHandler() {
+		            @Override
+		            public void onOptionClick(IconMenu.OptionClickEvent event) {
+		            	BGKit.setKit(pl, ChatColor.stripColor(event.getName()));
+		                event.setWillDestroy(true);
+		                event.setWillClose(true);
+		            }
+		        }, plugin);
+			 
+			 Integer mypos = 0;
+			 Integer othpos = 1;
+			 for(String name : kitname) {					
+						ArrayList<String> container = new ArrayList<String>();
+						ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(name.toLowerCase());
+						List<String> kititems = kit.getStringList("ITEMS");
+						for (String item : kititems) {
+							String[] oneitem = item.split(",");
+
+							String itemstring = null;
+							Integer id = null;
+							Integer amount = null;
+							String enchantment = null;
+							String ench_numb = null;
+
+							if (oneitem[0].contains(":")) {
+								String[] ITEM_ID = oneitem[0].split(":");
+								id = Integer.valueOf(Integer.parseInt(ITEM_ID[0]));
+								amount = Integer.valueOf(Integer.parseInt(oneitem[1]));
+							} else {
+								id = Integer.valueOf(Integer.parseInt(oneitem[0]));
+								amount = Integer.valueOf(Integer.parseInt(oneitem[1]));
+							}
+
+							itemstring = " - "
+									+ amount
+									+ "x "
+									+ Material.getMaterial(id.intValue()).toString()
+											.replace("_", " ").toLowerCase();
+
+							if (oneitem.length == 4) {
+								enchantment = Enchantment
+										.getById(Integer.parseInt(oneitem[2])).getName()
+										.toLowerCase();
+								ench_numb = oneitem[3];
+
+								itemstring = itemstring + " with " + enchantment + " "
+										+ ench_numb;
+							}
+
+							container.add("§f" + itemstring);
+						}
+
+						List<Integer> abils = kit.getIntegerList("ABILITY");
+						for(Integer abil : abils) {
+							String desc = getAbilityDesc(abil.intValue());
+							if (desc != null)
+								container.add("§7" + desc);
+						}
+									
+						Integer itemid = kit.getInt("ITEMMENU");
+						Material kitem = Material.getMaterial(itemid);
+					    
+						if (player.hasPermission("bg.kit." + name)
+								|| player.hasPermission("bg.kit.*") || (plugin.SIMP_REW && plugin.winner(player))
+								|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()) != null &&
+									plugin.reward.BOUGHT_KITS.get(player.getName()).equals(name.toLowerCase()))) {
+					    
+							String[] info = new String[container.size()];
+						    info = container.toArray(info);
+							
+							menu.setOption(mypos, new ItemStack(kitem, 1), "§a" + name, info);
+							mypos++;
+						} else {
+							if(plugin.REW) {
+								if(BGKit.getCoins(name.toLowerCase()) == 1)
+									container.add("§6PRICE: " + BGKit.getCoins(name.toLowerCase()) + " Coin");
+								else if(BGKit.getCoins(name.toLowerCase()) > 1)
+									container.add("§6PRICE: " + BGKit.getCoins(name.toLowerCase()) + " Coins");
+							}
+							
+							String[] info = new String[container.size()];
+						    info = container.toArray(info);
+							
+							menu.setOption(invsize - othpos, new ItemStack(kitem, 1), "§c" + name, info);
+							othpos++;
+						}
+					container.clear();
+			 }
+			
+			 menu.open(player);
+		}
 	}
 
 	public static void printKitInfo(Player player, String kitname) {
@@ -223,7 +331,6 @@ public class BGChat {
 						}
 					}, 100);
 		} else {
-
 			char[] stringArray = kitinfoname.toCharArray();
 			stringArray[0] = Character.toUpperCase(stringArray[0]);
 			kitinfoname = new String(stringArray);

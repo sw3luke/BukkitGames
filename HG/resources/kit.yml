@@ -32,6 +32,7 @@ KITS:
 #  POTION: 
 #    - POTION_ID,DURATION(IN SECONDS),AMPLIFIER [POTION_ID: 0 IS NO POTION, DURATION: 0 IS ENDLESS]
 #  COINS: 0 [THE PRICE FOR THE KIT (if Reward is enabled in the config file), 0 this kit can not be bought]
+# ITEMMENU: ITEM_ID [THE ID OF THE ITEM THAT WILL BE USED IN THE ITEMMENU FOR THAT KIT]
 
 barbarian:
   ITEMS:
@@ -41,6 +42,7 @@ barbarian:
   POTION:
     - 0
   COINS: 0
+  ITEMMENU: 267
 miner:
   ITEMS:
     - '274,1,32,1'
@@ -50,6 +52,7 @@ miner:
   POTION:
     - 2,0,1
   COINS: 2
+  ITEMMENU: 257
 fisherman:
   ITEMS:
     - '346,1'
@@ -61,6 +64,7 @@ fisherman:
   POTION:
     - 0
   COINS: 5
+  ITEMMENU: 346
 beastmaster:
   ITEMS:
     - '383:95,3'
@@ -70,6 +74,7 @@ beastmaster:
   POTION:
     - 18,30,1
   COINS: 7
+  ITEMMENU: 276
 enderman:
   ITEMS:
     - '368,5'
@@ -79,6 +84,7 @@ enderman:
   POTION:
     - 0
   COINS: 0
+  ITEMMENU: 381
 pyro:
   ITEMS:
     - '259,1'
@@ -89,6 +95,7 @@ pyro:
   POTION:
     - 0
   COINS: 0
+  ITEMMENU: 259
 poseidon:
   ITEMS:
     - '373:8195,1'
@@ -97,6 +104,7 @@ poseidon:
   POTION:
     - 0
   COINS: 0
+  ITEMMENU: 349
 scout:
   ITEMS:
     - '373:8194,1'
@@ -105,6 +113,7 @@ scout:
   POTION:
     - 8,0,0
   COINS: 0
+  ITEMMENU: 309
 snowman:
   ITEMS:
     - '332,5'
@@ -114,6 +123,7 @@ snowman:
   POTION:
     - 0
   COINS: 3
+  ITEMMENU: 332
 chemist:
   ITEMS:
     - '373:16456,1'
@@ -124,6 +134,7 @@ chemist:
   POTION:
     - 0
   COINS: 4
+  ITEMMENU: 373
 archer:
   ITEMS:
     - '261,1'
@@ -133,6 +144,7 @@ archer:
   POTION:
     - 0
   COINS: 0
+  ITEMMENU: 261
 engineer:
   ITEMS:
     - '46,5'
@@ -142,3 +154,4 @@ engineer:
   POTION:
     - 0
   COINS: 8
+  ITEMMENU: 331

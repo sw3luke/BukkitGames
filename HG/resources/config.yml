@@ -55,6 +55,9 @@ MINIMUM_PLAYERS_START: 5
 # Users which did not choose a kit, get the default kit (can be configured in the kit.yml)
 DEFAULT_KIT: false
 
+# If the plugin should use the item menu or the normal chat menu to display available kits
+ITEM_MENU: true
+
 # Enable or disable compass feature.
 COMPASS: true
 

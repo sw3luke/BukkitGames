@@ -121,6 +121,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean CORNUCOPIA_CHESTS = false;
 	public Boolean TEAM = true;
 	public Boolean GEN_MAPS = false;
+	public Boolean ITEM_MENU = true;
 	public Boolean CORNUCOPIA_ITEMS = true;
 	public Boolean CORNUCOPIA_PROTECTED = true;
 	public Boolean FEAST = true;
@@ -461,6 +462,7 @@ public class BGMain extends JavaPlugin {
 		this.COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		this.AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		this.STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
+		this.ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
 		
 		if (ADV_ABI) {
 			log.info("Enabeling the advanced abilities.");
