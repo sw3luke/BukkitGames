@@ -217,7 +217,7 @@ public class BGChat {
 			 }
 			 
 			 final Player pl = player;
-			 IconMenu menu = new IconMenu("Select a kit   (More kits: " + plugin.KIT_BUY_WEB + ")", invsize, new IconMenu.OptionClickEventHandler() {
+			 IconMenu menu = new IconMenu("Select a kit", invsize, new IconMenu.OptionClickEventHandler() {
 		            @Override
 		            public void onOptionClick(IconMenu.OptionClickEvent event) {
 		            	BGKit.setKit(pl, ChatColor.stripColor(event.getName()));
