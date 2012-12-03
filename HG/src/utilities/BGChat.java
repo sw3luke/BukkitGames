@@ -182,7 +182,6 @@ public class BGChat {
 					}, 100);
 		} else {
 			List<String> kitname = BGFiles.kitconf.getStringList("KITS");
-
 			String yourkits = "";
 			String otherkits = "";
 			for (String name : kitname) {

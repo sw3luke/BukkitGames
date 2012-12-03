@@ -68,10 +68,6 @@ public class BGPlayer implements CommandExecutor{
 
 		if (cmd.getName().equalsIgnoreCase("kit")) {
 			if (this.plugin.DENY_LOGIN.booleanValue()) {
-				if (args.length != 1) {
-					BGChat.printKitChat(p);
-					return true;
-				}
 				BGChat.printPlayerChat(p, "§eThe game has already began!");
 				return true;
 			}
