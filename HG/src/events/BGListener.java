@@ -30,6 +30,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -743,6 +744,17 @@ public class BGListener implements Listener {
 		}		
 	}
 
+	@EventHandler
+	public void onBlockBurn(BlockBurnEvent event) {
+		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || 
+			(plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || 
+			BGFBattle.isBattleBlock(event.getBlock())) {
+			
+			event.setCancelled(true);
+			return;
+		}
+	}
+		
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player p = event.getPlayer();
