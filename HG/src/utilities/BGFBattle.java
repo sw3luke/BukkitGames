@@ -15,22 +15,16 @@ public class BGFBattle {
 
 	@SuppressWarnings("unused")
 	private static BGMain plugin;
-	
 	private static Block mainBlock;
-	
 	private static Logger log = BGMain.getPluginLogger();
-	
-	private static ArrayList<Location> fblocks = new ArrayList<Location>();
+	private static ArrayList<Location> fbblocks = new ArrayList<Location>();
 	
 	public BGFBattle(BGMain plugin) {
-		
 		BGFBattle.plugin = plugin;
 	}
 	
 	public static void createBattle() {
-		
 		mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
-		
 		Location loc = mainBlock.getLocation();
 		
 		//-2: new layer; -1: new row; 0: Air
@@ -133,39 +127,32 @@ public class BGFBattle {
 			}
 			
 			if(i == -1) {
-				
 				loc.add(0, 0, 1);
 				loc.subtract(10, 0, 0);
-			}else if(i == -2) {
-				
+			} else if(i == -2) {
 				loc.add(0, 1, 0);
 				loc.subtract(10, 0, 9);
-			}else {
-				
+			} else {
 				loc.getBlock().setType(m);
-				fblocks.add(loc.getBlock().getLocation());
+				fbblocks.add(loc.getBlock().getLocation());
 				loc.add(1, 0, 0);
 			}
 		}
 	}
 	
 	public static void teleportGamers(Player[] players) {
-		
 		for(Player p : players) {
-			
 			Random r = new Random();
-			
 			Location loc = mainBlock.getLocation().add(r.nextInt(8)+1, 1.5, r.nextInt(8)+1);
-			
 			p.teleport(loc);
 		}
 	}
 	
 	public static boolean isBattleBlock(Block block) {
-		
-		if(fblocks.contains(block.getLocation()))
-			return true;
-		
-		return false;
+		return fbblocks.contains(block.getLocation());
+	}
+	
+	public static Block getMainBlock() {
+		return mainBlock;
 	}
 }

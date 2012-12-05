@@ -131,10 +131,7 @@ public class BGFeast {
 		if(!plugin.FEAST || !spawned)
 			return false;
 
-		if(fblocks.contains(b.getLocation()))
-			return true;
-
-		return false;
+		return fblocks.contains(b.getLocation());
 	}
 	
 	private static void createFeast(Material m) {
@@ -356,7 +353,6 @@ public class BGFeast {
 	}
 	
 	public static Block getMainBlock() {
-		
 		return mainBlock;
 	}
 }

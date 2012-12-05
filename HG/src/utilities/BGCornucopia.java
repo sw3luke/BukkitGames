@@ -66,10 +66,6 @@ public class BGCornucopia {
 	    
 	}
 	
-	/**
-	 * <b>Copyright</b> 2012 by ftbastler
-	 * @author ftbastler
-	*/
 	private static void createCornucopia() {
 		Location loc = mainBlock.getLocation();
 		loc.add(-3, 1, -3);
@@ -180,10 +176,7 @@ public class BGCornucopia {
 		if(!plugin.CORNUCOPIA)
 			return false;
 
-		if(cblocks.contains(b.getLocation()))
-			return true;
-
-		return false;
+		return cblocks.contains(b.getLocation());
 	}
 	
 	
@@ -268,7 +261,6 @@ public class BGCornucopia {
 	}
 	
 	public static Block getMainBlock() {
-		
 		return mainBlock;
 	}
  }

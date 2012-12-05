@@ -335,13 +335,18 @@ public class BGListener implements Listener {
 					return;
 				}
 				if (BGKit.hasAbility(player, Integer.valueOf(1))) {
-					if(BGFeast.isFeastBlock(arrow.getLocation().getBlock()) || BGCornucopia.isCornucopiaBlock(arrow.getLocation().getBlock())) {
-						BGChat.printPlayerChat(player, "§cYou can't destroy this block!");
-						arrow.remove();
-						return;
-					}
-					Bukkit.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F);
-					arrow.remove();
+					try{
+						if((event.getEntity().getLocation().distance(BGCornucopia.getMainBlock().getLocation()) <= 16) || 
+							(event.getEntity().getLocation().distance(BGFeast.getMainBlock().getLocation()) <= 16 ) ||
+							(event.getEntity().getLocation().distance(BGFBattle.getMainBlock().getLocation()) <= 16 )) {
+							BGChat.printPlayerChat(player, "§cYou can't destroy this block!");
+							arrow.remove();
+							return;
+						} else {
+							Bukkit.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F);
+							arrow.remove();
+						}
+					} catch (NullPointerException e) {}
 				} else {
 					return;
 				}
@@ -390,21 +395,27 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (this.plugin.DENY_DAMAGE_ENTITY.booleanValue())
+		if (this.plugin.DENY_DAMAGE_ENTITY)
 			event.setCancelled(true);
 		
 		try{
-			if((BGCornucopia.isCornucopiaBlock(event.getEntity().getLocation().getBlock()) || BGFeast.isFeastBlock(event.getEntity().getLocation().getBlock())))
+			if((BGCornucopia.isCornucopiaBlock(event.getEntity().getLocation().getBlock()) || 
+				BGFeast.isFeastBlock(event.getEntity().getLocation().getBlock())) || 
+				BGFBattle.isBattleBlock(event.getEntity().getLocation().getBlock())) {
 				event.setCancelled(true);
-		}catch (NullPointerException e){
-			
-		}
-		try{
-			if((event.getEntity().getLocation().distance(BGCornucopia.getMainBlock().getLocation()) < 16 ) || (event.getEntity().getLocation().distance(BGFeast.getMainBlock().getLocation()) < 16 ))
+				return;
+			}
+		} catch (NullPointerException e) {}
+		
+		try {
+			if((event.getEntity().getLocation().distance(BGCornucopia.getMainBlock().getLocation()) <= 16) || 
+				(event.getEntity().getLocation().distance(BGFeast.getMainBlock().getLocation()) <= 16 ) ||
+				(event.getEntity().getLocation().distance(BGFBattle.getMainBlock().getLocation()) <= 16 )) {
 				event.setCancelled(true);
-		}catch (NullPointerException e) {
-			
-		}
+				return;
+			}
+		} catch (NullPointerException e) {}
+		
 	}
 
 	@EventHandler
