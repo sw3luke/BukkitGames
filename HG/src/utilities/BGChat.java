@@ -3,6 +3,7 @@ package utilities;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import main.BGMain;
 
@@ -18,7 +19,7 @@ public class BGChat {
 	private static BGMain plugin;
 	static Integer TIP_COUNT = 0;
 	static ArrayList<String> TIPS = new ArrayList<String>();
-
+	private static Logger log = BGMain.getPluginLogger();
 	static String TIMER_MSG = ""; 
 	static String DEATH_MSG = ""; 
 	static String INFO_MSG = "Welcome to the HungerGames! | Get your kit now: §f/kit"; 
@@ -205,11 +206,11 @@ public class BGChat {
 		}
 		
 		} else {
-			
-			 List<String> kitname = BGFiles.kitconf.getStringList("KITS");
+			 List<String> kits = BGFiles.kitconf.getStringList("KITS");
+			 
 			 Integer invsize = 9;
 			 for(int i=0; i<=10; i++) {
-				 if((i*9) >= kitname.size()) {
+				 if((i*9) >= kits.size()) {
 					 invsize = invsize + i*9;
 					 break;
 				 }
@@ -227,9 +228,10 @@ public class BGChat {
 			 
 			 Integer mypos = 0;
 			 Integer othpos = 1;
-			 for(String name : kitname) {					
+			 for(String kitname : kits) {	
+				 try {
 						ArrayList<String> container = new ArrayList<String>();
-						ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(name.toLowerCase());
+						ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname.toLowerCase());
 						List<String> kititems = kit.getStringList("ITEMS");
 						for (String item : kititems) {
 							String[] oneitem = item.split(",");
@@ -278,33 +280,36 @@ public class BGChat {
 						Integer itemid = kit.getInt("ITEMMENU");
 						Material kitem = Material.getMaterial(itemid);
 					    
-						if (player.hasPermission("bg.kit." + name)
+						if (player.hasPermission("bg.kit." + kitname)
 								|| player.hasPermission("bg.kit.*") || (plugin.SIMP_REW && plugin.winner(player))
 								|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()) != null &&
-									plugin.reward.BOUGHT_KITS.get(player.getName()).equals(name.toLowerCase()))) {
+									plugin.reward.BOUGHT_KITS.get(player.getName()).equals(kitname.toLowerCase()))) {
 					    
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(mypos, new ItemStack(kitem, 1), "§a" + name, info);
+							menu.setOption(mypos, new ItemStack(kitem, 1), "§a" + kitname, info);
 							mypos++;
 						} else {
 							if(plugin.REW) {
-								if(BGKit.getCoins(name.toLowerCase()) == 1)
-									container.add("§6PRICE: " + BGKit.getCoins(name.toLowerCase()) + " Coin");
-								else if(BGKit.getCoins(name.toLowerCase()) > 1)
-									container.add("§6PRICE: " + BGKit.getCoins(name.toLowerCase()) + " Coins");
+								if(BGKit.getCoins(kitname.toLowerCase()) == 1)
+									container.add("§6PRICE: " + BGKit.getCoins(kitname.toLowerCase()) + " Coin");
+								else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
+									container.add("§6PRICE: " + BGKit.getCoins(kitname.toLowerCase()) + " Coins");
 							}
 							
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(invsize - othpos, new ItemStack(kitem, 1), "§c" + name, info);
+							menu.setOption(invsize - othpos, new ItemStack(kitem, 1), "§c" + kitname, info);
 							othpos++;
 						}
 					container.clear();
+				} catch (Exception e) {
+					log.warning("[BukkitGames] Error while trying to parse kit '" + kitname + "'");
+					e.printStackTrace();
+				}	
 			 }
-			
 			 menu.open(player);
 		}
 	}

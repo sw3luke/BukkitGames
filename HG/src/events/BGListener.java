@@ -42,6 +42,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -98,6 +99,13 @@ public class BGListener implements Listener {
 				.registerEvents(this, this.plugin);
 	}
 
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		Player p = (Player) event.getWhoClicked();
+		if(plugin.isSpectator(p))
+			event.setCancelled(true);
+	}
+	
 	@EventHandler
 	public void onVehicleMove(VehicleMoveEvent event) {
 		if (this.plugin.DENY_CHECK_WORLDBORDER.booleanValue()) {
@@ -595,7 +603,7 @@ public class BGListener implements Listener {
 				plugin.addSpectator(p);
 			}
 		} else {
-			if (!plugin.ADV_CHAT_SYSTEM)
+			if (!plugin.ADV_CHAT_SYSTEM && !plugin.ITEM_MENU)
 				BGChat.printKitChat(p);
 		}
 

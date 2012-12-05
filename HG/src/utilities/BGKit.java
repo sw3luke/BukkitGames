@@ -220,6 +220,8 @@ public class BGKit {
 			BGChat.printPlayerChat(player, "That kit doesn't exist!");
 			return;
 		}
+		if(KIT.get(player) == kitname)
+			return;
 
 		if (player.hasPermission("bg.kit." + kitname)
 				|| player.hasPermission("bg.kit.*") || (plugin.SIMP_REW && plugin.winner(player))
