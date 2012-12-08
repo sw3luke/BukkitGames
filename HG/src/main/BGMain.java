@@ -31,10 +31,12 @@ import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -1056,12 +1058,16 @@ public class BGMain extends JavaPlugin {
 		spectators.add(p);
 		p.setGameMode(GameMode.CREATIVE);
 		BGVanish.makeVanished(p);
+		for(int i=0;i<=8;i++) {
+			p.getInventory().setItem(i, new ItemStack(Material.CROPS, 1));
+		}
 		BGChat.printPlayerChat(p, "§eYou are now a spectator!");
 	}
 	
 	public void remSpectator(Player p) {
 		spectators.remove(p);
 		p.setGameMode(GameMode.SURVIVAL);
+		p.getInventory().clear();
 		BGVanish.makeVisible(p);
 	}
 	
