@@ -345,9 +345,9 @@ public class BGListener implements Listener {
 				}
 				if (BGKit.hasAbility(player, Integer.valueOf(1))) {
 					try{
-						if((event.getEntity().getLocation().distance(BGCornucopia.getMainBlock().getLocation()) <= 16) || 
-							(event.getEntity().getLocation().distance(BGFeast.getMainBlock().getLocation()) <= 16 ) ||
-							(event.getEntity().getLocation().distance(BGFBattle.getMainBlock().getLocation()) <= 16 )) {
+						if((arrow.getLocation().distance(BGCornucopia.getMainBlock().getLocation()) <= 16) || 
+							(arrow.getLocation().distance(BGFeast.getMainBlock().getLocation()) <= 16 ) ||
+							(arrow.getLocation().distance(BGFBattle.getMainBlock().getLocation()) <= 16 )) {
 							BGChat.printPlayerChat(player, "§cYou can't destroy this block!");
 							arrow.remove();
 							return;
@@ -454,12 +454,14 @@ public class BGListener implements Listener {
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		Player p = event.getPlayer();
 
-		if (this.plugin.DENY_LOGIN.booleanValue() & !plugin.SPECTATOR_SYSTEM & (!p.hasPermission("bg.admin.logingame") || !p.hasPermission("bg.admin.*"))) {
+		if (plugin.DENY_LOGIN &&
+				!(plugin.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) &&
+				!(p.hasPermission("bg.admin.logingame") || p.hasPermission("bg.admin.*"))) {
 			event.setKickMessage(ChatColor.RED + plugin.GAME_IN_PROGRESS_MSG);
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, event.getKickMessage());
 		} else if (event.getResult() == Result.KICK_FULL) {
 			if (p.hasPermission("bg.vip.full") || p.hasPermission("bg.admin.full") 
-					|| plugin.getServer().getMaxPlayers() > plugin.getServer().getOnlinePlayers().length - plugin.getGamemakers().size()) {
+					|| Bukkit.getServer().getMaxPlayers() > plugin.getGamers().length) {
 				event.allow();
 			} else {
 				event.setKickMessage(ChatColor.RED + plugin.SERVER_FULL_MSG.replace("<players>", Integer.toString(Bukkit.getOnlinePlayers().length)));
@@ -598,8 +600,7 @@ public class BGListener implements Listener {
 		if (plugin.DENY_LOGIN) {
 			if (p.hasPermission("bg.admin.gamemaker") || p.hasPermission("bg.admin.*")) {
 				plugin.addGameMaker(p);
-			
-			}else if(plugin.SPECTATOR_SYSTEM) {
+			}else if(plugin.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) {
 				plugin.addSpectator(p);
 			}
 		} else {
