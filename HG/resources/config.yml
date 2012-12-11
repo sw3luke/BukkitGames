@@ -92,7 +92,7 @@ COINS_FOR_KILL: 1
 # How many Coins you get when you win a game? (Only effects when REWARD is enabled!)
 COINS_FOR_WIN: 5
 
-# If enabled, players can join server during the game and act like spectators
+# If enabled, players can join server during the game and act like spectators (permissions node "bg.spectator" required)
 SPECTATOR_SYSTEM: false
 
 # Weather to use a MySQL database for statistics. (leaderboard.yml will still be used!)
