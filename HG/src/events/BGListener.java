@@ -60,6 +60,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -75,7 +76,6 @@ import utilities.BGFiles;
 import utilities.BGKit;
 import utilities.BGTeam;
 import utilities.BGVanish;
-import utilities.CraftBook;
 import utilities.Updater;
 
 public class BGListener implements Listener {
@@ -292,10 +292,10 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onServerPing(ServerListPingEvent event) {
 		if (this.plugin.DENY_LOGIN.booleanValue())
-			event.setMotd(this.plugin.MOTD_PROGRESS_MSG);
+			event.setMotd(ChatColor.translateAlternateColorCodes('&', plugin.MOTD_PROGRESS_MSG));
 		else
-			event.setMotd(this.plugin.MOTD_COUNTDOWN_MSG.replace("<time>",
-					this.plugin.TIME(BGMain.COUNTDOWN)));
+			event.setMotd(ChatColor.translateAlternateColorCodes('&', plugin.MOTD_PROGRESS_MSG.replace("<time>",
+					plugin.TIME(BGMain.COUNTDOWN))));
 	}
 
 	@EventHandler
@@ -655,12 +655,13 @@ public class BGListener implements Listener {
 		content.add(pagestr);	
 		page.clear();
 		
-		CraftBook bi = new CraftBook(new ItemStack(387,1));
-		bi.setPages(content.toArray(new String[0]));
-		bi.setAuthor(BGFiles.bookconf.getString("author"));
-		bi.setTitle(BGFiles.bookconf.getString("title"));
-		ItemStack writtenbook = bi.getItemStack();
-		p.getInventory().addItem(writtenbook);
+		ItemStack item = new ItemStack(387,1);
+		BookMeta im = (BookMeta) item.getItemMeta();
+			im.setPages(content);
+			im.setAuthor(BGFiles.bookconf.getString("author"));
+			im.setTitle(BGFiles.bookconf.getString("title"));
+		item.setItemMeta(im);
+		p.getInventory().addItem(item);
 		}
 		
 		String playerName = p.getName();

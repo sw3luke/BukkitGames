@@ -756,6 +756,9 @@ public class BGMain extends JavaPlugin {
 			p.setHealth(20);
 			p.setFoodLevel(20);
 			p.setExp(0);
+			if(p.getOpenInventory() != null)
+				p.getOpenInventory().close();
+			
 			BGKit.giveKit(p);
 
 			if (SQL_USE & !plugin.isSpectator(p)) {

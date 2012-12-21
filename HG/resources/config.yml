@@ -11,7 +11,7 @@ TIME:
 # Duration of invincibility.
   FINAL_COUNTDOWN-SEC: 60
   
-# Define the messages.
+# Define the messages. (You can use color codes in the MOTD, like '&e')
 MESSAGE:
   WORLD_BORDER: You have reached the WorldBorder!
   SERVER_FULL: The server is full.

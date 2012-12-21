@@ -221,7 +221,6 @@ public class BGChat {
 		            @Override
 		            public void onOptionClick(IconMenu.OptionClickEvent event) {
 		            	BGKit.setKit(pl, ChatColor.stripColor(event.getName()));
-		                event.setWillDestroy(true);
 		                event.setWillClose(true);
 		            }
 		        }, plugin);
