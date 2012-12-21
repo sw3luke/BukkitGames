@@ -1136,6 +1136,8 @@ public class BGListener implements Listener {
 		
 		if (plugin.isSpectator(dp) || plugin.isGameMaker(dp)) {
 			event.setDeathMessage(null);
+			event.getDrops().clear();
+			event.setDroppedExp(0);
 			return;
 		}
 		
