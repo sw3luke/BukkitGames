@@ -68,7 +68,7 @@ public class IconMenu implements Listener {
         if (event.getInventory().getTitle().equals(name)) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
-            if (slot >= 0 && slot < size && optionNames.get((Player) event.getWhoClicked())[slot] != null) {
+            if (slot >= 0 && slot < size && optionNames.containsKey((Player) event.getWhoClicked()) && optionNames.get((Player) event.getWhoClicked())[slot] != null) {
                 Plugin plugin = this.plugin;
                 OptionClickEvent e = new OptionClickEvent((Player)event.getWhoClicked(), slot, optionNames.get((Player) event.getWhoClicked())[slot]);
                 handler.onOptionClick(e);
