@@ -18,6 +18,7 @@ public class BGFBattle {
 	private static Block mainBlock;
 	private static Logger log = BGMain.getPluginLogger();
 	private static ArrayList<Location> fbblocks = new ArrayList<Location>();
+	private static Boolean spawned = false;
 	
 	public BGFBattle(BGMain plugin) {
 		BGFBattle.plugin = plugin;
@@ -26,6 +27,7 @@ public class BGFBattle {
 	public static void createBattle() {
 		mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
 		Location loc = mainBlock.getLocation();
+		spawned = true;
 		
 		//-2: new layer; -1: new row; 0: Air
 		//1: Mossy Cobblestone 2: GOLD_BLOCK
@@ -122,7 +124,7 @@ public class BGFBattle {
 			case -2:
 				break;
 			default:
-				log.warning("Illegal integer found while creating Chests at Feast: " + i.toString());
+				log.warning("Illegal integer found while creating BGFBattle: " + i.toString());
 				break;
 			}
 			
@@ -149,6 +151,9 @@ public class BGFBattle {
 	}
 	
 	public static boolean isBattleBlock(Block block) {
+		if(!spawned)
+			return false;
+		
 		return fbblocks.contains(block.getLocation());
 	}
 	

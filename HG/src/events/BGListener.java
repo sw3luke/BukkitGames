@@ -248,9 +248,9 @@ public class BGListener implements Listener {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.22.Expired"));
 				}
 			}
-		}catch(NullPointerException e) {
+		} catch(NullPointerException e) {
 			
-		}catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
@@ -263,7 +263,6 @@ public class BGListener implements Listener {
 					if ((!e.getType().equals(EntityType.PLAYER))|| plugin.isSpectator((Player) e) || plugin.isGameMaker((Player) e))
 						continue;
 					if(plugin.TEAM) {
-						
 						if(BGTeam.isInTeam(p, ((Player) e).getName()))
 								continue;
 					}
@@ -292,10 +291,9 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onServerPing(ServerListPingEvent event) {
 		if (plugin.DENY_LOGIN)
-			event.setMotd(ChatColor.translateAlternateColorCodes('&', plugin.MOTD_PROGRESS_MSG));
+			event.setMotd(plugin.MOTD_PROGRESS_MSG.replace("&", "§"));
 		else
-			event.setMotd(ChatColor.translateAlternateColorCodes('&', plugin.MOTD_COUNTDOWN_MSG.replace("<time>",
-					plugin.TIME(BGMain.COUNTDOWN))));
+			event.setMotd(plugin.MOTD_COUNTDOWN_MSG.replace("&", "§").replace("<time>", plugin.TIME(BGMain.COUNTDOWN)));
 	}
 
 	@EventHandler
@@ -341,21 +339,12 @@ public class BGListener implements Listener {
 			if ((shooter instanceof Player)) {
 				Player player = (Player) shooter;
 				if(plugin.isSpectator(player)) {
+					arrow.remove();
 					return;
 				}
-				if (BGKit.hasAbility(player, Integer.valueOf(1))) {
-					try{
-						if((arrow.getLocation().distance(BGCornucopia.getMainBlock().getLocation()) <= 16) || 
-							(arrow.getLocation().distance(BGFeast.getMainBlock().getLocation()) <= 16 ) ||
-							(arrow.getLocation().distance(BGFBattle.getMainBlock().getLocation()) <= 16 )) {
-							BGChat.printPlayerChat(player, "§cYou can't destroy this block!");
-							arrow.remove();
-							return;
-						} else {
-							Bukkit.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F);
-							arrow.remove();
-						}
-					} catch (NullPointerException e) {}
+				if (BGKit.hasAbility(player, 1)) {
+					Bukkit.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F);
+					arrow.remove();
 				} else {
 					return;
 				}
@@ -404,27 +393,25 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (this.plugin.DENY_DAMAGE_ENTITY)
+		if (this.plugin.DENY_DAMAGE_ENTITY) {
 			event.setCancelled(true);
+			return;
+		}
 		
-		try{
-			if((BGCornucopia.isCornucopiaBlock(event.getEntity().getLocation().getBlock()) || 
-				BGFeast.isFeastBlock(event.getEntity().getLocation().getBlock())) || 
-				BGFBattle.isBattleBlock(event.getEntity().getLocation().getBlock())) {
-				event.setCancelled(true);
-				return;
+		for(Block b : event.blockList()) {
+			if(BGCornucopia.isCornucopiaBlock(b)) {
+				event.blockList().remove(b);
+				continue;
 			}
-		} catch (NullPointerException e) {}
-		
-		try {
-			if((event.getEntity().getLocation().distance(BGCornucopia.getMainBlock().getLocation()) <= 16) || 
-				(event.getEntity().getLocation().distance(BGFeast.getMainBlock().getLocation()) <= 16 ) ||
-				(event.getEntity().getLocation().distance(BGFBattle.getMainBlock().getLocation()) <= 16 )) {
-				event.setCancelled(true);
-				return;
+			if(BGFeast.isFeastBlock(b)) {
+				event.blockList().remove(b);
+				continue;
 			}
-		} catch (NullPointerException e) {}
-		
+			if(BGFBattle.isBattleBlock(b)) {
+				event.blockList().remove(b);
+				continue;
+			}
+		}
 	}
 
 	@EventHandler
