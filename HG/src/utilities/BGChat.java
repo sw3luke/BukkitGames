@@ -217,7 +217,7 @@ public class BGChat {
 			 }
 			 
 			 final Player pl = player;
-			 IconMenu menu = new IconMenu("Select a kit", invsize, new IconMenu.OptionClickEventHandler() {
+			 IconMenu menu = new IconMenu(pl, "Select a kit", invsize, new IconMenu.OptionClickEventHandler() {
 		            @Override
 		            public void onOptionClick(IconMenu.OptionClickEvent event) {
 		            	BGKit.setKit(pl, ChatColor.stripColor(event.getName()));
@@ -287,7 +287,7 @@ public class BGChat {
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(mypos, new ItemStack(kitem, 1), "§a" + kitname, info);
+							menu.setOption(pl, mypos, new ItemStack(kitem, 1), "§a" + kitname, info);
 							mypos++;
 						} else {
 							if(plugin.REW) {
@@ -300,7 +300,7 @@ public class BGChat {
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(invsize - othpos, new ItemStack(kitem, 1), "§c" + kitname, info);
+							menu.setOption(pl, invsize - othpos, new ItemStack(kitem, 1), "§c" + kitname, info);
 							othpos++;
 						}
 					container.clear();

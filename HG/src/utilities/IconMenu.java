@@ -1,13 +1,13 @@
 package utilities;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
  
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -22,41 +22,45 @@ public class IconMenu implements Listener {
     private OptionClickEventHandler handler;
     private Plugin plugin;
    
-    private String[] optionNames;
-    private ItemStack[] optionIcons;
+    private HashMap<Player, String[]> optionNames = new HashMap<Player, String[]>();
+    private HashMap<Player, ItemStack[]> optionIcons = new HashMap<Player, ItemStack[]>();
    
-    public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin) {
+    public IconMenu(Player p, String name, int size, OptionClickEventHandler handler, Plugin plugin) {
         this.name = name;
         this.size = size;
         this.handler = handler;
         this.plugin = plugin;
-        this.optionNames = new String[size];
-        this.optionIcons = new ItemStack[size];
+        if(optionNames.containsKey(p))
+        	optionNames.remove(p);
+        if(optionIcons.containsKey(p))
+        	optionIcons.remove(p);
+        optionNames.put(p, new String[size]);
+        optionIcons.put(p, new ItemStack[size]);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
    
-    public IconMenu setOption(int position, ItemStack icon, String name, String... info) {
-        optionNames[position] = name;
-        optionIcons[position] = setItemNameAndLore(icon, name, info);
+    public IconMenu setOption(Player p, int position, ItemStack icon, String name, String... info) {
+        optionNames.get(p)[position] = name;
+        optionIcons.get(p)[position] = setItemNameAndLore(icon, name, info);
         return this;
     }
    
     public void open(Player player) {
         Inventory inventory = Bukkit.createInventory(player, size, name);
-        for (int i = 0; i < optionIcons.length; i++) {
-            if (optionIcons[i] != null) {
-                inventory.setItem(i, optionIcons[i]);
+        for (int i = 0; i < optionIcons.get(player).length; i++) {
+            if (optionIcons.get(player)[i] != null) {
+                inventory.setItem(i, optionIcons.get(player)[i]);
             }
         }
         player.openInventory(inventory);
     }
    
-    public void destroy() {
-        HandlerList.unregisterAll(this);
-        handler = null;
+    public void destroy(Player p) {
+        //HandlerList.unregisterAll(this);
+        //handler = null;
         plugin = null;
-        optionNames = null;
-        optionIcons = null;
+        optionNames.remove(p);
+        optionIcons.remove(p);
     }
    
     @EventHandler(priority=EventPriority.MONITOR)
@@ -64,9 +68,9 @@ public class IconMenu implements Listener {
         if (event.getInventory().getTitle().equals(name)) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
-            if (slot >= 0 && slot < size && optionNames[slot] != null) {
+            if (slot >= 0 && slot < size && optionNames.get((Player) event.getWhoClicked())[slot] != null) {
                 Plugin plugin = this.plugin;
-                OptionClickEvent e = new OptionClickEvent((Player)event.getWhoClicked(), slot, optionNames[slot]);
+                OptionClickEvent e = new OptionClickEvent((Player)event.getWhoClicked(), slot, optionNames.get((Player) event.getWhoClicked())[slot]);
                 handler.onOptionClick(e);
                 if (e.willClose()) {
                     final Player p = (Player)event.getWhoClicked();
@@ -77,7 +81,7 @@ public class IconMenu implements Listener {
                     }, 1);
                 }
                 if (e.willDestroy()) {
-                    destroy();
+                    destroy((Player) event.getWhoClicked());
                 }
             }
         }

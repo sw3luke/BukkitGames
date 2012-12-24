@@ -291,10 +291,10 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onServerPing(ServerListPingEvent event) {
-		if (this.plugin.DENY_LOGIN.booleanValue())
+		if (plugin.DENY_LOGIN)
 			event.setMotd(ChatColor.translateAlternateColorCodes('&', plugin.MOTD_PROGRESS_MSG));
 		else
-			event.setMotd(ChatColor.translateAlternateColorCodes('&', plugin.MOTD_PROGRESS_MSG.replace("<time>",
+			event.setMotd(ChatColor.translateAlternateColorCodes('&', plugin.MOTD_COUNTDOWN_MSG.replace("<time>",
 					plugin.TIME(BGMain.COUNTDOWN))));
 	}
 

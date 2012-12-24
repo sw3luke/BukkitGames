@@ -16,8 +16,8 @@ MESSAGE:
   WORLD_BORDER: You have reached the WorldBorder!
   SERVER_FULL: The server is full.
   GAME_PROGRESS: Game is in progress.
-  MOTD_PROGRESS: Game is in progress.
-  MOTD_COUNTDOWN: Game begins in <time>.
+  MOTD_PROGRESS: '&cGame is in progress.'
+  MOTD_COUNTDOWN: '&eGame begins in <time>.'
   NO_KIT_PERMISSION: You are not allowed to use this kit.
   HELP_MESSAGE: For help, visit tinyurl.com/HGHelp
   SERVER_TITLE: BukkitGames HG Server
