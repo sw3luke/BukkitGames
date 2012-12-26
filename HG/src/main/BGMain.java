@@ -327,7 +327,10 @@ public class BGMain extends JavaPlugin {
 			} catch (IOException e) {
 				log.warning("Error: " + e.toString());
 			}
-			BGMain.WORLDRADIUS = Integer.valueOf(Integer.parseInt(splitmap[1]));
+			if(splitmap.length == 2)
+				BGMain.WORLDRADIUS = Integer.valueOf(Integer.parseInt(splitmap[1]));
+			else
+				BGMain.WORLDRADIUS = 300;
 		} else {
 			this.log.info("Generating new world.");
 			BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt("WORLD_BORDER_RADIUS"));
