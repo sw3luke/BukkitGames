@@ -31,6 +31,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -398,20 +400,22 @@ public class BGListener implements Listener {
 			return;
 		}
 		
+		ArrayList<Block> remove = new ArrayList<Block>();
 		for(Block b : event.blockList()) {
 			if(BGCornucopia.isCornucopiaBlock(b)) {
-				event.blockList().remove(b);
+				remove.add(b);
 				continue;
 			}
 			if(BGFeast.isFeastBlock(b)) {
-				event.blockList().remove(b);
+				remove.add(b);
 				continue;
 			}
 			if(BGFBattle.isBattleBlock(b)) {
-				event.blockList().remove(b);
+				remove.add(b);
 				continue;
 			}
 		}
+		event.blockList().removeAll(remove);
 	}
 
 	@EventHandler
@@ -587,7 +591,7 @@ public class BGListener implements Listener {
 		if (plugin.DENY_LOGIN) {
 			if (p.hasPermission("bg.admin.gamemaker") || p.hasPermission("bg.admin.*")) {
 				plugin.addGameMaker(p);
-			}else if(plugin.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) {
+			} else if(plugin.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) {
 				plugin.addSpectator(p);
 			}
 		} else {
@@ -740,7 +744,42 @@ public class BGListener implements Listener {
 			}
 		}		
 	}
-
+	
+	@EventHandler
+	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+		for(Block b : event.getBlocks()) {
+			if(BGCornucopia.isCornucopiaBlock(b)) {
+				event.setCancelled(true);
+				break;
+			}
+			if(BGFeast.isFeastBlock(b)) {
+				event.setCancelled(true);
+				break;
+			}
+			if(BGFBattle.isBattleBlock(b)) {
+				event.setCancelled(true);
+				break;
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+		Block b = event.getBlock();
+		if(BGCornucopia.isCornucopiaBlock(b)) {
+			event.setCancelled(true);
+			return;
+		}
+		if(BGFeast.isFeastBlock(b)) {
+			event.setCancelled(true);
+			return;
+		}
+		if(BGFBattle.isBattleBlock(b)) {
+			event.setCancelled(true);
+			return;
+		}
+	}
+	
 	@EventHandler
 	public void onBlockBurn(BlockBurnEvent event) {
 		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || 
