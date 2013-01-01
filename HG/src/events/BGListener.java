@@ -1223,11 +1223,18 @@ public class BGListener implements Listener {
 				} else {
 					KL_ID = null;
 				}
+				
+				String cause = null;
+				try{
+					cause = p.getLastDamageCause().getCause().name().toString();
+				}catch (NullPointerException e) {
+					
+				}
 
 				plugin.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `REF_KILLER` = "
 						+ KL_ID
 						+ ", `DEATH_REASON` = '"
-						+ p.getLastDamageCause().getCause().name().toString()
+						+ cause
 						+ "' WHERE `REF_PLAYER` = "
 						+ PL_ID
 						+ " AND `REF_GAME` = " + plugin.SQL_GAMEID + " ;");
