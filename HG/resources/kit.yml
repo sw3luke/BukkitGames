@@ -50,7 +50,7 @@ miner:
   ABILITY:
     - 0
   POTION:
-    - 2,0,1
+    - '2,0,1'
   COINS: 2
   ITEMMENU: 257
 fisherman:
@@ -72,7 +72,7 @@ beastmaster:
   ABILITY:
     - 0
   POTION:
-    - 18,30,1
+    - '18,30,1'
   COINS: 7
   ITEMMENU: 276
 enderman:
@@ -111,7 +111,7 @@ scout:
   ABILITY:
     - 0
   POTION:
-    - 8,0,0
+    - '8,0,0'
   COINS: 0
   ITEMMENU: 309
 snowman:

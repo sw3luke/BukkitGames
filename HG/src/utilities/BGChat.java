@@ -14,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 public class BGChat {
 	private static BGMain plugin;
@@ -275,6 +276,25 @@ public class BGChat {
 							if (desc != null)
 								container.add("§7" + desc);
 						}
+						
+						List<String> pots = kit.getStringList("POTION");
+						for(String pot : pots) {	
+							if (pot != null & pot != "") {
+								if (!pot.equals(0)) {
+									String[] potion = pot.split(",");
+									if (Integer.parseInt(potion[0]) != 0) {
+										PotionEffectType pt = PotionEffectType.getById(Integer.parseInt(potion[0]));
+										String name = pt.getName();
+										if (Integer.parseInt(potion[1]) == 0) {
+											name += " (Duration: infinitely)";
+										} else {
+											name += " (Duration: "+potion[1]+" sec)";
+										}
+										container.add("§7" + name);
+									}
+								}
+							}
+						}
 									
 						Integer itemid = kit.getInt("ITEMMENU");
 						Material kitem = Material.getMaterial(itemid);
@@ -384,8 +404,27 @@ public class BGChat {
 				String desc = getAbilityDesc(abil.intValue());
 
 				if (desc != null) {
-					player.sendMessage("§f - " + desc+"\n");
+					player.sendMessage("§f - " + desc);
 
+				}
+			}
+			
+			List<String> pots = kit.getStringList("POTION");
+			for(String pot : pots) {	
+				if (pot != null & pot != "") {
+					if (!pot.equals(0)) {
+						String[] potion = pot.split(",");
+						if (Integer.parseInt(potion[0]) != 0) {
+							PotionEffectType pt = PotionEffectType.getById(Integer.parseInt(potion[0]));
+							String name = pt.getName();
+							if (Integer.parseInt(potion[1]) == 0) {
+								name += " (Duration: infinitely)";
+							} else {
+								name += " (Duration: "+potion[1]+" sec)";
+							}
+							player.sendMessage("§f - " + name);
+						}
+					}
 				}
 			}
 	
@@ -598,10 +637,30 @@ public class BGChat {
 				String desc = getAbilityDesc(abil.intValue());
 
 				if (desc != null) {
-					p.sendMessage("§f - " + desc+"\n");
+					p.sendMessage("§f - " + desc);
 
 				}
 			}
+			
+			List<String> pots = kit.getStringList("POTION");
+			for(String pot : pots) {	
+				if (pot != null & pot != "") {
+					if (!pot.equals(0)) {
+						String[] potion = pot.split(",");
+						if (Integer.parseInt(potion[0]) != 0) {
+							PotionEffectType pt = PotionEffectType.getById(Integer.parseInt(potion[0]));
+							String name = pt.getName();
+							if (Integer.parseInt(potion[1]) == 0) {
+								name += " (Duration: infinitely)";
+							} else {
+								name += " (Duration: "+potion[1]+" sec)";
+							}
+							p.sendMessage("§f - " + name);
+						}
+					}
+				}
+			}
+			
 			if(BGKit.getCoins(kitname.toLowerCase()) == 1)
 				p.sendMessage("§fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
 			else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
