@@ -1167,6 +1167,11 @@ public class BGListener implements Listener {
 			return;
 		}
 		
+		if(BGKit.hasAbility(dp, 23)) {
+			
+			plugin.getServer().getWorld("world").createExplosion(dp.getLocation(), 2.5F, BGFiles.abconf.getBoolean("AB.23.Burn"));
+		}
+		
 		if (plugin.DEATH_SIGNS) {
 			Location loc = dp.getLocation();
 			String fl = BGFiles.dsign.getString("FIRST_LINE");

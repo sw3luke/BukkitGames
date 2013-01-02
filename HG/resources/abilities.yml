@@ -77,4 +77,6 @@ AB:
     target: 'The time has been frozen by <player> for 10 seconds!'
     move: You are still frozen!
     unfrozen: You are no longer frozen!
-  
+  '23':
+    Desc: You explode on your death!
+    Burn: false
