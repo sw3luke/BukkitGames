@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -43,6 +46,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import commands.BGConsole;
 import commands.BGPlayer;
 
+import threads.BGEndDB;
+import threads.BGQuery;
 import utilities.BGChat;
 import utilities.BGCooldown;
 import utilities.BGCornucopia;
@@ -77,6 +82,8 @@ public class BGMain extends JavaPlugin {
 	public BGCornucopia cornucopia;
 	public BGFeast feasts;
 	private static BGMain plugin;
+	
+	public ReentrantLock lock = new ReentrantLock(true);
 
 	public String HELP_MESSAGE = null;
 	public String SERVER_FULL_MSG = "";
@@ -130,7 +137,7 @@ public class BGMain extends JavaPlugin {
 	public Boolean FEAST_CHESTS = false;
 	public Boolean FEAST_PROTECTED = true;
 	public Boolean SPECTATOR_SYSTEM = false;
-	Boolean SQL_DSC = false;
+	public Boolean SQL_DSC = false;
 	public Location spawn;
 	public String STOP_CMD = "";
 	public String LAST_WINNER = "";
@@ -586,7 +593,7 @@ public class BGMain extends JavaPlugin {
 		this.log.info("Plugin disabled");
 		this.log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
 		
-		Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(), this.STOP_CMD);
+		this.getServer().dispatchCommand(getServer().getConsoleSender(), this.STOP_CMD);
 	}
 
 	private void copyDirectory(File sourceLocation, File targetLocation)
@@ -873,7 +880,7 @@ public class BGMain extends JavaPlugin {
 					}
 				}
 				
-				Bukkit.getServer().shutdown();
+				this.getServer().shutdown();
 			}
 	}
 
@@ -965,34 +972,23 @@ public class BGMain extends JavaPlugin {
 	}
 
 	public void SQLquery(String sql) {
-		try {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(sql);
-			stmt.close();
-		} catch (SQLException ex) {
-			log.warning("Error with following query: "
-					+ sql);
-			log.warning("MySQL-Error: " + ex.getMessage());
-			SQLdisconnect();
-		} catch (NullPointerException ex) {
-			log.warning("Error while performing a query. (NullPointerException)");
-		}
+		BGQuery bq = new BGQuery(sql, log, con, this);
+		
+		ExecutorService executor = Executors.newCachedThreadPool();
+		
+		executor.execute(bq);
+		
+		executor.shutdown();
 	}
 
 	public void SQLdisconnect() {
-		try {
-			log.warning("Disconnecting from MySQL database...");
-			con.close();
-		} catch (SQLException ex) {
-			log.warning("Error while closing the connection...");
-		} catch (NullPointerException ex) {
-			log.warning("Error while closing the connection...");
-		}
-
-		if(!SQL_DSC){
-			log.info("Reconnecting with MySQL database...");
-			SQLconnect();
-		}
+		BGEndDB end = new BGEndDB(this, log, con);
+		
+		ExecutorService executor = Executors.newCachedThreadPool();
+		
+		executor.execute(end);
+		
+		executor.shutdown();
 	}
 	
 	public Integer getCoins(Integer playerID) {
