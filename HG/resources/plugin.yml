@@ -1,6 +1,6 @@
 name: The BukkitGames
 main: main.BGMain
-version: 1.8.5.1 DEV
+version: 1.8.6 DEV
 website: http://dev.bukkit.org/server-mods/bukkitgames
 dev-url: http://dev.bukkit.org/server-mods/bukkitgames
 authors: [ftbastler, Galodystic]
