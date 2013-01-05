@@ -14,7 +14,7 @@ public class BGEndDB extends Thread{
 	
 	public BGEndDB(BGMain plugin, Logger log, Connection con) {
 		
-		setDaemon(true);
+		setDaemon(false);
 		
 		this.plugin = plugin;
 		this.log = log;

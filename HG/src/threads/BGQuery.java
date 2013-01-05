@@ -16,7 +16,7 @@ public class BGQuery extends Thread{
 	
 	public BGQuery(String sql, Logger log, Connection con, BGMain plugin) {
 		
-		setDaemon(true);
+		setDaemon(false);
 		
 		this.sql = sql;
 		this.log = log;
