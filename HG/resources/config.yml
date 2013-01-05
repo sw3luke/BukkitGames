@@ -40,6 +40,9 @@ TIPS:
 # Advcanced Abilities (DisguiseCraft needed!)
 ADVANCED_ABILITIES: false
 
+# Should the kitname displayed as prefix in the chat?
+KIT_PREFIX: true
+
 # Spawn cornucopia on start (see cornucopia.yml)
 CORNUCOPIA: true
 

@@ -96,6 +96,7 @@ public class BGMain extends JavaPlugin {
 	public String NO_KIT_MSG = "";
 	public String SERVER_TITLE = null;
 	public Boolean ADV_CHAT_SYSTEM = true;
+	public Boolean KIT_PREFIX = true;
 	public static Integer COUNTDOWN_SECONDS = Integer.valueOf(30);
 	public Integer FINAL_COUNTDOWN_SECONDS = Integer.valueOf(20);
 	public Integer MAX_GAME_RUNNING_TIME = Integer.valueOf(30);
@@ -456,6 +457,7 @@ public class BGMain extends JavaPlugin {
 		this.MOTD_PROGRESS_MSG = getConfig().getString("MESSAGE.MOTD_PROGRESS");
 		this.MOTD_COUNTDOWN_MSG = getConfig().getString("MESSAGE.MOTD_COUNTDOWN");
 		this.ADV_CHAT_SYSTEM = Boolean.valueOf(getConfig().getBoolean("ADVANCED_CHAT"));
+		this.KIT_PREFIX = Boolean.valueOf(getConfig().getBoolean("KIT_PREFIX"));
 		this.SQL_USE = Boolean.valueOf(getConfig().getBoolean("MYSQL"));
 		this.SQL_HOST = getConfig().getString("HOST");
 		this.SQL_PORT = getConfig().getString("PORT");

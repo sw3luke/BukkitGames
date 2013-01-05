@@ -247,6 +247,9 @@ public class BGKit {
 	}
 
 	private static void setKitDisplayName(Player player, String kitname) {
+		if(!plugin.KIT_PREFIX)
+			return;
+		
 		if (plugin.winner(player))
 			player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.GOLD
 					+ player.getName() + ChatColor.WHITE);
