@@ -21,10 +21,11 @@ public class IconMenu implements Listener {
     private int size;
     private OptionClickEventHandler handler;
     private Plugin plugin;
-   
+   private Boolean reg = false;
     private HashMap<Player, String[]> optionNames = new HashMap<Player, String[]>();
     private HashMap<Player, ItemStack[]> optionIcons = new HashMap<Player, ItemStack[]>();
-   
+    
+    
     public IconMenu(Player p, String name, int size, OptionClickEventHandler handler, Plugin plugin) {
         this.name = name;
         this.size = size;
@@ -36,7 +37,11 @@ public class IconMenu implements Listener {
         	optionIcons.remove(p);
         optionNames.put(p, new String[size]);
         optionIcons.put(p, new ItemStack[size]);
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        
+        if(!reg) {
+        	plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        	reg = true;
+        }
     }
    
     public IconMenu setOption(Player p, int position, ItemStack icon, String name, String... info) {
@@ -58,7 +63,7 @@ public class IconMenu implements Listener {
     public void destroy(Player p) {
         //HandlerList.unregisterAll(this);
         //handler = null;
-        plugin = null;
+        //plugin = null;
         optionNames.remove(p);
         optionIcons.remove(p);
     }
