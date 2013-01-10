@@ -23,6 +23,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
@@ -333,19 +334,19 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
-		Entity entity = event.getEntity();
+		Projectile entity =  event.getEntity();
 
-		if ((entity instanceof Arrow)) {
+		if (entity.getType() == EntityType.ARROW) {
 			Arrow arrow = (Arrow) entity;
-			Entity shooter = arrow.getShooter();
-			if ((shooter instanceof Player)) {
+			LivingEntity shooter = arrow.getShooter();
+			if (shooter.getType() == EntityType.PLAYER) {
 				Player player = (Player) shooter;
 				if(plugin.isSpectator(player)) {
 					arrow.remove();
 					return;
 				}
-				if (BGKit.hasAbility(player, 1)) {
-					Bukkit.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F);
+				if (BGKit.hasAbility(player, Integer.valueOf(1))) {
+					plugin.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F, false);
 					arrow.remove();
 				} else {
 					return;
@@ -355,10 +356,10 @@ public class BGListener implements Listener {
 			}
 		}
 
-		if ((entity instanceof Snowball)) {
+		if (entity.getType() == EntityType.SNOWBALL) {
 			Snowball ball = (Snowball) entity;
-			Entity shooter = ball.getShooter();
-			if ((shooter instanceof Player)) {
+			LivingEntity shooter = ball.getShooter();
+			if (shooter.getType() == EntityType.PLAYER) {
 				Player player = (Player) shooter;
 				if(plugin.isSpectator(player)) {
 					return;
@@ -367,7 +368,7 @@ public class BGListener implements Listener {
 					Bukkit.getServer().getWorld("world")
 							.createExplosion(ball.getLocation(), 0.0F);
 					for (Entity e : ball.getNearbyEntities(3.0D, 3.0D, 3.0D))
-						if ((e instanceof Player)) {
+						if ((e.getType() == EntityType.PLAYER)) {
 							Player pl = (Player) e;
 							if (pl.getName() != player.getName()) {
 								pl.addPotionEffect(new PotionEffect(
@@ -1098,7 +1099,7 @@ public class BGListener implements Listener {
 			
 			EntityType mob = defender.getType();
 			
-			if (BGKit.hasAbility(dam, 17) && BGDisguise.getDisguiseType(mob) != null && plugin.ADV_ABI) {
+			if (plugin.ADV_ABI && BGKit.hasAbility(dam, 17) && BGDisguise.getDisguiseType(mob) != null) {
 				
 				DisguiseType mt = BGDisguise.getDisguiseType(mob);
 				plugin.dis.disguise(dam, mt);

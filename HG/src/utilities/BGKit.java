@@ -275,10 +275,9 @@ public class BGKit {
 				
 				List<Integer> s = def.getIntegerList("ABILITY");
 				for(Integer i : s) {
-					if (i == ability) {
+					if (i.equals(ability)) {
 					return true;
 					}
-					continue;
 				}
 				return false;
 			}else {
@@ -291,10 +290,9 @@ public class BGKit {
 
 		List<Integer> s = kit.getIntegerList("ABILITY");
 		for(Integer i : s) {
-			if (i == ability) {
+			if (i.equals(ability)) {
 			return true;
 			}
-			continue;
 		}
 		return false;
 	}
