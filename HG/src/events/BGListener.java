@@ -815,6 +815,12 @@ public class BGListener implements Listener {
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.CROPS) {
 			block.setData(CropState.RIPE.getData());
 		}
+		if (BGKit.hasAbility(p, 10) && block.getType() == Material.MELON_SEEDS) {
+			block.setData(CropState.RIPE.getData());
+		}
+		if (BGKit.hasAbility(p, 10) && block.getType() == Material.PUMPKIN_SEEDS) {
+			block.setData(CropState.RIPE.getData());
+		}
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.SAPLING) {
 			TreeType t = getTree(block.getData());
 			Bukkit.getServer().getWorld("world").generateTree(block.getLocation(), t);
