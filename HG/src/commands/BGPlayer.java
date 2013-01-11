@@ -249,7 +249,7 @@ public class BGPlayer implements CommandExecutor{
 						return true;
 					}
 					
-					Location loc = new Location(plugin.getServer().getWorld("world"), x, plugin.getServer().getWorld("world").getHighestBlockYAt(x, z)+1.5, z);
+					Location loc = new Location(plugin.getServer().getWorlds().get(0), x, plugin.getServer().getWorlds().get(0).getHighestBlockYAt(x, z)+1.5, z);
 					
 					if(!plugin.inBorder(loc)) {
 						

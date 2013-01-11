@@ -44,7 +44,7 @@ public class BGSign extends JavaPlugin{
 				foline = foline.substring(0, 15);
 			}
 		
-			Block block = Bukkit.getWorld("world").getBlockAt(loc);
+			Block block = Bukkit.getWorlds().get(0).getBlockAt(loc);
 			block.setType(Material.SIGN_POST);
 			Sign sign = (Sign) block.getState();
 		

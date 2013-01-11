@@ -126,10 +126,10 @@ public class BGListener implements Listener {
 		BGChat.printPlayerChat((Player) Passenger, this.plugin.WORLD_BORDER_MSG);
 		s.teleport(event.getFrom());
 		this.plugin.getClass();
-		Bukkit.getServer().getWorld("world")
+		Bukkit.getServer().getWorlds().get(0)
 				.playEffect(s.getLocation(), Effect.ENDER_SIGNAL, 5);
 		this.plugin.getClass();
-		Bukkit.getServer().getWorld("world")
+		Bukkit.getServer().getWorlds().get(0)
 				.playEffect(s.getLocation(), Effect.SMOKE, 5);
 	}
 
@@ -182,7 +182,7 @@ public class BGListener implements Listener {
 					plugin.cooldown.thorCooldown(p);
 					Block block = event.getClickedBlock();
 					Location loc = block.getLocation();
-					World world = plugin.getServer().getWorld("world");
+					World world = plugin.getServer().getWorlds().get(0);
 					world.strikeLightning(loc);
 				}else {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.11.Expired"));
@@ -346,7 +346,7 @@ public class BGListener implements Listener {
 					return;
 				}
 				if (BGKit.hasAbility(player, Integer.valueOf(1))) {
-					plugin.getServer().getWorld("world").createExplosion(arrow.getLocation(), 2.0F, false);
+					plugin.getServer().getWorlds().get(0).createExplosion(arrow.getLocation(), 2.0F, false);
 					arrow.remove();
 				} else {
 					return;
@@ -365,7 +365,7 @@ public class BGListener implements Listener {
 					return;
 				}
 				if (BGKit.hasAbility(player, Integer.valueOf(3)).booleanValue()) {
-					Bukkit.getServer().getWorld("world")
+					Bukkit.getServer().getWorlds().get(0)
 							.createExplosion(ball.getLocation(), 0.0F);
 					for (Entity e : ball.getNearbyEntities(3.0D, 3.0D, 3.0D))
 						if ((e.getType() == EntityType.PLAYER)) {
@@ -475,19 +475,19 @@ public class BGListener implements Listener {
 				event.setTo(event.getFrom());
 				p.teleport(event.getFrom());
 				this.plugin.getClass();
-				Bukkit.getServer().getWorld("world")
+				Bukkit.getServer().getWorlds().get(0)
 						.playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 5);
 				this.plugin.getClass();
-				Bukkit.getServer().getWorld("world")
+				Bukkit.getServer().getWorlds().get(0)
 						.playEffect(p.getLocation(), Effect.SMOKE, 5);
 				return;
 			}
 			p.teleport(p.getWorld().getSpawnLocation().add(0.0D, 20.0D, 0.0D));
 			this.plugin.getClass();
-			Bukkit.getServer().getWorld("world")
+			Bukkit.getServer().getWorlds().get(0)
 					.playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 5);
 			this.plugin.getClass();
-			Bukkit.getServer().getWorld("world")
+			Bukkit.getServer().getWorlds().get(0)
 					.playEffect(p.getLocation(), Effect.SMOKE, 5);
 		}
 	}
@@ -823,7 +823,7 @@ public class BGListener implements Listener {
 		}
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.SAPLING) {
 			TreeType t = getTree(block.getData());
-			Bukkit.getServer().getWorld("world").generateTree(block.getLocation(), t);
+			Bukkit.getServer().getWorlds().get(0).generateTree(block.getLocation(), t);
 		}
 	}
 	
@@ -920,7 +920,7 @@ public class BGListener implements Listener {
 			Location light = p.getLocation();
 			last_quit = p.getName();
 			p.setHealth(0);
-			Bukkit.getServer().getWorld("world")
+			Bukkit.getServer().getWorlds().get(0)
 					.strikeLightningEffect(light.add(0.0D, 100.0D, 0.0D));
 		}
 
@@ -994,7 +994,7 @@ public class BGListener implements Listener {
 								}
 								Location light = v.getLocation();
 								Bukkit.getServer()
-										.getWorld("world")
+										.getWorlds().get(0)
 										.strikeLightningEffect(
 												light.add(0.0D, 100.0D, 0.0D));
 								last_headshot = v.getName();
@@ -1176,7 +1176,7 @@ public class BGListener implements Listener {
 		
 		if(BGKit.hasAbility(dp, 23)) {
 			
-			plugin.getServer().getWorld("world").createExplosion(dp.getLocation(), 2.5F, BGFiles.abconf.getBoolean("AB.23.Burn"));
+			plugin.getServer().getWorlds().get(0).createExplosion(dp.getLocation(), 2.5F, BGFiles.abconf.getBoolean("AB.23.Burn"));
 		}
 		
 		if (plugin.DEATH_SIGNS) {
@@ -1260,7 +1260,7 @@ public class BGListener implements Listener {
 				BGChat.printDeathChat(this.plugin.getGamers().length + " players remaining.");
 				BGChat.printDeathChat("");
 			}
-			Bukkit.getServer().getWorld("world").strikeLightningEffect(light.add(0, 100, 0));
+			Bukkit.getServer().getWorlds().get(0).strikeLightningEffect(light.add(0, 100, 0));
 		}
 
 		event.setDeathMessage(null);

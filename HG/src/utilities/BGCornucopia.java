@@ -43,7 +43,7 @@ public class BGCornucopia {
 	private static Block getCornSpawnBlock() {
 		Location loc = plugin.getSpawn();
 		loc.subtract(0, 2.5, 0);
-		Block b = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+		Block b = Bukkit.getServer().getWorlds().get(0).getBlockAt(loc);
 		return b;
 	}
 	
@@ -55,7 +55,7 @@ public class BGCornucopia {
 	    
 	    for (double x = -r; x <= r; x++) {
 	        for (double z = -r; z <= r; z++) {
-	        	Location l = new Location(Bukkit.getServer().getWorld("world"), loc.getX() + x, loc.getY(), loc.getZ() + z);
+	        	Location l = new Location(Bukkit.getServer().getWorlds().get(0), loc.getX() + x, loc.getY(), loc.getZ() + z);
 	        	if(l.distance(loc) <= r && l.getBlock().getType() != Material.DIAMOND_BLOCK) {
 	        		removeAbove(l.getBlock());
 	        		l.getBlock().setType(m);
@@ -183,11 +183,11 @@ public class BGCornucopia {
 	public static void removeAbove(Block block) {
 		Location loc = block.getLocation();
 		loc.setY(loc.getY()+1);
-		Block newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
-		while(loc.getY() < Bukkit.getServer().getWorld("world").getMaxHeight()) {
+		Block newBlock = Bukkit.getServer().getWorlds().get(0).getBlockAt(loc);
+		while(loc.getY() < Bukkit.getServer().getWorlds().get(0).getMaxHeight()) {
 			newBlock.setType(Material.AIR);
 			loc.setY(loc.getY()+1);
-			newBlock = Bukkit.getServer().getWorld("world").getBlockAt(loc);
+			newBlock = Bukkit.getServer().getWorlds().get(0).getBlockAt(loc);
 		}
 	}
 	
@@ -253,7 +253,7 @@ public class BGCornucopia {
 				Location c = mainBlock.getLocation();
 				c.add(-(ra/2) + r.nextInt(ra), 1, -(ra/2) + r.nextInt(ra));
 				while(amount > 0) {
-					Bukkit.getServer().getWorld("world").dropItemNaturally(c, i).setPickupDelay(20 * 5);
+					Bukkit.getServer().getWorlds().get(0).dropItemNaturally(c, i).setPickupDelay(20 * 5);
 					amount--;
 				}
 			}

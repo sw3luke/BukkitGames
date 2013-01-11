@@ -31,15 +31,21 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Color;
 import org.bukkit.Difficulty;
+import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.FireworkEffect.Type;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -294,7 +300,7 @@ public class BGMain extends JavaPlugin {
 		
 		public void run() {
 			
-			World w = Bukkit.getWorld("world");
+			World w = Bukkit.getWorlds().get(0);
 			w.setDifficulty(Difficulty.HARD);
 			w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
 			BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
@@ -347,7 +353,7 @@ public class BGMain extends JavaPlugin {
 
 	public void onEnable() {
 		
-		plugin.getServer().getWorld("world").setDifficulty(Difficulty.PEACEFUL);
+		plugin.getServer().getWorlds().get(0).setDifficulty(Difficulty.PEACEFUL);
 		
 		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
 		
@@ -525,7 +531,7 @@ public class BGMain extends JavaPlugin {
 
 		this.LAST_WINNER = merke;
 
-		World thisWorld = getServer().getWorld("world");
+		World thisWorld = getServer().getWorlds().get(0);
 		this.spawn = thisWorld.getSpawnLocation();
 
 		Border newBorder = new Border(this.spawn.getX(), this.spawn.getZ(), BGMain.WORLDRADIUS.intValue());
@@ -556,7 +562,7 @@ public class BGMain extends JavaPlugin {
 		}
 
 		Location loc = randomLocation(this.spawn.getChunk()).add(0.0D, 30.0D,0.0D);
-		Bukkit.getServer().getWorld("world").loadChunk(loc.getChunk());
+		Bukkit.getServer().getWorlds().get(0).loadChunk(loc.getChunk());
 		this.timer1.scheduleAtFixedRate(this.task1, 0L, 1000L);
 
 		PluginDescriptionFile pdfFile = getDescription();
@@ -657,8 +663,8 @@ public class BGMain extends JavaPlugin {
 	}
 	
 	public Location getSpawn() {
-		Location loc = Bukkit.getWorld("world").getSpawnLocation();
-		loc.setY(Bukkit.getWorld("world").getHighestBlockYAt(Bukkit.getWorld("world").getSpawnLocation()) + 1.5);
+		Location loc = Bukkit.getWorlds().get(0).getSpawnLocation();
+		loc.setY(Bukkit.getWorlds().get(0).getHighestBlockYAt(Bukkit.getWorlds().get(0).getSpawnLocation()) + 1.5);
 		return loc;
 	}
 
@@ -737,9 +743,9 @@ public class BGMain extends JavaPlugin {
 		}
 
 		this.DENY_CHECK_WORLDBORDER = Boolean.valueOf(true);
-		Bukkit.getServer().getWorld("world").loadChunk(getSpawn().getChunk());
+		Bukkit.getServer().getWorlds().get(0).loadChunk(getSpawn().getChunk());
 
-		Bukkit.getWorld("world").setDifficulty(Difficulty.HARD);
+		Bukkit.getWorlds().get(0).setDifficulty(Difficulty.HARD);
 		for (Player p : getPlayers()) {
 			if(this.isGameMaker(p) || this.isSpectator(p))
 				continue;
@@ -755,14 +761,14 @@ public class BGMain extends JavaPlugin {
 					addy = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
 				}while((Math.abs(addx)+Math.abs(addy)) < 5);
 				loc.add(addx, 60, addy);
-				loc.setY(getServer().getWorld("world").getHighestBlockYAt(loc) + 1.5);
+				loc.setY(getServer().getWorlds().get(0).getHighestBlockYAt(loc) + 1.5);
 				p.teleport(loc);
 			} else {
 				Location tploc = getRandomLocation();
 				while(!inBorder(tploc)) {
 					tploc = getRandomLocation();
 				}
-				tploc.setY(getServer().getWorld("world").getHighestBlockYAt(tploc) + 1.5);
+				tploc.setY(getServer().getWorlds().get(0).getHighestBlockYAt(tploc) + 1.5);
 				p.teleport(tploc);
 			}
 			p.setHealth(20);
@@ -785,9 +791,9 @@ public class BGMain extends JavaPlugin {
 			}
 		}
 
-		Bukkit.getServer().getWorld("world").setTime(0L);
-		Bukkit.getServer().getWorld("world").setStorm(false);
-		Bukkit.getServer().getWorld("world").setThundering(false);
+		Bukkit.getServer().getWorlds().get(0).setTime(0L);
+		Bukkit.getServer().getWorlds().get(0).setStorm(false);
+		Bukkit.getServer().getWorlds().get(0).setThundering(false);
 		this.DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
 		if (ADV_CHAT_SYSTEM) {
 			BGChat.printInfoChat(" --- The games have begun! ---");
@@ -802,26 +808,26 @@ public class BGMain extends JavaPlugin {
 
 	public static Location randomLocation(Chunk c) {
 		Random random = new Random();
-		Location startFrom = Bukkit.getWorld("world").getSpawnLocation();
+		Location startFrom = Bukkit.getWorlds().get(0).getSpawnLocation();
 		Location loc = startFrom.clone();
 		loc.add((random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS),
 				60,
 				(random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS));
-		int newY = Bukkit.getWorld("world").getHighestBlockYAt(loc);
+		int newY = Bukkit.getWorlds().get(0).getHighestBlockYAt(loc);
 		loc.setY(newY);
 		return loc;
 	}
 
 	public static Location getRandomLocation() {
 		Random random = new Random();
-		Location startFrom = Bukkit.getWorld("world").getSpawnLocation();
+		Location startFrom = Bukkit.getWorlds().get(0).getSpawnLocation();
 		Location loc;
 		do{
 			loc = startFrom.clone();
 			loc.add((random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS),
 				60,
 				(random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS));
-			int newY = Bukkit.getWorld("world").getHighestBlockYAt(loc);
+			int newY = Bukkit.getWorlds().get(0).getHighestBlockYAt(loc);
 			loc.setY(newY);
 		}while(!plugin.inBorder(loc));
 		return loc;
@@ -848,23 +854,9 @@ public class BGMain extends JavaPlugin {
 					this.log.warning(ex.toString());
 				}
 				
-				Player pl = getGamers()[0];
+				final Player pl = getGamers()[0];
 				pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1.0F, (byte) 1);
-				
-				if(this.REW && this.COINS_FOR_WIN != 0) {
-					String text = "You got ";
-					if(this.COINS_FOR_WIN == 1)
-						text += "1 Coin for winning the game!";
-					else
-						text += this.COINS_FOR_WIN+" Coins for winning the game!";
-					getGamers()[0].kickPlayer(ChatColor.GOLD
-							+ "You are the winner of this game!"+
-							'\n'+ text);
-				}else {
-					getGamers()[0].kickPlayer(ChatColor.GOLD
-							+ "You are the winner of this game!");
-				}
-				
+								
 				if(SQL_USE) {
 					Integer PL_ID = getPlayerID(winnername);
 					SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'WINNER' WHERE `REF_PLAYER` = "
@@ -881,11 +873,70 @@ public class BGMain extends JavaPlugin {
 						reward.giveCoins(winnername, plugin.COINS_FOR_WIN);
 					}
 				}
+				final Boolean R = REW;
+				final Integer CFW = COINS_FOR_WIN;
 				
-				this.getServer().shutdown();
+				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+					
+					@Override
+					public void run() {
+						Random r = new Random();
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
+					}
+					
+				}, 0, 10);
+				
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+					
+					@Override
+					public void run() {
+						if(R && CFW != 0) {
+							String text = "You got ";
+							if(CFW == 1)
+								text += "1 Coin for winning the game!";
+							else
+								text += CFW+" Coins for winning the game!";
+							pl.kickPlayer(ChatColor.GOLD
+									+ "You are the winner of this game!"+
+									'\n'+ text);
+						} else {
+							pl.kickPlayer(ChatColor.GOLD
+									+ "You are the winner of this game!");
+						}
+						Bukkit.getServer().shutdown();
+					}
+					
+				}, 20*10);
 			}
 	}
 
+	public static void spawnRandomFirework(Location loc) {
+        Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+        FireworkMeta fwm = fw.getFireworkMeta();
+        Random r = new Random();   
+
+        int rt = r.nextInt(4) + 1;
+        Type type = Type.BALL;       
+        if (rt == 1) type = Type.BALL;
+        if (rt == 2) type = Type.BALL_LARGE;
+        if (rt == 3) type = Type.BURST;
+        if (rt == 4) type = Type.CREEPER;
+        if (rt == 5) type = Type.STAR;
+        
+        Color c1 = Color.RED;
+        Color c2 = Color.YELLOW;
+        Color c3 = Color.ORANGE;
+       
+        FireworkEffect effect = FireworkEffect.builder().flicker(r.nextBoolean()).withColor(c1).withColor(c2).withFade(c3).with(type).trail(r.nextBoolean()).build();
+        fwm.addEffect(effect);
+       
+        int rp = r.nextInt(2) + 1;
+        fwm.setPower(rp);
+        
+        fw.setFireworkMeta(fwm);           
+	}
+	
 	public static void deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
