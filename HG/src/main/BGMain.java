@@ -876,16 +876,24 @@ public class BGMain extends JavaPlugin {
 				final Boolean R = REW;
 				final Integer CFW = COINS_FOR_WIN;
 				
+				BGChat.printPlayerChat(pl, "§6§lYOU HAVE WON THIS GAME!");
+				
 				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 					
 					@Override
 					public void run() {
 						Random r = new Random();
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(0, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, 0).add(0, 5, 0)).getLocation());
 						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
-						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(-r.nextInt(5) - 5, 0, 0).add(0, 5, 0)).getLocation());
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(0, 0, -r.nextInt(5) - 5).add(0, 5, 0)).getLocation());
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(-r.nextInt(5) - 5, 0, -r.nextInt(5) - 5).add(0, 5, 0)).getLocation());
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(-r.nextInt(5) - 5, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
+						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, -r.nextInt(5) - 5).add(0, 5, 0)).getLocation());
 					}
 					
-				}, 0, 10);
+				}, 0, 20);
 				
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 					
