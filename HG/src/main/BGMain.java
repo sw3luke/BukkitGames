@@ -746,7 +746,8 @@ public class BGMain extends JavaPlugin {
 					@Override
 					public void run() {
 						Bukkit.getServer().getScheduler().cancelTask(s);
-						pl.kickPlayer("§6§lYOU HAVE WON THIS GAME!");
+						//TODO: When doing this, the client will crash
+						//pl.kickPlayer("§6§lYOU HAVE WON THIS GAME!");
 						Bukkit.getServer().shutdown();
 					}
 					
