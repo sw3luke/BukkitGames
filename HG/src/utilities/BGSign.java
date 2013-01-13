@@ -2,28 +2,17 @@ package utilities;
 
 import java.util.ArrayList;
 
-import main.BGMain;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class BGSign extends JavaPlugin{
-
-	@SuppressWarnings("unused")
-	private BGMain plugin;
+public class BGSign {
 	
-	public ArrayList<Location> signs = new ArrayList<Location>();
+	public static ArrayList<Location> signs = new ArrayList<Location>();
 	
-	public BGSign(BGMain plugin) {
-		
-		this.plugin = plugin;
-	}
-	
-	public void createSign (Location loc, String firstLine, String secondLine, String thirdLine, String fourthLine) {
+	public static void createSign (Location loc, String firstLine, String secondLine, String thirdLine, String fourthLine) {
 		
 		try{
 			String fline = firstLine;

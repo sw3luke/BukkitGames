@@ -4,24 +4,22 @@ import java.util.logging.Logger;
 
 import main.BGMain;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import timers.EndGameTimer;
 import utilities.BGChat;
 import utilities.BGFBattle;
 import utilities.BGKit;
+import utilities.BGReward;
 import utilities.Updater;
 
 public class BGConsole implements CommandExecutor {
 	Logger log = BGMain.getPluginLogger();
-	private BGMain plugin;
-
-	public BGConsole(BGMain plugin) {
-		this.plugin = plugin;
-	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player p;
@@ -33,15 +31,15 @@ public class BGConsole implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("start")) {
 			if (sender.hasPermission("bg.admin.start")
 					|| sender.hasPermission("bg.admin.*")) {
-				if (this.plugin.DENY_LOGIN.booleanValue())			
+				if (BGMain.DENY_LOGIN.booleanValue())			
 					if (p != null) 
 						BGChat.printPlayerChat(p, "The game has already begun!");
 					else
 						sender.sendMessage("The game has already begun!");
 				else
-					this.plugin.startgame();
+					BGMain.startgame();
 			} else {
-				BGChat.printPlayerChat(p, "§cYou are not allowed to do this.");
+				BGChat.printPlayerChat(p, "§cYou are not allowed to do ");
 			}
 			return true;
 		}
@@ -50,12 +48,12 @@ public class BGConsole implements CommandExecutor {
 			
 			if(sender.hasPermission("bg.admin.fbattle")) {
 				
-				if(plugin.DENY_LOGIN) {
-					if(plugin.END_GAME) {
+				if(BGMain.DENY_LOGIN) {
+					if(BGMain.END_GAME) {
 						BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-						plugin.END_GAME = false;
+						BGMain.END_GAME = false;
 						BGFBattle.createBattle();
-						plugin.timer4.schedule(plugin.task4, 60000);
+						new EndGameTimer();
 						
 						return true;
 					}else {
@@ -85,7 +83,7 @@ public class BGConsole implements CommandExecutor {
 		
 		if(cmd.getName().equalsIgnoreCase("bgversion")) {
 			if(sender.hasPermission("bg.admin.check")) {
-				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+				Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				if (update) {
 					String newversion = updater.getLatestVersionString();
@@ -95,9 +93,9 @@ public class BGConsole implements CommandExecutor {
 						sender.sendMessage("§6Update available: " + newversion + " §r/bgdownload");
 				} else {
 					if(p != null)
-						BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + plugin.getDescription().getVersion());
+						BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
 					else
-						sender.sendMessage("§7Current version of The BukkitGames: " + plugin.getDescription().getVersion());
+						sender.sendMessage("§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
 				}
 			} else {
 				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
@@ -107,7 +105,7 @@ public class BGConsole implements CommandExecutor {
 		
 		if(cmd.getName().equalsIgnoreCase("bgdownload")) {
 			if(sender.hasPermission("bg.admin.download")) {
-				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+				Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				
 				if(update) {
@@ -115,7 +113,7 @@ public class BGConsole implements CommandExecutor {
 						BGChat.printPlayerChat(p, "§7Downloading new version...");
 					else
 						sender.sendMessage("§7Downloading new version...");
-					Updater download = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+					Updater download = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
 					
 					if(download.getResult() == Updater.UpdateResult.SUCCESS) {
 						if(p != null)
@@ -147,7 +145,7 @@ public class BGConsole implements CommandExecutor {
 		
 		if (cmd.getName().equalsIgnoreCase("coin")) {
 			
-			if (!plugin.REW) {
+			if (!BGMain.REW) {
 				if(p == null) {
 					sender.sendMessage("§eReward System disabled!");
 				}else {
@@ -164,14 +162,14 @@ public class BGConsole implements CommandExecutor {
 				return true;
 			}else if( p != null){
 			
-				coins = plugin.getCoins(plugin.getPlayerID(p.getName()));
+				coins = BGMain.getCoins(BGMain.getPlayerID(p.getName()));
 			
 			}
 			
 			if (args.length == 0) {
 				BGChat.printPlayerChat(p,
-										"§eYou get "+plugin.COINS_FOR_WIN+" Coins for each time you win a game"+
-										'\n'+"§eYou get "+plugin.COINS_FOR_KILL+" Coin for killing a player (only close combat)"+		
+										"§eYou get "+BGMain.COINS_FOR_WIN+" Coins for each time you win a game"+
+										'\n'+"§eYou get "+BGMain.COINS_FOR_KILL+" Coin for killing a player (only close combat)"+		
 										'\n'+"§eCOINS: "+ coins +
 										'\n'+"§eType /coin buy [kitName] when you want to buy a Kit!"+
 										'\n'+"§eType /coin send <player> <amount> to send other players coins");
@@ -182,7 +180,7 @@ public class BGConsole implements CommandExecutor {
 				return true;
 			}else if (args[0].equalsIgnoreCase("buy")) {
 				
-				if(plugin.isSpectator(p)) {
+				if(BGMain.isSpectator(p)) {
 					
 					BGChat.printPlayerChat(p, "§eYou can not buy a kit because you are a spectator!");
 					return true;
@@ -198,7 +196,7 @@ public class BGConsole implements CommandExecutor {
 				if (p.hasPermission("bg.kit.*")) {
 					
 					BGChat.printPlayerChat(p, "§eYou don't need to use Coins you can use all Kits!");
-				}else if (plugin.REW && plugin.reward.BOUGHT_KITS.containsKey(p.getName())) {
+				}else if (BGMain.REW && BGReward.BOUGHT_KITS.containsKey(p.getName())) {
 					
 					BGChat.printPlayerChat(p, "§eYou have already bought a kit this round!");
 					return true;					
@@ -211,10 +209,10 @@ public class BGConsole implements CommandExecutor {
 					BGChat.printPlayerChat(p, "§eThis Kit can not be bought!");
 					return true;
 				}else if(coins >= BGKit.getCoins(kitName.toLowerCase())) {
-					plugin.reward.coinUse(p.getName(), kitName.toLowerCase());
-					plugin.reward.takeCoins(p.getName(), BGKit.getCoins(kitName.toLowerCase()));
+					BGReward.coinUse(p.getName(), kitName.toLowerCase());
+					BGReward.takeCoins(p.getName(), BGKit.getCoins(kitName.toLowerCase()));
 					BGChat.printPlayerChat(p, "§eYou bought the "+kitName+" Kit!");
-					if(plugin.ADV_CHAT_SYSTEM) {
+					if(BGMain.ADV_CHAT_SYSTEM) {
 						BGChat.updateChat(p);
 					}
 					return true;
@@ -230,7 +228,7 @@ public class BGConsole implements CommandExecutor {
 					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /coin");
 					return true;
 				}
-				if (plugin.getPlayerID(args[1]) == null) {
+				if (BGMain.getPlayerID(args[1]) == null) {
 						
 					BGChat.printPlayerChat(p, "§ePlayer was never on this server!");
 					return true;
@@ -256,18 +254,18 @@ public class BGConsole implements CommandExecutor {
 						
 						BGChat.printPlayerChat(p, "§eYou don't have enough Coins!");
 						return true;
-					}else {
+					} else {
 							
-						plugin.reward.sendCoins(p.getName(), args[1], zahl);
+						BGReward.sendCoins(p.getName(), args[1], zahl);
 							
-							if (plugin.getServer().getPlayer(args[1]) == null) {
+							if (Bukkit.getServer().getPlayer(args[1]) == null) {
 								
 								BGChat.printPlayerChat(p, "§eYou have send " + zahl + " Coins to " + args[1] + "!");
 								return true;
 							}else {
 								
 								BGChat.printPlayerChat(p, "§eYou have send " + zahl + " Coins to " + args[1] + "!");
-								BGChat.printPlayerChat(plugin.getServer().getPlayer(args[1]), "§3You have received " + zahl +" Coins from " + p.getName()+ "!");
+								BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), "§3You have received " + zahl +" Coins from " + p.getName()+ "!");
 								return true;
 							}
 						
@@ -285,7 +283,7 @@ public class BGConsole implements CommandExecutor {
 							}
 							return true;
 						}
-						if (plugin.getPlayerID(args[1]) == null) {
+						if (BGMain.getPlayerID(args[1]) == null) {
 						
 							if(p == null) {
 								sender.sendMessage("§ePlayer was never on this server!");
@@ -320,17 +318,17 @@ public class BGConsole implements CommandExecutor {
 							}
 						}
 							
-							plugin.reward.giveCoins(args[1], zahl);
+							BGReward.giveCoins(args[1], zahl);
 							if(p == null) {
 								sender.sendMessage("§eYou gave " + zahl + " Coins to " + args[1] + "!");
 							}else {
 								BGChat.printPlayerChat(p, "§eYou gave " + zahl + " Coins to " + args[1] + "!");
 							}
 							
-							if(plugin.getServer().getPlayer(args[2]) == null)
+							if(Bukkit.getServer().getPlayer(args[2]) == null)
 								return true;
 							
-							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[1]), "§eYou have received " + zahl + " Coins!");
+							BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), "§eYou have received " + zahl + " Coins!");
 							
 							return true;
 						
@@ -351,7 +349,7 @@ public class BGConsole implements CommandExecutor {
 							}
 							return true;
 						}
-						if (plugin.getPlayerID(args[1]) == null) {
+						if (BGMain.getPlayerID(args[1]) == null) {
 						
 							if(p == null) {
 								sender.sendMessage("§ePlayer was never on this server!");
@@ -385,17 +383,17 @@ public class BGConsole implements CommandExecutor {
 								}
 							}
 							
-							plugin.reward.takeCoins(args[1], zahl);
+							BGReward.takeCoins(args[1], zahl);
 							if(p == null) {
 								sender.sendMessage("§eYou took " + zahl + " Coins from " + args[1] + "!");
 							}else {
 								BGChat.printPlayerChat(p, "§eYou took " + zahl + " Coins from " + args[1] + "!");
 							}
 							
-							if(plugin.getServer().getPlayer(args[1]) == null)
+							if(Bukkit.getServer().getPlayer(args[1]) == null)
 								return true;
 							
-							BGChat.printPlayerChat(plugin.getServer().getPlayer(args[1]), "§eYou lost " + zahl + " Coins!");
+							BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), "§eYou lost " + zahl + " Coins!");
 							
 							return true;
 					}else {
@@ -412,13 +410,13 @@ public class BGConsole implements CommandExecutor {
 							BGChat.printPlayerChat(p, "§eTo less arrguments!");
 						}
 						
-						if (plugin.getPlayerID(args[1]) == null) {
+						if (BGMain.getPlayerID(args[1]) == null) {
 							
 							BGChat.printPlayerChat(p, "§ePlayer was never on this server!");
 							return true;
 						}
 						
-						int coins1 = plugin.getCoins(plugin.getPlayerID(args[1]));
+						int coins1 = BGMain.getCoins(BGMain.getPlayerID(args[1]));
 						
 						BGChat.printPlayerChat(p, "§eThis are the stats of " + args[1] + ":"+
 						"\n§eCOINS: " + coins1);

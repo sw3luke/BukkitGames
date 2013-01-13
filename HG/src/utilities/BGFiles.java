@@ -8,10 +8,7 @@ import main.BGMain;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class BGFiles {
-	
-	private static BGMain plugin;
-	
+public class BGFiles {	
 	Logger log = BGMain.getPluginLogger();
 	
 	public static FileConfiguration abconf;
@@ -24,10 +21,7 @@ public class BGFiles {
 	public static FileConfiguration feastconf;
 	public static FileConfiguration worldconf;
 
-	public BGFiles(BGMain main) {
-		
-		plugin = main;
-		
+	public BGFiles() {		
 		try{
 			loadFiles();
 		}catch (Exception e) {
@@ -38,67 +32,67 @@ public class BGFiles {
 	private void loadFiles() throws Exception {
 		
 		//Create files if not exist
-		File configFile = new File(plugin.getDataFolder(), "config.yml");
-		File kitFile = new File(plugin.getDataFolder(), "kit.yml");
-		File leaderboardFile = new File(plugin.getDataFolder(), "leaderboard.yml");
-		File deathSignFile = new File(plugin.getDataFolder(), "deathsign.yml");
-		File abilitiesFile = new File(plugin.getDataFolder(), "abilities.yml");
-		File bookFile = new File(plugin.getDataFolder(), "book.yml");
-		File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
-		File cornFile = new File(plugin.getDataFolder(), "cornucopia.yml");
-		File feastFile = new File(plugin.getDataFolder(), "feast.yml");
-		File worldFile = new File(plugin.getDataFolder(), "world.yml");
+		File configFile = new File(BGMain.instance.getDataFolder(), "config.yml");
+		File kitFile = new File(BGMain.instance.getDataFolder(), "kit.yml");
+		File leaderboardFile = new File(BGMain.instance.getDataFolder(), "leaderboard.yml");
+		File deathSignFile = new File(BGMain.instance.getDataFolder(), "deathsign.yml");
+		File abilitiesFile = new File(BGMain.instance.getDataFolder(), "abilities.yml");
+		File bookFile = new File(BGMain.instance.getDataFolder(), "book.yml");
+		File messagesFile = new File(BGMain.instance.getDataFolder(), "messages.yml");
+		File cornFile = new File(BGMain.instance.getDataFolder(), "cornucopia.yml");
+		File feastFile = new File(BGMain.instance.getDataFolder(), "feast.yml");
+		File worldFile = new File(BGMain.instance.getDataFolder(), "world.yml");
 
 		Integer creation = 0;
 		
 		if (!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("config.yml"), configFile);
+			BGMain.copy(BGMain.instance.getResource("config.yml"), configFile);
 			creation++;
 		}
 		if (!kitFile.exists()) {
 			kitFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("kit.yml"), kitFile);
+			BGMain.copy(BGMain.instance.getResource("kit.yml"), kitFile);
 			creation++;
 		}
 		if (!leaderboardFile.exists()) {
 			leaderboardFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("leaderboard.yml"), leaderboardFile);
+			BGMain.copy(BGMain.instance.getResource("leaderboard.yml"), leaderboardFile);
 			creation++;
 		}
 		if (!deathSignFile.exists()) {
 			deathSignFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("deathsign.yml"), deathSignFile);
+			BGMain.copy(BGMain.instance.getResource("deathsign.yml"), deathSignFile);
 			creation++;
 		}
 		if (!abilitiesFile.exists()) {
 			abilitiesFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("abilities.yml"), abilitiesFile);
+			BGMain.copy(BGMain.instance.getResource("abilities.yml"), abilitiesFile);
 			creation++;
 		}
 		if (!bookFile.exists()) {
 			bookFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("book.yml"), bookFile);
+			BGMain.copy(BGMain.instance.getResource("book.yml"), bookFile);
 			creation++;
 		}
 		if (!messagesFile.exists()) {
 			messagesFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("messages.yml"), messagesFile);
+			BGMain.copy(BGMain.instance.getResource("messages.yml"), messagesFile);
 			creation++;
 		}
 		if(!cornFile.exists()) {
 			cornFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("cornucopia.yml"), cornFile);
+			BGMain.copy(BGMain.instance.getResource("cornucopia.yml"), cornFile);
 			creation++;
 		}
 		if(!feastFile.exists()) {
 			feastFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("feast.yml"), feastFile);
+			BGMain.copy(BGMain.instance.getResource("feast.yml"), feastFile);
 			creation++;
 		}
 		if(!worldFile.exists()) {
 			worldFile.getParentFile().mkdirs();
-			plugin.copy(plugin.getResource("world.yml"), worldFile);
+			BGMain.copy(BGMain.instance.getResource("world.yml"), worldFile);
 			creation++;
 		}
 		
@@ -108,22 +102,22 @@ public class BGFiles {
 		
 		//Save files in variables
 		abconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "abilities.yml"));
+				new File(BGMain.instance.getDataFolder(), "abilities.yml"));
 		bookconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "book.yml"));
+				new File(BGMain.instance.getDataFolder(), "book.yml"));
 		config = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "config.yml"));
+				new File(BGMain.instance.getDataFolder(), "config.yml"));
 		dsign = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "deathsign.yml"));
+				new File(BGMain.instance.getDataFolder(), "deathsign.yml"));
 		kitconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "kit.yml"));
+				new File(BGMain.instance.getDataFolder(), "kit.yml"));
 		messageconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "messages.yml"));
+				new File(BGMain.instance.getDataFolder(), "messages.yml"));
 		cornconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "cornucopia.yml"));
+				new File(BGMain.instance.getDataFolder(), "cornucopia.yml"));
 		feastconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "feast.yml"));
+				new File(BGMain.instance.getDataFolder(), "feast.yml"));
 		worldconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "world.yml"));
+				new File(BGMain.instance.getDataFolder(), "world.yml"));
 	}
 }

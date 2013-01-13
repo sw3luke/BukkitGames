@@ -2,8 +2,6 @@ package utilities;
 
 import java.util.ArrayList;
 
-import main.BGMain;
-
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -13,21 +11,15 @@ import pgDev.bukkit.DisguiseCraft.disguise.Disguise;
 import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 public class BGDisguise {
-
-	@SuppressWarnings("unused")
-	private BGMain plugin;
 	
-	public DisguiseCraftAPI dcapi;
+	public static DisguiseCraftAPI dcapi;
+	public static ArrayList<String> disList = new ArrayList<String>();
 	
-	public ArrayList<String> disList = new ArrayList<String>();
-	
-	public BGDisguise(BGMain plugin) {
-		
-		this.plugin = plugin;
+	public BGDisguise() {
 		dcapi = DisguiseCraft.getAPI();
 	}
 	
-	public void disguise(Player player, DisguiseType mob) {
+	public static void disguise(Player player, DisguiseType mob) {
 		
 		if (!dcapi.isDisguised(player)) {
 			Disguise dis = new Disguise(dcapi.newEntityID(), mob);
@@ -41,7 +33,7 @@ public class BGDisguise {
 		}
 	}
 	
-	public void unDisguise(Player player) {
+	public static void unDisguise(Player player) {
 		
 		if (dcapi.isDisguised(player)) {
 			dcapi.undisguisePlayer(player);

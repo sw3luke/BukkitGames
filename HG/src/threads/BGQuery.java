@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
+
 import main.BGMain;
 
 public class BGQuery extends Thread{
@@ -12,7 +13,6 @@ public class BGQuery extends Thread{
 	private String sql;
 	private Logger log;
 	private Connection con;
-	private BGMain plugin;
 	
 	public BGQuery(String sql, Logger log, Connection con, BGMain plugin) {
 		
@@ -21,12 +21,11 @@ public class BGQuery extends Thread{
 		this.sql = sql;
 		this.log = log;
 		this.con = con;
-		this.plugin = plugin;
 	}
 	
 	@Override
 	public void run() {
-		plugin.lock.lock();
+		BGMain.lock.lock();
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(sql);
@@ -35,10 +34,10 @@ public class BGQuery extends Thread{
 			log.warning("Error with following query: "
 					+ sql);
 			log.warning("MySQL-Error: " + ex.getMessage());
-			plugin.SQLdisconnect();
+			BGMain.SQLdisconnect();
 		} catch (NullPointerException ex) {
 			log.warning("Error while performing a query. (NullPointerException)");
 		}
-		plugin.lock.unlock();
+		BGMain.lock.unlock();
 	}
 }

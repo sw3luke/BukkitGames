@@ -8,27 +8,23 @@ import main.BGMain;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class BGCooldown extends JavaPlugin {
-	
-	private BGMain plugin;
-	
-	public BGCooldown(BGMain plugin) {
-		
-		this.plugin = plugin;
-		
+import events.BGListener;
+
+public class BGCooldown {
+
+	public BGCooldown() {
 		BGFiles.abconf = YamlConfiguration.loadConfiguration(
-				new File(plugin.getDataFolder(), "abilities.yml"));
+				new File(BGMain.instance.getDataFolder(), "abilities.yml"));
 	}
 	
-	public void monkCooldown(final Player player) {
+	public static void monkCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask() {
 			
 			public void run() {
 				
-				plugin.listener.monkList.remove(player);
+				BGListener.monkList.remove(player);
 			}
 		};
 		
@@ -36,13 +32,13 @@ public class BGCooldown extends JavaPlugin {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.13.Cooldown") * 1000);
 	}
 	
-	public void thiefCooldown(final Player player) {
+	public static void thiefCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask() {
 			
 			public void run() {
 				
-				plugin.listener.thiefList.remove(player);
+				BGListener.thiefList.remove(player);
 			}
 		};
 		
@@ -50,13 +46,13 @@ public class BGCooldown extends JavaPlugin {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.15.Cooldown") * 1000);
 	}
 	
-	public void ghostCooldown(final Player player) {
+	public static void ghostCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask() {
 			
 			public void run() {
 				
-				plugin.listener.ghostList.remove(player);
+				BGListener.ghostList.remove(player);
 			}
 		};
 		
@@ -64,7 +60,7 @@ public class BGCooldown extends JavaPlugin {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.16.Cooldown") * 1000);
 	}
 	
-	public void showPlayerCooldown(final Player player, final Player[] players) {
+	public static void showPlayerCooldown(final Player player, final Player[] players) {
 		
 		TimerTask action = new TimerTask() {
 			
@@ -84,13 +80,13 @@ public class BGCooldown extends JavaPlugin {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.16.Duration") * 1000);
 	}
 	
-	public void viperCooldown(final Player player) {
+	public static void viperCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask() {
 			
 			public void run() {
 				
-				plugin.listener.viperList.remove(player);
+				BGListener.viperList.remove(player);
 			}
 		};
 		
@@ -98,13 +94,13 @@ public class BGCooldown extends JavaPlugin {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.19.Duration") * 1000);
 	}
 	
-	public void thorCooldown(final Player player) {
+	public static void thorCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask() {
 			
 			public void run(){
 				
-				plugin.listener.thorList.remove(player);
+				BGListener.thorList.remove(player);
 			}
 		};
 		
@@ -112,13 +108,13 @@ public class BGCooldown extends JavaPlugin {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.11.Cooldown") * 1000);
 	}
 	
-	public void timeCooldown(final Player player) {
+	public static void timeCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask() {
 			
 			public void run() {
 				
-				plugin.listener.timeList.remove(player);
+				BGListener.timeList.remove(player);
 			}
 		};
 		
@@ -126,13 +122,13 @@ public class BGCooldown extends JavaPlugin {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.22.Cooldown")*1000);
 	}
 	
-	public void freezeCooldown(final Player player) {
+	public static void freezeCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask(){
 			
 			public void run() {
 				
-				plugin.listener.freezeList.remove(player);
+				BGListener.freezeList.remove(player);
 				BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.22.unfrozen"));
 			}
 		};

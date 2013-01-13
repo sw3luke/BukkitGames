@@ -8,15 +8,15 @@ public class Border {
 	public double radius;
 
 	public Border(double X, double Z, double Radius) {
-		this.centerX = X;
-		this.centerZ = Z;
-		this.radius = Radius;
-		this.radiusSq = (int) (this.radius * this.radius);
-		this.definiteSq = (int) Math.sqrt(0.5D * this.radiusSq);
+		centerX = X;
+		centerZ = Z;
+		radius = Radius;
+		radiusSq = (int) (radius * radius);
+		definiteSq = (int) Math.sqrt(0.5D * radiusSq);
 	}
 
 	public String toString() {
-		return "X: " + this.centerX + " Z: " + this.centerZ + " Radius: "
-				+ this.radius;
+		return "X: " + centerX + " Z: " + centerZ + " Radius: "
+				+ radius;
 	}
 }

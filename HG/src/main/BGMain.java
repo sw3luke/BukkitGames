@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
@@ -47,6 +45,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import commands.BGConsole;
@@ -54,289 +53,132 @@ import commands.BGPlayer;
 
 import threads.BGEndDB;
 import threads.BGQuery;
+import timers.GameTimer;
+import timers.InvincibilityTimer;
+import timers.PreGameTimer;
 import utilities.BGChat;
-import utilities.BGCooldown;
 import utilities.BGCornucopia;
 import utilities.BGDisguise;
-import utilities.BGFBattle;
-import utilities.BGFeast;
 import utilities.BGFiles;
 import utilities.BGKit;
 import utilities.BGReward;
-import utilities.BGSign;
 import utilities.BGVanish;
 import utilities.Border;
 import utilities.Metrics;
 
 import events.BGListener;
 
-public class BGMain extends JavaPlugin {
-	Logger log;
-	
-	public BGChat chat;
-	public BGConsole consolecmd;
-	public BGPlayer player;
-	public BGCooldown cooldown;
-	public BGDisguise dis;
-	public BGKit kit;
-	public BGListener listener;
-	public BGReward reward;
-	public BGSign sign;
-	public BGVanish vanish;
-	public Border border;
-	public BGFiles files;
-	public BGCornucopia cornucopia;
-	public BGFeast feasts;
-	private static BGMain plugin;
-	
-	public ReentrantLock lock = new ReentrantLock(true);
+public class BGMain extends JavaPlugin {		
+	public static  ReentrantLock lock = new ReentrantLock(true);
 
-	public String HELP_MESSAGE = null;
-	public String SERVER_FULL_MSG = "";
-	public String WORLD_BORDER_MSG = "";
-	public String GAME_IN_PROGRESS_MSG = "";
-	public String KIT_BUY_WEB = "";
-	public String NEW_WINNER = "";
-	public String MOTD_PROGRESS_MSG = "";
-	public String MOTD_COUNTDOWN_MSG = "";
-	public String NO_KIT_MSG = "";
-	public String SERVER_TITLE = null;
-	public Boolean ADV_CHAT_SYSTEM = true;
-	public Boolean KIT_PREFIX = true;
+	public static String HELP_MESSAGE = null;
+	public static String SERVER_FULL_MSG = "";
+	public static String WORLD_BORDER_MSG = "";
+	public static String GAME_IN_PROGRESS_MSG = "";
+	public static String KIT_BUY_WEB = "";
+	public static String NEW_WINNER = "";
+	public static String MOTD_PROGRESS_MSG = "";
+	public static String MOTD_COUNTDOWN_MSG = "";
+	public static String NO_KIT_MSG = "";
+	public static String SERVER_TITLE = null;
+	public static Boolean ADV_CHAT_SYSTEM = true;
+	public static Boolean KIT_PREFIX = true;
 	public static Integer COUNTDOWN_SECONDS = Integer.valueOf(30);
-	public Integer FINAL_COUNTDOWN_SECONDS = Integer.valueOf(20);
-	public Integer MAX_GAME_RUNNING_TIME = Integer.valueOf(30);
-	public Integer MINIMUM_PLAYERS = Integer.valueOf(1);
-	public final Integer WINNER_PLAYERS = Integer.valueOf(1);
-	public Integer END_GAME_TIME = Integer.valueOf(25);
-	public final String WORLD_TEMPOARY_NAME = "world";
-	public Boolean REGEN_WORLD = false;
-	public Boolean RANDOM_START = false;
-	public Boolean SHOW_TIPS = true;
-	public Boolean DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
-	public Boolean DENY_LOGIN = false;
-	public Boolean DENY_BLOCKPLACE = false;
-	public Boolean DENY_BLOCKBREAK = false;
-	public Boolean DENY_ITEMPICKUP = false;
-	public Boolean DENY_ITEMDROP = false;
-	public Boolean DENY_DAMAGE_PLAYER = false;
-	public Boolean DENY_DAMAGE_ENTITY = false;
-	public Boolean DENY_SHOOT_BOW = false;
-	public Boolean QUIT_MSG = false;
-	public Boolean DEATH_MSG = false;
-	public Boolean COMPASS = true;
-	public Boolean AUTO_COMPASS = false;
-	public Boolean ADV_ABI = false;
-	public Boolean SIMP_REW = false;
-	public Boolean REW = false;
-	public Boolean DEATH_SIGNS = true;
-	public Boolean DEATH_SG_PROTECTED = true;
-	public Boolean END_GAME = true;
-	public Boolean DEFAULT_KIT = false;
-	public Boolean CORNUCOPIA = true;
-	public Boolean CORNUCOPIA_CHESTS = false;
-	public Boolean TEAM = true;
-	public Boolean GEN_MAPS = false;
-	public Boolean ITEM_MENU = true;
-	public Boolean CORNUCOPIA_ITEMS = true;
-	public Boolean CORNUCOPIA_PROTECTED = true;
-	public Boolean FEAST = true;
-	public Boolean FEAST_CHESTS = false;
-	public Boolean FEAST_PROTECTED = true;
-	public Boolean SPECTATOR_SYSTEM = false;
-	public Boolean SQL_DSC = false;
-	public Location spawn;
-	public String STOP_CMD = "";
-	public String LAST_WINNER = "";
-	public ArrayList<Player> spectators = new ArrayList<Player>();
-	public ArrayList<Player> gamemakers = new ArrayList<Player>();
+	public static Integer FINAL_COUNTDOWN_SECONDS = Integer.valueOf(20);
+	public static Integer MAX_GAME_RUNNING_TIME = Integer.valueOf(30);
+	public static Integer MINIMUM_PLAYERS = Integer.valueOf(1);
+	public static final Integer WINNER_PLAYERS = Integer.valueOf(1);
+	public static Integer END_GAME_TIME = Integer.valueOf(25);
+	public static final String WORLD_TEMPOARY_NAME = "world";
+	public static Boolean REGEN_WORLD = false;
+	public static Boolean RANDOM_START = false;
+	public static Boolean SHOW_TIPS = true;
+	public static Boolean DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
+	public static Boolean DENY_LOGIN = false;
+	public static Boolean DENY_BLOCKPLACE = false;
+	public static Boolean DENY_BLOCKBREAK = false;
+	public static Boolean DENY_ITEMPICKUP = false;
+	public static Boolean DENY_ITEMDROP = false;
+	public static Boolean DENY_DAMAGE_PLAYER = false;
+	public static Boolean DENY_DAMAGE_ENTITY = false;
+	public static Boolean DENY_SHOOT_BOW = false;
+	public static Boolean QUIT_MSG = false;
+	public static Boolean DEATH_MSG = false;
+	public static Boolean COMPASS = true;
+	public static Boolean AUTO_COMPASS = false;
+	public static Boolean ADV_ABI = false;
+	public static Boolean SIMP_REW = false;
+	public static Boolean REW = false;
+	public static Boolean DEATH_SIGNS = true;
+	public static Boolean DEATH_SG_PROTECTED = true;
+	public static Boolean END_GAME = true;
+	public static Boolean DEFAULT_KIT = false;
+	public static Boolean CORNUCOPIA = true;
+	public static Boolean CORNUCOPIA_CHESTS = false;
+	public static Boolean TEAM = true;
+	public static Boolean GEN_MAPS = false;
+	public static Boolean ITEM_MENU = true;
+	public static Boolean CORNUCOPIA_ITEMS = true;
+	public static Boolean CORNUCOPIA_PROTECTED = true;
+	public static Boolean FEAST = true;
+	public static Boolean FEAST_CHESTS = false;
+	public static Boolean FEAST_PROTECTED = true;
+	public static Boolean SPECTATOR_SYSTEM = false;
+	public static Boolean SQL_DSC = false;
+	public static Location spawn;
+	public static String STOP_CMD = "";
+	public static String LAST_WINNER = "";
+	public static ArrayList<Player> spectators = new ArrayList<Player>();
+	public static ArrayList<Player> gamemakers = new ArrayList<Player>();
 	public static Integer COUNTDOWN = Integer.valueOf(0);
-	public Integer FINAL_COUNTDOWN = Integer.valueOf(0);
-	public Integer GAME_RUNNING_TIME = Integer.valueOf(0);
-	HashMap<World, ArrayList<Border>> BORDERS = new HashMap<World, ArrayList<Border>>();
+	public static Integer FINAL_COUNTDOWN = Integer.valueOf(0);
+	public static Integer GAME_RUNNING_TIME = Integer.valueOf(0);
+	static HashMap<World, ArrayList<Border>> BORDERS = new HashMap<World, ArrayList<Border>>();
 	public static Integer WORLDRADIUS = Integer.valueOf(250);
-	public Boolean SQL_USE = false;
-	public Integer FEAST_SPAWN_TIME = 30;
-	public Integer COINS_FOR_KILL = 1;
-	public Integer COINS_FOR_WIN = 5;
+	public static Boolean SQL_USE = false;
+	public static Integer FEAST_SPAWN_TIME = 30;
+	public static Integer COINS_FOR_KILL = 1;
+	public static Integer COINS_FOR_WIN = 5;
 
-	public Integer SQL_GAMEID = null;
-	public String SQL_HOST = null;
-	public String SQL_PORT = null;
-	public String SQL_USER = null;
-	public String SQL_PASS = null;
-	public String SQL_DATA = null;
-	public Connection con = null;
-
-	final Timer timer1 = new Timer();
-	TimerTask task1 = new TimerTask() {
-		public void run() {
-
-			if (BGMain.COUNTDOWN.intValue() > 0) {
-				if (BGMain.COUNTDOWN >= 10 & BGMain.COUNTDOWN % 10 == 0) {
-					BGChat.printTimeChat("The game will start in "
-							+ BGMain.this.TIME(BGMain.COUNTDOWN) + ".");
-					for (Player pl : getGamers()) {
-						pl.setHealth(20);
-						pl.setFoodLevel(20);
-						pl.setExp(0);
-						pl.setRemainingAir(20);
-					}
-				} else if (BGMain.COUNTDOWN < 10) {
-					BGChat.printTimeChat("The game will start in "
-							+ BGMain.this.TIME(BGMain.COUNTDOWN) + ".");
-					for (Player pl : getGamers()) {
-						pl.playSound(pl.getLocation(), Sound.CLICK, 1.0F, (byte) 1);
-					}
-				}
-
-				BGMain.COUNTDOWN--;
-			} else if (BGMain.this.getGamers().length < BGMain.this.MINIMUM_PLAYERS
-					.intValue()) {
-				BGChat.printTimeChat("There are too few players on, restarting countdown.");
-				BGMain.COUNTDOWN = BGMain.COUNTDOWN_SECONDS;
-			} else {
-				BGMain.this.startgame();
-			}
-		}
-	};
-
+	public static Integer SQL_GAMEID = null;
+	public static String SQL_HOST = null;
+	public static String SQL_PORT = null;
+	public static String SQL_USER = null;
+	public static String SQL_PASS = null;
+	public static String SQL_DATA = null;
+	public static Connection con = null;
 	
-	final Timer timer3 = new Timer();
-	TimerTask task3 = new TimerTask() {
-		public void run() {
-			if (BGMain.this.FINAL_COUNTDOWN > 0) {
-				if (BGMain.this.FINAL_COUNTDOWN >= 10
-						& BGMain.this.FINAL_COUNTDOWN % 10 == 0) {
-					BGChat.printTimeChat("Invincibility wears off in "
-							+ BGMain.this.TIME(BGMain.this.FINAL_COUNTDOWN)
-							+ ".");
-				} else if (BGMain.this.FINAL_COUNTDOWN < 10) {
-					BGChat.printTimeChat("Invincibility wears off in "
-							+ BGMain.this.TIME(BGMain.this.FINAL_COUNTDOWN)
-							+ ".");
-					for (Player pl : getGamers()) {
-						pl.playSound(pl.getLocation(), Sound.CLICK, 1.0F, (byte) 1);
-					}
-				}
-				FINAL_COUNTDOWN--;
-			} else {
-				BGChat.printTimeChat("");
-				BGChat.printTimeChat("Invincibility was worn off.");
-				log.info("Game phase: 3 - Fighting");
-				for (Player pl : getGamers()) {
-					pl.playSound(pl.getLocation(), Sound.ANVIL_LAND, 1.0F, (byte) 1);
-				}
-				if(SHOW_TIPS) {
-					BGChat.printTipChat();
-				}
-				if(ADV_CHAT_SYSTEM && !SHOW_TIPS) {
-					BGChat.updateChat();
-				}
-				DENY_DAMAGE_PLAYER = false;
-				DEATH_MSG = true;
-				timer3.cancel();
-				timer2.scheduleAtFixedRate(task2, 0, 60000);
-			}
-		}
-	};
-
-	final Timer timer2 = new Timer();
-	TimerTask task2 = new TimerTask() {
-		public void run() {
-			GAME_RUNNING_TIME++;
-
-			checkwinner();
-			BGVanish.updateVanished();
-			
-			if ((GAME_RUNNING_TIME % 5 != 0)
-					& (BGMain.this.GAME_RUNNING_TIME % 10 != 0)) {
-				if(SHOW_TIPS) {	
-					BGChat.printTipChat();
-				}
-				if(ADV_CHAT_SYSTEM && !SHOW_TIPS) {
-					BGChat.updateChat();
-				}
-			}
-			
-			if(FEAST) {
-				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 3)
-					BGFeast.announceFeast(3);
-				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 2)
-					BGFeast.announceFeast(2);
-				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME - 1)
-					BGFeast.announceFeast(1);
-				
-				if (GAME_RUNNING_TIME == FEAST_SPAWN_TIME)
-					BGFeast.spawnFeast();
-			}
-			
-			if (GAME_RUNNING_TIME == (BGMain.this.END_GAME_TIME - 1)) {
-				if(END_GAME) {
-					BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-					
-					END_GAME = false;
-					
-					BGFBattle.createBattle();
-					
-					timer4.schedule(task4, 60000);
-				}			
-            }
-
-
-			if (GAME_RUNNING_TIME.intValue() == MAX_GAME_RUNNING_TIME
-					.intValue() - 1) {
-				BGChat.printInfoChat("Final battle! 1 minute left.");
-			}
-
-			if (GAME_RUNNING_TIME.intValue() >= MAX_GAME_RUNNING_TIME
-					.intValue())
-				Bukkit.getServer().shutdown();
-		}
-	};
-
-	public final Timer timer4 = new Timer();
-	public TimerTask task4 = new TimerTask(){
-		
-		public void run() {
-			
-			World w = Bukkit.getWorlds().get(0);
-			w.setDifficulty(Difficulty.HARD);
-			w.strikeLightning(BGMain.this.spawn.add(0.0D, 100.0D, 0.0D));
-			BGChat.printInfoChat("Final battle! Teleported everybody to spawn.");
-			log.info("Game phase: 4 - Final");
-			BGFBattle.teleportGamers(getGamers());
-		}
-	};
+	public static BGMain instance;
+	public static Logger log;
 	
 	public void onLoad() {
-		plugin = this;
+		instance = this;
 		log = getPluginLogger();
 		
 		try {
-			files = new BGFiles(this);
+			new BGFiles();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		this.log.info("Deleting old world.");
+		log.info("Deleting old world.");
 		Bukkit.getServer().unloadWorld("world", false);
 		deleteDir(new File("world"));
 
 		Random r = new Random();
 		
-		this.REGEN_WORLD = getConfig().getBoolean("REGEN_WORLD");
-		this.GEN_MAPS = BGFiles.worldconf.getBoolean("GEN_MAPS");
+		REGEN_WORLD = getConfig().getBoolean("REGEN_WORLD");
+		GEN_MAPS = BGFiles.worldconf.getBoolean("GEN_MAPS");
 		
-		if (!this.REGEN_WORLD && !(GEN_MAPS && r.nextBoolean())) {
+		if (!REGEN_WORLD && !(GEN_MAPS && r.nextBoolean())) {
 			List<String> mapnames = BGFiles.worldconf.getStringList("WORLDS");
 			
 			String map = mapnames.get(r.nextInt(mapnames.size()));
 			String[] splitmap = map.split(",");
 			
-			this.log.info("Copying saved world. ("+splitmap[0]+")");
+			log.info("Copying saved world. ("+splitmap[0]+")");
 			try {
-				copyDirectory(new File(this.getDataFolder(), splitmap[0]),
+				copyDirectory(new File(getDataFolder(), splitmap[0]),
 						new File("world"));
 			} catch (IOException e) {
 				log.warning("Error: " + e.toString());
@@ -346,29 +188,82 @@ public class BGMain extends JavaPlugin {
 			else
 				BGMain.WORLDRADIUS = 300;
 		} else {
-			this.log.info("Generating new world.");
+			log.info("Generating new world.");
 			BGMain.WORLDRADIUS = Integer.valueOf(getConfig().getInt("WORLD_BORDER_RADIUS"));
 		}
 	}
 
+	private void registerEvents() {
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(new BGListener(), this);
+	}
+		
+	public void registerCommands() {
+		ConsoleCommandSender console = Bukkit.getConsoleSender();
+
+		if (getCommand("help") != null) 
+			getCommand("help").setExecutor(new BGPlayer()); 
+		else 
+			console.sendMessage(ChatColor.RED+"getCommand help returns null");
+
+		if (getCommand("kit") != null) 
+			getCommand("kit").setExecutor(new BGPlayer()); 
+		else 
+			console.sendMessage(ChatColor.RED+"getCommand kit returns null");
+
+		if (getCommand("kitinfo") != null) 
+			getCommand("kitinfo").setExecutor(new BGPlayer()); 
+		else 
+			console.sendMessage(ChatColor.RED+"getCommand kitinfo returns null");
+
+		if (getCommand("start") != null) 
+			getCommand("start").setExecutor(new BGConsole()); 
+		else 
+			console.sendMessage(ChatColor.RED+"getCommand start returns null");
+
+		if (getCommand("spawn") != null) 
+			getCommand("spawn").setExecutor(new BGPlayer()); 
+		else 
+			console.sendMessage(ChatColor.RED+"getCommand spawn returns null");
+		
+		if (getCommand("coin") != null)
+			getCommand("coin").setExecutor(new BGConsole());
+		else
+			console.sendMessage(ChatColor.RED+"getCommand coin returns null");
+		
+		if (getCommand("fbattle") != null)
+			getCommand("fbattle").setExecutor(new BGConsole());
+		else
+			console.sendMessage(ChatColor.RED+"getCommand fbattle returns null");
+		
+		if (getCommand("bgversion") != null)
+			getCommand("bgversion").setExecutor(new BGConsole());
+		else
+			console.sendMessage(ChatColor.RED+"getCommand bgversion returns null");
+		if(getCommand("bgdownload") != null)
+			getCommand("bgdownload").setExecutor(new BGConsole());
+		else
+			console.sendMessage(ChatColor.RED+"getCommand bgdownload returns null");
+		if(getCommand("team") != null)
+			getCommand("team").setExecutor(new BGPlayer());
+		else
+			console.sendMessage(ChatColor.RED+"getCommand team returns null");
+		if(getCommand("gamemaker") != null)
+			getCommand("gamemaker").setExecutor(new BGPlayer());
+		else
+			console.sendMessage(ChatColor.RED+"getCommand gamemaker returns null");
+		if(getCommand("teleport") != null)
+			getCommand("teleport").setExecutor(new BGPlayer());
+		else
+			console.sendMessage(ChatColor.RED+"getCommand teleport returns null");
+	}
+	
 	public void onEnable() {
+		instance = this;
+		Bukkit.getServer().getWorlds().get(0).setDifficulty(Difficulty.PEACEFUL);
 		
-		plugin.getServer().getWorlds().get(0).setDifficulty(Difficulty.PEACEFUL);
-		
-		this.ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
-		
-		kit = new BGKit(this);
-		listener = new BGListener(this);
-		cooldown = new BGCooldown(this);
-		chat = new BGChat(this);
-		consolecmd = new BGConsole(this);
-		player = new BGPlayer(this);
-		vanish = new BGVanish(this);
-		sign = new BGSign(this);
-		feasts = new BGFeast(this);
-		cornucopia = new BGCornucopia(this);
-		reward = new BGReward(this);
-		
+		ADV_ABI = Boolean.valueOf(getConfig().getBoolean("ADVANCED_ABILITIES"));
+				
 		//Metrics
 		try{
 			Metrics metrics = new Metrics(this);
@@ -378,120 +273,65 @@ public class BGMain extends JavaPlugin {
 			log.info("Error with Plugin Metrics!");
 		}
 		
-		ConsoleCommandSender console = Bukkit.getConsoleSender();
+		registerEvents();
+		registerCommands();
+		new BGKit();
 		
-
-		if (this.getCommand("help") != null) 
-			this.getCommand("help").setExecutor(player); 
-		else 
-			console.sendMessage(ChatColor.RED+"getCommand help returns null");
-
-		if (this.getCommand("kit") != null) 
-			this.getCommand("kit").setExecutor(player); 
-		else 
-			console.sendMessage(ChatColor.RED+"getCommand kit returns null");
-
-		if (this.getCommand("kitinfo") != null) 
-			this.getCommand("kitinfo").setExecutor(player); 
-		else 
-			console.sendMessage(ChatColor.RED+"getCommand kitinfo returns null");
-
-		if (this.getCommand("start") != null) 
-			this.getCommand("start").setExecutor(consolecmd); 
-		else 
-			console.sendMessage(ChatColor.RED+"getCommand start returns null");
-
-		if (this.getCommand("spawn") != null) 
-			this.getCommand("spawn").setExecutor(player); 
-		else 
-			console.sendMessage(ChatColor.RED+"getCommand spawn returns null");
-		
-		if (this.getCommand("coin") != null)
-			this.getCommand("coin").setExecutor(consolecmd);
-		else
-			console.sendMessage(ChatColor.RED+"getCommand coin returns null");
-		
-		if (this.getCommand("fbattle") != null)
-			this.getCommand("fbattle").setExecutor(consolecmd);
-		else
-			console.sendMessage(ChatColor.RED+"getCommand fbattle returns null");
-		
-		if (this.getCommand("bgversion") != null)
-			this.getCommand("bgversion").setExecutor(consolecmd);
-		else
-			console.sendMessage(ChatColor.RED+"getCommand bgversion returns null");
-		if(this.getCommand("bgdownload") != null)
-			this.getCommand("bgdownload").setExecutor(consolecmd);
-		else
-			console.sendMessage(ChatColor.RED+"getCommand bgdownload returns null");
-		if(this.getCommand("team") != null)
-			this.getCommand("team").setExecutor(player);
-		else
-			console.sendMessage(ChatColor.RED+"getCommand team returns null");
-		if(this.getCommand("gamemaker") != null)
-			this.getCommand("gamemaker").setExecutor(player);
-		else
-			console.sendMessage(ChatColor.RED+"getCommand gamemaker returns null");
-		if(this.getCommand("teleport") != null)
-			this.getCommand("teleport").setExecutor(player);
-		else
-			console.sendMessage(ChatColor.RED+"getCommand teleport returns null");
-
 		log.info("Loading configuration options.");
-		this.DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
-		this.DEATH_SG_PROTECTED = Boolean.valueOf(BGFiles.dsign.getBoolean("PROTECTED"));
-		this.KIT_BUY_WEB = getConfig().getString("MESSAGE.KIT_BUY_WEBSITE");
-		this.SERVER_TITLE = getConfig().getString("MESSAGE.SERVER_TITLE");
-		this.HELP_MESSAGE = getConfig().getString("MESSAGE.HELP_MESSAGE");
-		this.RANDOM_START = Boolean.valueOf(getConfig().getBoolean("RANDOM_START"));
-		this.DEFAULT_KIT = Boolean.valueOf(getConfig().getBoolean("DEFAULT_KIT"));
-		this.SHOW_TIPS = Boolean.valueOf(getConfig().getBoolean("SHOW_TIPS"));
-		this.REGEN_WORLD = Boolean.valueOf(getConfig().getBoolean("REGEN_WORLD"));
-		this.CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
-		this.CORNUCOPIA_ITEMS = Boolean.valueOf(BGFiles.cornconf.getBoolean("ITEM_SPAWN"));
-		this.CORNUCOPIA_CHESTS = Boolean.valueOf(BGFiles.cornconf.getBoolean("CHESTS"));
-		this.CORNUCOPIA_PROTECTED = Boolean.valueOf(BGFiles.cornconf.getBoolean("PROTECTED"));
-		this.FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
-		this.FEAST_CHESTS = Boolean.valueOf(BGFiles.feastconf.getBoolean("CHESTS"));
-		this.FEAST_PROTECTED = Boolean.valueOf(BGFiles.feastconf.getBoolean("PROTECTED"));
-		this.SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
-		this.TEAM = Boolean.valueOf(getConfig().getBoolean("TEAM"));
-		this.NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
-		this.GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
-		this.SERVER_FULL_MSG = getConfig().getString("MESSAGE.SERVER_FULL");
-		this.WORLD_BORDER_MSG = getConfig().getString("MESSAGE.WORLD_BORDER");
-		this.MOTD_PROGRESS_MSG = getConfig().getString("MESSAGE.MOTD_PROGRESS");
-		this.MOTD_COUNTDOWN_MSG = getConfig().getString("MESSAGE.MOTD_COUNTDOWN");
-		this.ADV_CHAT_SYSTEM = Boolean.valueOf(getConfig().getBoolean("ADVANCED_CHAT"));
-		this.KIT_PREFIX = Boolean.valueOf(getConfig().getBoolean("KIT_PREFIX"));
-		this.SQL_USE = Boolean.valueOf(getConfig().getBoolean("MYSQL"));
-		this.SQL_HOST = getConfig().getString("HOST");
-		this.SQL_PORT = getConfig().getString("PORT");
-		this.SQL_USER = getConfig().getString("USERNAME");
-		this.SQL_PASS = getConfig().getString("PASSWORD");
-		this.SQL_DATA = getConfig().getString("DATABASE");
-		this.SIMP_REW = getConfig().getBoolean("SIMPLE_REWARD");
-		this.REW = Boolean.valueOf(getConfig().getBoolean("REWARD"));
-		this.COINS_FOR_KILL = Integer.valueOf(getConfig().getInt("COINS_FOR_KILL"));
-		this.COINS_FOR_WIN = Integer.valueOf(getConfig().getInt("COINS_FOR_WIN"));
-		this.MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));	
-		this.MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
+		DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
+		DEATH_SG_PROTECTED = Boolean.valueOf(BGFiles.dsign.getBoolean("PROTECTED"));
+		KIT_BUY_WEB = getConfig().getString("MESSAGE.KIT_BUY_WEBSITE");
+		SERVER_TITLE = getConfig().getString("MESSAGE.SERVER_TITLE");
+		HELP_MESSAGE = getConfig().getString("MESSAGE.HELP_MESSAGE");
+		RANDOM_START = Boolean.valueOf(getConfig().getBoolean("RANDOM_START"));
+		DEFAULT_KIT = Boolean.valueOf(getConfig().getBoolean("DEFAULT_KIT"));
+		SHOW_TIPS = Boolean.valueOf(getConfig().getBoolean("SHOW_TIPS"));
+		REGEN_WORLD = Boolean.valueOf(getConfig().getBoolean("REGEN_WORLD"));
+		CORNUCOPIA = Boolean.valueOf(getConfig().getBoolean("CORNUCOPIA"));
+		CORNUCOPIA_ITEMS = Boolean.valueOf(BGFiles.cornconf.getBoolean("ITEM_SPAWN"));
+		CORNUCOPIA_CHESTS = Boolean.valueOf(BGFiles.cornconf.getBoolean("CHESTS"));
+		CORNUCOPIA_PROTECTED = Boolean.valueOf(BGFiles.cornconf.getBoolean("PROTECTED"));
+		FEAST = Boolean.valueOf(getConfig().getBoolean("FEAST"));
+		FEAST_CHESTS = Boolean.valueOf(BGFiles.feastconf.getBoolean("CHESTS"));
+		FEAST_PROTECTED = Boolean.valueOf(BGFiles.feastconf.getBoolean("PROTECTED"));
+		SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
+		TEAM = Boolean.valueOf(getConfig().getBoolean("TEAM"));
+		NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
+		GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
+		SERVER_FULL_MSG = getConfig().getString("MESSAGE.SERVER_FULL");
+		WORLD_BORDER_MSG = getConfig().getString("MESSAGE.WORLD_BORDER");
+		MOTD_PROGRESS_MSG = getConfig().getString("MESSAGE.MOTD_PROGRESS");
+		MOTD_COUNTDOWN_MSG = getConfig().getString("MESSAGE.MOTD_COUNTDOWN");
+		ADV_CHAT_SYSTEM = Boolean.valueOf(getConfig().getBoolean("ADVANCED_CHAT"));
+		KIT_PREFIX = Boolean.valueOf(getConfig().getBoolean("KIT_PREFIX"));
+		SQL_USE = Boolean.valueOf(getConfig().getBoolean("MYSQL"));
+		SQL_HOST = getConfig().getString("HOST");
+		SQL_PORT = getConfig().getString("PORT");
+		SQL_USER = getConfig().getString("USERNAME");
+		SQL_PASS = getConfig().getString("PASSWORD");
+		SQL_DATA = getConfig().getString("DATABASE");
+		SIMP_REW = getConfig().getBoolean("SIMPLE_REWARD");
+		REW = Boolean.valueOf(getConfig().getBoolean("REWARD"));
+		COINS_FOR_KILL = Integer.valueOf(getConfig().getInt("COINS_FOR_KILL"));
+		COINS_FOR_WIN = Integer.valueOf(getConfig().getInt("COINS_FOR_WIN"));
+		MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));	
+		MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
 		COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.COUNTDOWN-SEC"));
-		this.FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.FINAL_COUNTDOWN-SEC"));
-		this.END_GAME_TIME = Integer.valueOf(getConfig().getInt("TIME.INCREASE_DIFFICULTY-MIN"));
-		this.COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
-		this.AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
-		this.STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
-		this.ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
+		FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.FINAL_COUNTDOWN-SEC"));
+		END_GAME_TIME = Integer.valueOf(getConfig().getInt("TIME.INCREASE_DIFFICULTY-MIN"));
+		COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
+		AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
+		STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
+		ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
 		
 		if (ADV_ABI) {
 			log.info("Enabeling the advanced abilities.");
-			dis = new BGDisguise(this);
+			new BGDisguise();
 		}
 		
 		if(REW && !SQL_USE) {
 			log.warning("MySQL has to be enabled for advanced reward, turning it off.");
-			this.REW = false;
+			REW = false;
 		}
 		
 		if(FEAST) {
@@ -512,7 +352,7 @@ public class BGMain extends JavaPlugin {
 		try {
 			br = new BufferedReader(new FileReader(new File(getDataFolder(),"leaderboard.yml")));
 		} catch (FileNotFoundException e) {
-			this.log.warning(e.toString());
+			log.warning(e.toString());
 		}
 
 		String line = null;
@@ -521,7 +361,7 @@ public class BGMain extends JavaPlugin {
 			while ((line = br.readLine()) != null)
 				merke = line;
 		} catch (IOException e) {
-			this.log.warning(e.toString());
+			log.warning(e.toString());
 		}
 		try {
 			br.close();
@@ -529,29 +369,29 @@ public class BGMain extends JavaPlugin {
 			log.warning(e.toString());
 		}
 
-		this.LAST_WINNER = merke;
+		LAST_WINNER = merke;
 
 		World thisWorld = getServer().getWorlds().get(0);
-		this.spawn = thisWorld.getSpawnLocation();
+		spawn = thisWorld.getSpawnLocation();
 
-		Border newBorder = new Border(this.spawn.getX(), this.spawn.getZ(), BGMain.WORLDRADIUS.intValue());
-		if (!this.BORDERS.containsKey(thisWorld)) {
+		Border newBorder = new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS.intValue());
+		if (!BORDERS.containsKey(thisWorld)) {
 			ArrayList<Border> newArray = new ArrayList<Border>();
-			this.BORDERS.put(thisWorld, newArray);
+			BORDERS.put(thisWorld, newArray);
 		}
-		((ArrayList<Border>) this.BORDERS.get(thisWorld)).add(newBorder);
+		((ArrayList<Border>) BORDERS.get(thisWorld)).add(newBorder);
 
 		COUNTDOWN = COUNTDOWN_SECONDS;
-		this.FINAL_COUNTDOWN = this.FINAL_COUNTDOWN_SECONDS;
-		this.GAME_RUNNING_TIME = Integer.valueOf(0);
+		FINAL_COUNTDOWN = FINAL_COUNTDOWN_SECONDS;
+		GAME_RUNNING_TIME = Integer.valueOf(0);
 
-		this.DENY_BLOCKBREAK = Boolean.valueOf(true);
-		this.DENY_BLOCKPLACE = Boolean.valueOf(true);
-		this.DENY_ITEMDROP = Boolean.valueOf(true);
-		this.DENY_ITEMPICKUP = Boolean.valueOf(true);
-		this.DENY_DAMAGE_PLAYER = Boolean.valueOf(true);
-		this.DENY_DAMAGE_ENTITY = Boolean.valueOf(true);
-		this.DENY_SHOOT_BOW = Boolean.valueOf(true);
+		DENY_BLOCKBREAK = Boolean.valueOf(true);
+		DENY_BLOCKPLACE = Boolean.valueOf(true);
+		DENY_ITEMDROP = Boolean.valueOf(true);
+		DENY_ITEMPICKUP = Boolean.valueOf(true);
+		DENY_DAMAGE_PLAYER = Boolean.valueOf(true);
+		DENY_DAMAGE_ENTITY = Boolean.valueOf(true);
+		DENY_SHOOT_BOW = Boolean.valueOf(true);
 
 		if (SQL_USE) {
 			SQLconnect();
@@ -561,14 +401,14 @@ public class BGMain extends JavaPlugin {
 			SQLquery("CREATE TABLE IF NOT EXISTS `REWARD` (`ID` int(10) unsigned NOT NULL AUTO_INCREMENT, `REF_PLAYER` int(10) NOT NULL, `COINS` int(10) NOT NULL, PRIMARY KEY (`ID`)) ENGINE=InnoDB DEFAULT CHARSET=UTF8 AUTO_INCREMENT=1 ;");
 		}
 
-		Location loc = randomLocation(this.spawn.getChunk()).add(0.0D, 30.0D,0.0D);
+		Location loc = randomLocation(spawn.getChunk()).add(0.0D, 30.0D,0.0D);
 		Bukkit.getServer().getWorlds().get(0).loadChunk(loc.getChunk());
-		this.timer1.scheduleAtFixedRate(this.task1, 0L, 1000L);
+		new PreGameTimer();
 
 		PluginDescriptionFile pdfFile = getDescription();
-		this.log.info("Plugin enabled");
-		this.log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
-		this.log.info("All rights reserved. This plugin is free to download. If you had to pay for it, contact us immediately!");
+		log.info("Plugin enabled");
+		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
+		log.info("All rights reserved. This plugin is free to download. If you had to pay for it, contact us immediately!");
 		
 		log.info("Game phase: 1 - Waiting");
 	}
@@ -588,20 +428,16 @@ public class BGMain extends JavaPlugin {
 			}
 		}
 
-		this.timer2.cancel();
-		this.timer1.cancel();
-		this.timer3.cancel();
-
 		for (Player p : getPlayers()) {
 			p.kickPlayer(ChatColor.YELLOW + "Server is restarting!");
 		}
 		
 		Bukkit.getServer().unloadWorld("world", false);
 		
-		this.log.info("Plugin disabled");
-		this.log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
+		log.info("Plugin disabled");
+		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
 		
-		this.getServer().dispatchCommand(getServer().getConsoleSender(), this.STOP_CMD);
+		getServer().dispatchCommand(getServer().getConsoleSender(), STOP_CMD);
 	}
 
 	private void copyDirectory(File sourceLocation, File targetLocation)
@@ -631,7 +467,7 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 
-	public void copy(InputStream in, File file) {
+	public static void copy(InputStream in, File file) {
 		try {
 			OutputStream out = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
@@ -646,10 +482,10 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 
-	public boolean inBorder(Location checkHere) {
-		if (!this.BORDERS.containsKey(checkHere.getWorld()))
+	public static boolean inBorder(Location checkHere) {
+		if (!BORDERS.containsKey(checkHere.getWorld()))
 			return true;
-		for (Border amIHere : this.BORDERS.get(checkHere.getWorld())) {
+		for (Border amIHere : BORDERS.get(checkHere.getWorld())) {
 			int X = (int) Math.abs(amIHere.centerX - checkHere.getBlockX());
 			int Z = (int) Math.abs(amIHere.centerZ - checkHere.getBlockZ());
 			if ((X < amIHere.definiteSq) && (Z < amIHere.definiteSq))
@@ -662,24 +498,24 @@ public class BGMain extends JavaPlugin {
 		return false;
 	}
 	
-	public Location getSpawn() {
+	public static Location getSpawn() {
 		Location loc = Bukkit.getWorlds().get(0).getSpawnLocation();
 		loc.setY(Bukkit.getWorlds().get(0).getHighestBlockYAt(Bukkit.getWorlds().get(0).getSpawnLocation()) + 1.5);
 		return loc;
 	}
 
-	public Player[] getGamers() {
+	public static Player[] getGamers() {
 		ArrayList<Player> gamers = new ArrayList<Player>();
 		Player[] list = Bukkit.getOnlinePlayers();
 		for (Player p : list) {
-			if (!plugin.isSpectator(p) && !plugin.isGameMaker(p)) {
+			if (!BGMain.isSpectator(p) && !BGMain.isGameMaker(p)) {
 				gamers.add(p);
 			}
 		}
 		return (Player[]) gamers.toArray(new Player[0]);
 	}
 
-	public Player[] getPlayers() {
+	public static Player[] getPlayers() {
 		ArrayList<Player> players = new ArrayList<Player>();
 		Player[] onlineplayers = Bukkit.getOnlinePlayers();
 		for (int i = 0; i < onlineplayers.length; i++) {
@@ -688,19 +524,19 @@ public class BGMain extends JavaPlugin {
 		return (Player[]) players.toArray(new Player[0]);
 	}
 
-	public void startgame() {
+	public static void startgame() {
 		log.info("Game phase: 2 - Starting");
-		this.timer1.cancel();
-		this.timer3.scheduleAtFixedRate(this.task3, 3000, 1000);
+		PreGameTimer.cancel();
+		new InvincibilityTimer();
 
-		this.DENY_LOGIN = true;
-		this.DENY_BLOCKBREAK = false;
-		this.DENY_BLOCKPLACE = false;
-		this.DENY_ITEMDROP = false;
-		this.DENY_ITEMPICKUP = false;
-		this.DENY_DAMAGE_ENTITY = false;
-		this.DENY_SHOOT_BOW = false;
-		this.QUIT_MSG = true;
+		DENY_LOGIN = true;
+		DENY_BLOCKBREAK = false;
+		DENY_BLOCKPLACE = false;
+		DENY_ITEMDROP = false;
+		DENY_ITEMPICKUP = false;
+		DENY_DAMAGE_ENTITY = false;
+		DENY_SHOOT_BOW = false;
+		QUIT_MSG = true;
 
 		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
 			BGCornucopia.spawnItems();
@@ -742,14 +578,14 @@ public class BGMain extends JavaPlugin {
 
 		}
 
-		this.DENY_CHECK_WORLDBORDER = Boolean.valueOf(true);
+		DENY_CHECK_WORLDBORDER = Boolean.valueOf(true);
 		Bukkit.getServer().getWorlds().get(0).loadChunk(getSpawn().getChunk());
 
 		Bukkit.getWorlds().get(0).setDifficulty(Difficulty.HARD);
 		for (Player p : getPlayers()) {
-			if(this.isGameMaker(p) || this.isSpectator(p))
+			if(isGameMaker(p) || isSpectator(p))
 				continue;
-			if (this.RANDOM_START == false) {
+			if (RANDOM_START == false) {
 				Random r = new Random();
 				Location startFrom = getSpawn();
 				Location loc = startFrom.clone();
@@ -761,14 +597,14 @@ public class BGMain extends JavaPlugin {
 					addy = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
 				}while((Math.abs(addx)+Math.abs(addy)) < 5);
 				loc.add(addx, 60, addy);
-				loc.setY(getServer().getWorlds().get(0).getHighestBlockYAt(loc) + 1.5);
+				loc.setY(Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(loc) + 1.5);
 				p.teleport(loc);
 			} else {
 				Location tploc = getRandomLocation();
 				while(!inBorder(tploc)) {
 					tploc = getRandomLocation();
 				}
-				tploc.setY(getServer().getWorlds().get(0).getHighestBlockYAt(tploc) + 1.5);
+				tploc.setY(Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(tploc) + 1.5);
 				p.teleport(tploc);
 			}
 			p.setHealth(20);
@@ -779,7 +615,7 @@ public class BGMain extends JavaPlugin {
 			
 			BGKit.giveKit(p);
 
-			if (SQL_USE & !plugin.isSpectator(p)) {
+			if (SQL_USE & !BGMain.isSpectator(p)) {
 				Integer PL_ID = getPlayerID(p.getName());
 				SQLquery("INSERT INTO `PLAYS` (`REF_PLAYER`, `REF_GAME`, `KIT`) VALUES ("
 						+ PL_ID
@@ -794,7 +630,7 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().getWorlds().get(0).setTime(0L);
 		Bukkit.getServer().getWorlds().get(0).setStorm(false);
 		Bukkit.getServer().getWorlds().get(0).setThundering(false);
-		this.DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
+		DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
 		if (ADV_CHAT_SYSTEM) {
 			BGChat.printInfoChat(" --- The games have begun! ---");
 			BGChat.printDeathChat("§e\"May the odds be ever in your favor!\"");
@@ -803,7 +639,7 @@ public class BGMain extends JavaPlugin {
 			BGChat.printTimeChat("The games have begun!");
 		}
 		BGChat.printTimeChat("Everyone is invincible for "
-				+ TIME(this.FINAL_COUNTDOWN_SECONDS) + ".");
+				+ TIME(FINAL_COUNTDOWN_SECONDS) + ".");
 	}
 
 	public static Location randomLocation(Chunk c) {
@@ -829,29 +665,29 @@ public class BGMain extends JavaPlugin {
 				(random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS));
 			int newY = Bukkit.getWorlds().get(0).getHighestBlockYAt(loc);
 			loc.setY(newY);
-		}while(!plugin.inBorder(loc));
+		}while(!BGMain.inBorder(loc));
 		return loc;
 	}
 
-	public void checkwinner() {
-		if (getGamers().length <= this.WINNER_PLAYERS)
+	public static void checkwinner() {
+		if (getGamers().length <= WINNER_PLAYERS)
 			if (getGamers().length == 0) {
-				this.timer2.cancel();
+				GameTimer.cancel();
 				Bukkit.getServer().shutdown();
 			} else {
-				this.timer2.cancel();
+				GameTimer.cancel();
 				String winnername = getGamers()[0].getName();
-				this.NEW_WINNER = winnername;
+				NEW_WINNER = winnername;
 				try {
 					String contents = winnername;
 					BufferedWriter writer = new BufferedWriter(new FileWriter(
-							new File(getDataFolder(), "leaderboard.yml"), true));
+							new File(instance.getDataFolder(), "leaderboard.yml"), true));
 					writer.newLine();
 					writer.write(contents);
 					writer.flush();
 					writer.close();
 				} catch (Exception ex) {
-					this.log.warning(ex.toString());
+					log.warning(ex.toString());
 				}
 				
 				final Player pl = getGamers()[0];
@@ -867,10 +703,10 @@ public class BGMain extends JavaPlugin {
 				
 				if(REW) {
 					if (getPlayerID(winnername) == null) {
-						reward.createUser(winnername);
-						reward.giveCoins(winnername, plugin.COINS_FOR_WIN);
+						BGReward.createUser(winnername);
+						BGReward.giveCoins(winnername, BGMain.COINS_FOR_WIN);
 					} else {
-						reward.giveCoins(winnername, plugin.COINS_FOR_WIN);
+						BGReward.giveCoins(winnername, BGMain.COINS_FOR_WIN);
 					}
 				}
 				final Boolean R = REW;
@@ -878,7 +714,7 @@ public class BGMain extends JavaPlugin {
 				
 				BGChat.printPlayerChat(pl, "§6§lYOU HAVE WON THIS GAME!");
 				
-				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 					
 					@Override
 					public void run() {
@@ -895,7 +731,7 @@ public class BGMain extends JavaPlugin {
 					
 				}, 0, 20);
 				
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
 					
 					@Override
 					public void run() {
@@ -955,7 +791,7 @@ public class BGMain extends JavaPlugin {
 		dir.delete();
 	}
 
-	public String TIME(Integer i) {
+	public static String TIME(Integer i) {
 		if (i.intValue() >= 60) {
 			Integer time = Integer.valueOf(i.intValue() / 60);
 			String add = "";
@@ -972,7 +808,7 @@ public class BGMain extends JavaPlugin {
 		return time + " second" + add;
 	}
 
-	public boolean winner(Player p) {
+	public static boolean winner(Player p) {
 		if (LAST_WINNER == null) {
 			return false;
 		}
@@ -983,7 +819,7 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 
-	public Integer getPlayerID(String playername) {
+	public static Integer getPlayerID(String playername) {
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet r = stmt
@@ -1012,7 +848,7 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 
-	public void SQLconnect() {
+	public static void SQLconnect() {
 		try {
 			log.info("Connecting to MySQL database...");
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -1028,22 +864,19 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 
-	public Connection SQLgetConnection() {
+	public static Connection SQLgetConnection() {
 		return con;
 	}
 
-	public void SQLquery(String sql) {
-		BGQuery bq = new BGQuery(sql, log, con, this);
-		
+	public static void SQLquery(String sql) {
+		BGQuery bq = new BGQuery(sql, log, con, instance);
 		ExecutorService executor = Executors.newCachedThreadPool();
-		
 		executor.execute(bq);
-		
 		executor.shutdown();
 	}
 
-	public void SQLdisconnect() {
-		BGEndDB end = new BGEndDB(this, log, con);
+	public static void SQLdisconnect() {
+		BGEndDB end = new BGEndDB(instance, log, con);
 		
 		ExecutorService executor = Executors.newCachedThreadPool();
 		
@@ -1052,7 +885,7 @@ public class BGMain extends JavaPlugin {
 		executor.shutdown();
 	}
 	
-	public Integer getCoins(Integer playerID) {
+	public static Integer getCoins(Integer playerID) {
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet r = stmt
@@ -1080,7 +913,7 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 	
-	public void addGameMaker(Player p) {
+	public static void addGameMaker(Player p) {
 		spectators.remove(p);
 		gamemakers.add(p);
 		
@@ -1089,32 +922,32 @@ public class BGMain extends JavaPlugin {
 		BGChat.printPlayerChat(p, "§eYou are now a gamemaker!");
 	}
 	
-	public void remGameMaker(Player p) {
+	public static void remGameMaker(Player p) {
 		gamemakers.remove(p);
 		p.setGameMode(GameMode.SURVIVAL);
 		BGVanish.makeVisible(p);
 	}
 	
-	public Boolean isGameMaker(Player p) {
+	public static Boolean isGameMaker(Player p) {
 		return gamemakers.contains(p);
 	}
 	
-	public Boolean isSpectator(Player p) {
+	public static Boolean isSpectator(Player p) {
 		if(isGameMaker(p))
 			return false;
 		
 		return spectators.contains(p);
 	}
 	
-	public ArrayList<Player> getSpectators() {
+	public static ArrayList<Player> getSpectators() {
 		return spectators;
 	}
 	
-	public ArrayList<Player> getGamemakers() {
+	public static ArrayList<Player> getGamemakers() {
 		return gamemakers;
 	}
 	
-	public void addSpectator(Player p) {
+	public static void addSpectator(Player p) {
 		if(isGameMaker(p))
 			return;
 			
@@ -1127,7 +960,7 @@ public class BGMain extends JavaPlugin {
 		BGChat.printPlayerChat(p, "§eYou are now a spectator!");
 	}
 	
-	public void remSpectator(Player p) {
+	public static void remSpectator(Player p) {
 		spectators.remove(p);
 		p.setGameMode(GameMode.SURVIVAL);
 		p.getInventory().clear();
@@ -1135,10 +968,10 @@ public class BGMain extends JavaPlugin {
 	}
 	
 	public static Logger getPluginLogger() {
-		return plugin.getLogger();
+		return instance.getLogger();
 	}
 	
-	public File getPFile() {
-		return getFile();
+	public static File getPFile() {
+		return instance.getFile();
 	}
 }

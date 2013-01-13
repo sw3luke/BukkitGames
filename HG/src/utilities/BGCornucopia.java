@@ -16,18 +16,13 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 public class BGCornucopia {
-
-	private static BGMain plugin;
 	private static Block mainBlock;
 	private static Integer radius = 10;
 	private static Logger log = BGMain.getPluginLogger();
 	private static Chest[] chests = new Chest[8];
 	
 	private static ArrayList<Location> cblocks = new ArrayList<Location>();
-	
-	public BGCornucopia(BGMain plugin) {
-		BGCornucopia.plugin = plugin;
-	}
+
 	
 	public static void createCorn() {
 		BGCornucopia.mainBlock = BGCornucopia.getCornSpawnBlock();
@@ -36,12 +31,12 @@ public class BGCornucopia {
 		removeAbove(mainBlock);
 		createFloor(Material.GOLD_BLOCK);
 		
-		if(plugin.CORNUCOPIA_CHESTS)
+		if(BGMain.CORNUCOPIA_CHESTS)
 			createCornucopia();
 	}
 	
 	private static Block getCornSpawnBlock() {
-		Location loc = plugin.getSpawn();
+		Location loc = BGMain.getSpawn();
 		loc.subtract(0, 2.5, 0);
 		Block b = Bukkit.getServer().getWorlds().get(0).getBlockAt(loc);
 		return b;
@@ -173,7 +168,7 @@ public class BGCornucopia {
 	}
 	
 	public static Boolean isCornucopiaBlock(Block b) {		
-		if(!plugin.CORNUCOPIA)
+		if(!BGMain.CORNUCOPIA)
 			return false;
 
 		return cblocks.contains(b.getLocation());
@@ -234,7 +229,7 @@ public class BGCornucopia {
 			else
 				amount = minamount + r.nextInt(maxamount - minamount + 1);
 			
-			if(plugin.CORNUCOPIA_CHESTS) {				
+			if(BGMain.CORNUCOPIA_CHESTS) {				
 				while(amount > 0) {
 					Chest chest = chests[r.nextInt(8)];
 					Integer slot = r.nextInt(27);

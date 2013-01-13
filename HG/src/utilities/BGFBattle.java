@@ -13,17 +13,11 @@ import main.BGMain;
 
 public class BGFBattle {
 
-	@SuppressWarnings("unused")
-	private static BGMain plugin;
 	private static Block mainBlock;
 	private static Logger log = BGMain.getPluginLogger();
 	private static ArrayList<Location> fbblocks = new ArrayList<Location>();
 	private static Boolean spawned = false;
-	
-	public BGFBattle(BGMain plugin) {
-		BGFBattle.plugin = plugin;
-	}
-	
+
 	public static void createBattle() {
 		mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
 		Location loc = mainBlock.getLocation();

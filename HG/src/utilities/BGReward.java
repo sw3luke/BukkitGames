@@ -4,43 +4,34 @@ import java.util.HashMap;
 
 import main.BGMain;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-public class BGReward extends JavaPlugin{
-
-	private BGMain plugin;
+public class BGReward {
+	public static HashMap<String, String> BOUGHT_KITS = new HashMap<String, String>();
 	
-	public HashMap<String, String> BOUGHT_KITS = new HashMap<String, String>();
-	
-	public BGReward(BGMain plugin) {
-		this.plugin = plugin;
-	}
-	
-	public void createUser(String playerName) {
+	public static void createUser(String playerName) {
 		
-		if (plugin.getCoins(plugin.getPlayerID(playerName)) == null) {
-			plugin.SQLquery("INSERT INTO REWARD (REF_PLAYER, COINS) VALUES ("+ plugin.getPlayerID(playerName) + ", 0)");
+		if (BGMain.getCoins(BGMain.getPlayerID(playerName)) == null) {
+			BGMain.SQLquery("INSERT INTO REWARD (REF_PLAYER, COINS) VALUES ("+ BGMain.getPlayerID(playerName) + ", 0)");
 		}
 	}
 	
-	public void giveCoins(String playerName, int coins) {
+	public static void giveCoins(String playerName, int coins) {
 		
-		plugin.SQLquery("UPDATE REWARD SET COINS = (COINS+"+coins+") WHERE REF_PLAYER=" + plugin.getPlayerID(playerName));
+		BGMain.SQLquery("UPDATE REWARD SET COINS = (COINS+"+coins+") WHERE REF_PLAYER=" + BGMain.getPlayerID(playerName));
 	}
 	
-	public void takeCoins(String playerName, int coins) {
+	public static void takeCoins(String playerName, int coins) {
 		
-		plugin.SQLquery("UPDATE REWARD SET COINS = (COINS-"+coins+") WHERE REF_PLAYER=" + plugin.getPlayerID(playerName));
+		BGMain.SQLquery("UPDATE REWARD SET COINS = (COINS-"+coins+") WHERE REF_PLAYER=" + BGMain.getPlayerID(playerName));
 	}
 	
-	public void coinUse(String playerName, String kitName) {
+	public static void coinUse(String playerName, String kitName) {
 		
 		BOUGHT_KITS.put(playerName, kitName);
 	}
 	
-	public boolean sendCoins(String sender, String dest, int coins) {
+	public static boolean sendCoins(String sender, String dest, int coins) {
 		
-		int scoins = (int) plugin.getCoins(plugin.getPlayerID(sender));
+		int scoins = (int) BGMain.getCoins(BGMain.getPlayerID(sender));
 		if(scoins >= coins) {
 			takeCoins(sender, coins);
 			giveCoins(dest, coins);

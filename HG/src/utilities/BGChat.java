@@ -60,7 +60,7 @@ public class BGChat {
 		ABILITY_DESC.put(15, BGFiles.abconf.getString("AB.15.Desc"));
 		ABILITY_DESC.put(16, BGFiles.abconf.getString("AB.16.Desc"));
 		
-		if(plugin.ADV_ABI) {
+		if(BGMain.ADV_ABI) {
 			ABILITY_DESC.put(17, BGFiles.abconf.getString("AB.17.Desc"));
 		}else {
 			ABILITY_DESC.put(17, "Advanced Abilities disabled! This ability wont work!");
@@ -91,7 +91,7 @@ public class BGChat {
 	}
 
 	public static void printInfoChat(String text) {
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			INFO_MSG = text;
 			updateChat();
 		} else {
@@ -100,7 +100,7 @@ public class BGChat {
 	}
 
 	public static void printDeathChat(String text) {
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			DEATH_MSG = text;
 			updateChat();
 		} else {
@@ -109,7 +109,7 @@ public class BGChat {
 	}
 
 	public static void printTimeChat(String text) {
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			TIMER_MSG = text;
 			updateChat();
 		} else {
@@ -118,7 +118,7 @@ public class BGChat {
 	}
 
 	public static void printPlayerChat(Player player, String text) {
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			PLAYER_MSG.put(player, "§7" + text);
 			updateChat(player);
 			final Player pl = player;
@@ -134,7 +134,7 @@ public class BGChat {
 	}
 
 	public static void printHelpChat(Player player) {
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			HELP_CHAT.put(player, true);
 			updateChat();
 			final Player pl = player;
@@ -145,16 +145,16 @@ public class BGChat {
 						}
 					}, 100);
 		} else {
-			BGChat.printPlayerChat(player, plugin.SERVER_TITLE);
+			BGChat.printPlayerChat(player, BGMain.SERVER_TITLE);
 			String are = "are";
 			String players = "players";
-			if (plugin.getGamers().length == 1) {
+			if (BGMain.getGamers().length == 1) {
 				are = "is";
 				players = "player";
 			}
 
-			Integer timeleft = plugin.MAX_GAME_RUNNING_TIME
-					- plugin.GAME_RUNNING_TIME;
+			Integer timeleft = BGMain.MAX_GAME_RUNNING_TIME
+					- BGMain.GAME_RUNNING_TIME;
 			String is = "are";
 			String minute = "minutes";
 			if (timeleft <= 1) {
@@ -162,18 +162,18 @@ public class BGChat {
 				minute = "minute";
 			}
 			player.sendMessage("§7 - There " + are + " "
-					+ plugin.getGamers().length + " " + players + " online.");
+					+ BGMain.getGamers().length + " " + players + " online.");
 			player.sendMessage("§7 - There " + is + " " + timeleft + " "
 					+ minute + " left.");
-			if (plugin.HELP_MESSAGE != null && plugin.HELP_MESSAGE != "")
-				player.sendMessage("§7 - " + plugin.HELP_MESSAGE);
+			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "")
+				player.sendMessage("§7 - " + BGMain.HELP_MESSAGE);
 		}
 	}
 
 	public static void printKitChat(Player player) {
-		if(!plugin.ITEM_MENU) {
+		if(!BGMain.ITEM_MENU) {
 			
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			KIT_CHAT.put(player, true);
 			updateChat();
 			final Player pl = player;
@@ -189,9 +189,9 @@ public class BGChat {
 			String otherkits = "";
 			for (String name : kitname) {
 				if (player.hasPermission("bg.kit." + name)
-						|| player.hasPermission("bg.kit.*") || (plugin.SIMP_REW && plugin.winner(player))
-						|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()) != null &&
-							plugin.reward.BOUGHT_KITS.get(player.getName()).equals(name.toLowerCase()))) {
+						|| player.hasPermission("bg.kit.*") || (BGMain.SIMP_REW && BGMain.winner(player))
+						|| (BGMain.REW && BGReward.BOUGHT_KITS.get(player.getName()) != null &&
+							BGReward.BOUGHT_KITS.get(player.getName()).equals(name.toLowerCase()))) {
 					yourkits = name + ", " + yourkits;
 				} else {
 					otherkits = name + ", " + otherkits;
@@ -203,7 +203,7 @@ public class BGChat {
 			player.sendMessage("§aYour kits: §f" + yourkits);
 			player.sendMessage("§aOther kits: §f" + otherkits);
 			player.sendMessage("§bMore kits available at: "
-					+ plugin.KIT_BUY_WEB);
+					+ BGMain.KIT_BUY_WEB);
 			player.sendMessage("");
 		}
 		
@@ -302,9 +302,9 @@ public class BGChat {
 						Material kitem = Material.getMaterial(itemid);
 					    
 						if (player.hasPermission("bg.kit." + kitname)
-								|| player.hasPermission("bg.kit.*") || (plugin.SIMP_REW && plugin.winner(player))
-								|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(player.getName()) != null &&
-									plugin.reward.BOUGHT_KITS.get(player.getName()).equals(kitname.toLowerCase()))) {
+								|| player.hasPermission("bg.kit.*") || (BGMain.SIMP_REW && BGMain.winner(player))
+								|| (BGMain.REW && BGReward.BOUGHT_KITS.get(player.getName()) != null &&
+									BGReward.BOUGHT_KITS.get(player.getName()).equals(kitname.toLowerCase()))) {
 					    
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
@@ -312,7 +312,7 @@ public class BGChat {
 							menu.setOption(pl, mypos, new ItemStack(kitem, 1), "§a" + kitname, info);
 							mypos++;
 						} else {
-							if(plugin.REW) {
+							if(BGMain.REW) {
 								if(BGKit.getCoins(kitname.toLowerCase()) == 1)
 									container.add("§6PRICE: " + BGKit.getCoins(kitname.toLowerCase()) + " Coin");
 								else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
@@ -345,7 +345,7 @@ public class BGChat {
 			return;
 		}
 
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			KITINFO_CHAT.put(player, kitname);
 			updateChat();
 			final Player pl = player;
@@ -443,7 +443,7 @@ public class BGChat {
 		
 		String tip = TIPS.get(TIP_COUNT);
 		TIP_COUNT++;
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			INFO_MSG = "[TIP] " + tip;
 			updateChat();
 		} else {
@@ -453,7 +453,7 @@ public class BGChat {
 	}
 
 	public static void updateChat() {
-		for (Player pl : plugin.getPlayers()) {
+		for (Player pl : BGMain.getPlayers()) {
 			updateChat(pl);
 		}
 	}
@@ -482,13 +482,13 @@ public class BGChat {
 			Integer line = 5;
 			String are = "are";
 			String players = "players";
-			if (plugin.getGamers().length == 1) {
+			if (BGMain.getGamers().length == 1) {
 				are = "is";
 				players = "player";
 			}
 
-			Integer timeleft = plugin.MAX_GAME_RUNNING_TIME
-					- plugin.GAME_RUNNING_TIME;
+			Integer timeleft = BGMain.MAX_GAME_RUNNING_TIME
+					- BGMain.GAME_RUNNING_TIME;
 			String is = "are";
 			String minute = "minutes";
 			if (timeleft <= 1) {
@@ -496,22 +496,22 @@ public class BGChat {
 				minute = "minute";
 			}
 			Integer help_length = 0;
-			if (plugin.HELP_MESSAGE != null && plugin.HELP_MESSAGE != "")
-				help_length = plugin.HELP_MESSAGE.length();
+			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "")
+				help_length = BGMain.HELP_MESSAGE.length();
 
 			while (help_length > 50) {
 				line++;
 				help_length = help_length - 50;
 			}
 
-			p.sendMessage("§b" + plugin.SERVER_TITLE);
+			p.sendMessage("§b" + BGMain.SERVER_TITLE);
 			p.sendMessage("");
-			p.sendMessage("§7 - There " + are + " " + plugin.getGamers().length
+			p.sendMessage("§7 - There " + are + " " + BGMain.getGamers().length
 					+ " " + players + " online.");
 			p.sendMessage("§7 - There " + is + " " + timeleft + " " + minute
 					+ " left.");
-			if (plugin.HELP_MESSAGE != null && plugin.HELP_MESSAGE != "")
-				p.sendMessage("§7 - " + plugin.HELP_MESSAGE);
+			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "")
+				p.sendMessage("§7 - " + BGMain.HELP_MESSAGE);
 
 			if (PLAYER_MSG.containsKey(p))
 				line++;
@@ -531,9 +531,9 @@ public class BGChat {
 			String yourkits = "";
 			String otherkits = "";
 			for (String name : kitname) {
-				if (p.hasPermission("bg.kit." + name) || (plugin.SIMP_REW && plugin.winner(p))
-					|| (plugin.REW && plugin.reward.BOUGHT_KITS.get(p.getName()) != null
-					&& plugin.reward.BOUGHT_KITS.get(p.getName()).equals(name.toLowerCase()))) {
+				if (p.hasPermission("bg.kit." + name) || (BGMain.SIMP_REW && BGMain.winner(p))
+					|| (BGMain.REW && BGReward.BOUGHT_KITS.get(p.getName()) != null
+					&& BGReward.BOUGHT_KITS.get(p.getName()).equals(name.toLowerCase()))) {
 					if(yourkits == "")
 						yourkits = name;
 					else
@@ -565,7 +565,7 @@ public class BGChat {
 			p.sendMessage("§aYour kits: §f" + yourkits);
 			p.sendMessage("§aOther kits: §f" + otherkits);
 			p.sendMessage("");
-			p.sendMessage("§bMore kits available at: " + plugin.KIT_BUY_WEB);
+			p.sendMessage("§bMore kits available at: " + BGMain.KIT_BUY_WEB);
 
 			if (PLAYER_MSG.containsKey(p))
 				line++;
@@ -683,18 +683,18 @@ public class BGChat {
 			// Print chat
 			p.sendMessage("§9" + INFO_MSG);
 			p.sendMessage("§c" + DEATH_MSG);
-			if (plugin.DENY_DAMAGE_PLAYER)
+			if (BGMain.DENY_DAMAGE_PLAYER)
 				p.sendMessage("§a" + TIMER_MSG);
 			else {
-				Integer timeleft = plugin.MAX_GAME_RUNNING_TIME
-						- plugin.GAME_RUNNING_TIME;
+				Integer timeleft = BGMain.MAX_GAME_RUNNING_TIME
+						- BGMain.GAME_RUNNING_TIME;
 				String minute = "minutes";
 				if (timeleft <= 1) {
 					minute = "minute";
 				}
 
 				p.sendMessage("§a" + "Players remaining: §f"
-						+ plugin.getGamers().length + " §a| Time remaining: §f"
+						+ BGMain.getGamers().length + " §a| Time remaining: §f"
 						+ timeleft + " " + minute);
 			}
 			p.sendMessage("-----------------------------------------------------");

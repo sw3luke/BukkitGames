@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class BGFeast {
 
-	private static BGMain plugin;
 	private static Block mainBlock = null;
 	private static Integer radius = 8;
 	private static Logger log = BGMain.getPluginLogger();
@@ -26,16 +25,12 @@ public class BGFeast {
 	private static Chest[] chests = new Chest[8];
 	
 	private static ArrayList<Location> fblocks = new ArrayList<Location>();
-	
-	public BGFeast(BGMain plugin) {	
-		BGFeast.plugin = plugin;
-	}
-	
+
 	public static void announceFeast(Integer time) {
 		if(mainBlock == null) {
 			do {
 				mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
-			} while (!plugin.inBorder(mainBlock.getLocation()));
+			} while (!BGMain.inBorder(mainBlock.getLocation()));
 			mainBlock.setType(Material.NETHERRACK);
 			fblocks.add(mainBlock.getLocation());
 			removeAbove(mainBlock);
@@ -57,7 +52,7 @@ public class BGFeast {
 		
 		DecimalFormat df = new DecimalFormat("##.#");
 		BGChat.printInfoChat("Feast spawned at X: " + df.format(mainBlock.getLocation().getX()) + " | Y: " + df.format(mainBlock.getLocation().getY()) + " | Z: " + df.format(mainBlock.getLocation().getZ()));
-		if(plugin.FEAST_CHESTS)
+		if(BGMain.FEAST_CHESTS)
 			spawnChests();
 		
 		List<String> items = BGFiles.feastconf.getStringList("ITEMS");
@@ -102,7 +97,7 @@ public class BGFeast {
 			else
 				amount = minamount + r.nextInt(maxamount - minamount + 1);
 			
-			if(plugin.FEAST_CHESTS) {				
+			if(BGMain.FEAST_CHESTS) {				
 				while(amount > 0) {
 					Chest chest = chests[r.nextInt(8)];
 					Integer slot = r.nextInt(27);
@@ -128,7 +123,7 @@ public class BGFeast {
 	}
 	
 	public static Boolean isFeastBlock(Block b) {		
-		if(!plugin.FEAST || !spawned)
+		if(!BGMain.FEAST || !spawned)
 			return false;
 
 		return fblocks.contains(b.getLocation());

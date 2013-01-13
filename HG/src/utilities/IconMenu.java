@@ -21,7 +21,7 @@ public class IconMenu implements Listener {
     private int size;
     private OptionClickEventHandler handler;
     private Plugin plugin;
-   private Boolean reg = false;
+    private Boolean reg = false;
     private HashMap<Player, String[]> optionNames = new HashMap<Player, String[]>();
     private HashMap<Player, ItemStack[]> optionIcons = new HashMap<Player, ItemStack[]>();
     
@@ -39,7 +39,7 @@ public class IconMenu implements Listener {
         optionIcons.put(p, new ItemStack[size]);
         
         if(!reg) {
-        	plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        	Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
         	reg = true;
         }
     }
@@ -104,11 +104,11 @@ public class IconMenu implements Listener {
         private boolean destroy;
        
         public OptionClickEvent(Player player, int position, String name) {
-            this.player = player;
-            this.position = position;
-            this.name = name;
-            this.close = true;
-            this.destroy = false;
+        	this.player = player;
+        	this.position = position;
+        	this.name = name;
+            close = true;
+            destroy = false;
         }
        
         public Player getPlayer() {
@@ -136,7 +136,7 @@ public class IconMenu implements Listener {
         }
        
         public void setWillDestroy(boolean destroy) {
-            this.destroy = destroy;
+        	this.destroy = destroy;
         }
     }
    

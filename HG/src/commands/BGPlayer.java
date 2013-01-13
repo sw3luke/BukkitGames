@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import main.BGMain;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,16 +18,11 @@ import utilities.BGTeam;
 public class BGPlayer implements CommandExecutor{
 
 	Logger log = BGMain.getPluginLogger();
-	private BGMain plugin;
-	
-	public BGPlayer(BGMain plugin) {
-		this.plugin = plugin;
-	}
-	
+		
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		if (!(sender instanceof Player)) {
-			this.log.info("§cThis command can only be accessed by players!");
+			log.info("§cThis command can only be accessed by players!");
 			return true;
 		}
 		Player p = (Player) sender;
@@ -39,14 +35,14 @@ public class BGPlayer implements CommandExecutor{
 			
 			if(p.hasPermission("bg.admin.gamemaker")) {
 				
-				if(plugin.isGameMaker(p)) {
+				if(BGMain.isGameMaker(p)) {
 					
-					plugin.remGameMaker(p);
+					BGMain.remGameMaker(p);
 					BGChat.printPlayerChat(p, "§eYou are no longer a gamemaker!");
 					return true;
 				}else {
 					
-					plugin.addGameMaker(p);
+					BGMain.addGameMaker(p);
 					return true;
 				}
 			}else {
@@ -67,7 +63,7 @@ public class BGPlayer implements CommandExecutor{
 		}
 
 		if (cmd.getName().equalsIgnoreCase("kit")) {
-			if (this.plugin.DENY_LOGIN.booleanValue()) {
+			if (BGMain.DENY_LOGIN.booleanValue()) {
 				BGChat.printPlayerChat(p, "§eThe game has already began!");
 				return true;
 			}
@@ -80,13 +76,13 @@ public class BGPlayer implements CommandExecutor{
 		}
 
 		if (cmd.getName().equalsIgnoreCase("spawn")) {
-			if (this.plugin.DENY_LOGIN.booleanValue()
+			if (BGMain.DENY_LOGIN.booleanValue()
 					& !p.hasPermission("bg.admin.spawn")
-					& !(plugin.isGameMaker(p) || plugin.isSpectator(p))) {
+					& !(BGMain.isGameMaker(p) || BGMain.isSpectator(p))) {
 				BGChat.printPlayerChat(p, "§eThe game has already began!");
 				return true;
 			} else {
-				p.teleport(plugin.getSpawn());
+				p.teleport(BGMain.getSpawn());
 				BGChat.printPlayerChat(p, "§eTeleported to the spawn location.");
 				return true;
 			}
@@ -94,7 +90,7 @@ public class BGPlayer implements CommandExecutor{
 		
 		if(cmd.getName().equalsIgnoreCase("team")) {
 			
-			if(!plugin.TEAM) {
+			if(!BGMain.TEAM) {
 				
 				BGChat.printPlayerChat(p, "§eTeam function is disabled!");
 				return true;
@@ -129,13 +125,13 @@ public class BGPlayer implements CommandExecutor{
 				
 				
 				
-				if(plugin.getServer().getPlayer(args[1]) == null) {
+				if(Bukkit.getServer().getPlayer(args[1]) == null) {
 					
 					BGChat.printPlayerChat(p, "§eThis player is not online!");
 					return true;
 				}
 				
-				Player player = plugin.getServer().getPlayer(args[1]);
+				Player player = Bukkit.getServer().getPlayer(args[1]);
 				
 				if(BGTeam.isInTeam(p, player.getName())){
 					
@@ -204,7 +200,7 @@ public class BGPlayer implements CommandExecutor{
 		
 		if(cmd.getName().equalsIgnoreCase("teleport")) {
 			
-			if(plugin.isGameMaker(p) || plugin.isSpectator(p)) {
+			if(BGMain.isGameMaker(p) || BGMain.isSpectator(p)) {
 				
 				if(args.length > 2) {
 					
@@ -222,13 +218,13 @@ public class BGPlayer implements CommandExecutor{
 				
 				if(args.length == 1) {
 					
-					if(plugin.getServer().getPlayer(args[0]) == null) {
+					if(Bukkit.getServer().getPlayer(args[0]) == null) {
 						
 						BGChat.printPlayerChat(p, "§eThis player is not online!");
 						return true;
 					}
 					
-					Player target = plugin.getServer().getPlayer(args[0]);
+					Player target = Bukkit.getServer().getPlayer(args[0]);
 					BGChat.printPlayerChat(p, "§eTeleport to "+ target.getName());
 					p.teleport(target);
 					return true;
@@ -249,9 +245,9 @@ public class BGPlayer implements CommandExecutor{
 						return true;
 					}
 					
-					Location loc = new Location(plugin.getServer().getWorlds().get(0), x, plugin.getServer().getWorlds().get(0).getHighestBlockYAt(x, z)+1.5, z);
+					Location loc = new Location(Bukkit.getServer().getWorlds().get(0), x, Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(x, z)+1.5, z);
 					
-					if(!plugin.inBorder(loc)) {
+					if(!BGMain.inBorder(loc)) {
 						
 						BGChat.printPlayerChat(p, "§eThis cords are not in the worldborder!");
 						return true;

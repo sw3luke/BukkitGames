@@ -42,7 +42,6 @@ import org.bukkit.plugin.Plugin;
 
 public class Updater 
 {
-    private Plugin plugin;
     private UpdateType type;
     private String versionTitle;
     private String versionLink;
@@ -109,7 +108,7 @@ public class Updater
         
         public int getValue()
         {
-            return this.value;
+            return value;
         }
         
         public static Updater.UpdateResult getResult(int value)
@@ -154,7 +153,7 @@ public class Updater
         
         public int getValue()
         {
-            return this.value;
+            return value;
         }
         
         public static Updater.UpdateType getResult(int value)
@@ -179,7 +178,7 @@ public class Updater
      * @param slug
      *            The dev.bukkit.org slug of the project (http://dev.bukkit.org/server-mods/SLUG_IS_HERE)
      * @param file
-     *            The file that the plugin is running from, get this by doing this.getFile() from within your main class.
+     *            The file that the plugin is running from, get this by doing getFile() from within your main class.
      * @param type
      *            Specify the type of update this will be. See {@link UpdateType}
      * @param announce
@@ -187,7 +186,6 @@ public class Updater
      */ 
     public Updater(Plugin plugin, String slug, File file, UpdateType type, boolean announce)
     {
-        this.plugin = plugin;
         this.type = type;
         this.announce = announce;
         try 
@@ -307,8 +305,8 @@ public class Updater
             
             try {
                 if(announce) log.info("Moving old configs into 'plugins/" + updateFolder + "/The_BukkitGames-old/'.");
-                copyDirectory(plugin.getDataFolder(), new File("plugins/" + updateFolder + "/The_BukkitGames-old/"));
-                copy(plugin.getResource("auto_update.txt"), new File(plugin.getDataFolder(), "AUTO-UPDATE-INFO.txt"));
+                copyDirectory(BGMain.instance.getDataFolder(), new File("plugins/" + updateFolder + "/The_BukkitGames-old/"));
+                copy(BGMain.instance.getResource("auto_update.txt"), new File(BGMain.instance.getDataFolder(), "AUTO-UPDATE-INFO.txt"));
             } catch (Exception ex) {
             	log.warning(ex.getMessage());
             }
@@ -550,7 +548,7 @@ public class Updater
     {
         if(type != UpdateType.NO_VERSION_CHECK)
         {
-            String version = plugin.getDescription().getVersion();
+            String version = BGMain.instance.getDescription().getVersion();
             if(title.split("v").length == 2)
             {
                 String remoteVersion = title.split("v")[1].split(" ")[0]; // Get the newest file's version number
@@ -566,7 +564,7 @@ public class Updater
                 // The file's name did not contain the string 'vVersion'
                 log.warning("The author of this plugin has misconfigured their Auto Update system");
                 log.warning("Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
-                log.warning("Please notify the author (" + plugin.getDescription().getAuthors().get(0) + ") of this error.");
+                log.warning("Please notify the author (" + BGMain.instance.getDescription().getAuthors().get(0) + ") of this error.");
                 result = Updater.UpdateResult.FAIL_NOVERSION;
                 return false;
             }

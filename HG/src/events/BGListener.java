@@ -71,50 +71,46 @@ import org.bukkit.util.Vector;
 import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
 
 import utilities.BGChat;
+import utilities.BGCooldown;
 import utilities.BGCornucopia;
 import utilities.BGDisguise;
 import utilities.BGFBattle;
 import utilities.BGFeast;
 import utilities.BGFiles;
 import utilities.BGKit;
+import utilities.BGReward;
+import utilities.BGSign;
 import utilities.BGTeam;
 import utilities.BGVanish;
 import utilities.Updater;
 
 public class BGListener implements Listener {
 	Logger log = BGMain.getPluginLogger();
-	private BGMain plugin;
 	private String last_quit;
 	private String last_headshot;
 	
-	public ArrayList<Player> viperList = new ArrayList<Player>();
-	public ArrayList<Player> monkList = new ArrayList<Player>();
-	public ArrayList<Player> thiefList = new ArrayList<Player>();
-	public ArrayList<Player> ghostList = new ArrayList<Player>();
-	public ArrayList<Player> thorList = new ArrayList<Player>();
-	public ArrayList<Player> timeList = new ArrayList<Player>();
-	public ArrayList<Player> freezeList = new ArrayList<Player>();
+	public static ArrayList<Player> viperList = new ArrayList<Player>();
+	public static ArrayList<Player> monkList = new ArrayList<Player>();
+	public static ArrayList<Player> thiefList = new ArrayList<Player>();
+	public static ArrayList<Player> ghostList = new ArrayList<Player>();
+	public static ArrayList<Player> thorList = new ArrayList<Player>();
+	public static ArrayList<Player> timeList = new ArrayList<Player>();
+	public static ArrayList<Player> freezeList = new ArrayList<Player>();
 
 	
-	public BGListener(BGMain instance) {
-		this.plugin = instance;
-		this.plugin.getServer().getPluginManager()
-				.registerEvents(this, this.plugin);
-	}
-
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player p = (Player) event.getWhoClicked();
-		if(plugin.isSpectator(p))
+		if(BGMain.isSpectator(p))
 			event.setCancelled(true);
 	}
 	
 	@EventHandler
 	public void onVehicleMove(VehicleMoveEvent event) {
-		if (this.plugin.DENY_CHECK_WORLDBORDER.booleanValue()) {
+		if (BGMain.DENY_CHECK_WORLDBORDER.booleanValue()) {
 			return;
 		}
-		if (this.plugin.inBorder(event.getTo()))
+		if (BGMain.inBorder(event.getTo()))
 			return;
 		Vehicle s = event.getVehicle();
 		if (s.isEmpty())
@@ -123,12 +119,10 @@ public class BGListener implements Listener {
 		if (!(Passenger instanceof Player))
 			return;
 
-		BGChat.printPlayerChat((Player) Passenger, this.plugin.WORLD_BORDER_MSG);
+		BGChat.printPlayerChat((Player) Passenger, BGMain.WORLD_BORDER_MSG);
 		s.teleport(event.getFrom());
-		this.plugin.getClass();
 		Bukkit.getServer().getWorlds().get(0)
 				.playEffect(s.getLocation(), Effect.ENDER_SIGNAL, 5);
-		this.plugin.getClass();
 		Bukkit.getServer().getWorlds().get(0)
 				.playEffect(s.getLocation(), Effect.SMOKE, 5);
 	}
@@ -137,12 +131,12 @@ public class BGListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		Action a = event.getAction();
-		if(plugin.isSpectator(p)) {
+		if(BGMain.isSpectator(p)) {
 			event.setCancelled(true);
 			return;
 		}
 		
-		if (this.plugin.DENY_BLOCKBREAK.booleanValue()
+		if (BGMain.DENY_BLOCKBREAK.booleanValue()
 				& (!p.hasPermission("bg.admin.editblocks") || !p.hasPermission("bg.admin.*"))) {
 			event.setCancelled(true);
 			return;
@@ -179,10 +173,10 @@ public class BGListener implements Listener {
 					.getType() == Material.STONE_AXE) {
 				if(!thorList.contains(p)) {
 					thorList.add(p);
-					plugin.cooldown.thorCooldown(p);
+					BGCooldown.thorCooldown(p);
 					Block block = event.getClickedBlock();
 					Location loc = block.getLocation();
-					World world = plugin.getServer().getWorlds().get(0);
+					World world = Bukkit.getServer().getWorlds().get(0);
 					world.strikeLightning(loc);
 				}else {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.11.Expired"));
@@ -194,11 +188,11 @@ public class BGListener implements Listener {
 				
 				if(!ghostList.contains(p)) {
 					ghostList.add(p);
-					plugin.cooldown.ghostCooldown(p);
+					BGCooldown.ghostCooldown(p);
 					
-					Player[] players = plugin.getServer().getOnlinePlayers();
+					Player[] players = Bukkit.getServer().getOnlinePlayers();
 					
-					plugin.cooldown.showPlayerCooldown(p, players);
+					BGCooldown.showPlayerCooldown(p, players);
 					p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.APPLE, 1)});
 					for(Player player : players) {
 						if(player.getName().equals(p.getName())) {
@@ -214,13 +208,13 @@ public class BGListener implements Listener {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
 				}
 			}
-			if(BGKit.hasAbility(p, 22) && !plugin.DENY_DAMAGE_PLAYER &&
+			if(BGKit.hasAbility(p, 22) && !BGMain.DENY_DAMAGE_PLAYER &&
 					p.getItemInHand().getType() == Material.WATCH &&
 					(a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {
 				
 				if(!timeList.contains(p)) {
 					timeList.add(p);
-					plugin.cooldown.timeCooldown(p);
+					BGCooldown.timeCooldown(p);
 					
 					p.getInventory().removeItem(new ItemStack[] {new ItemStack(Material.WATCH,1)});
 					
@@ -229,10 +223,10 @@ public class BGListener implements Listener {
 					List<Entity> entities = p.getNearbyEntities(radius+30, radius+30, radius+30);
 					for(Entity e : entities) {
 						
-						if(!e.getType().equals(EntityType.PLAYER) || plugin.isSpectator((Player)e) || plugin.isGameMaker((Player) e))
+						if(!e.getType().equals(EntityType.PLAYER) || BGMain.isSpectator((Player)e) || BGMain.isGameMaker((Player) e))
 							continue;
 						Player target = (Player) e;
-						if(plugin.TEAM) {
+						if(BGMain.TEAM) {
 							
 							if(BGTeam.isInTeam(p, target.getName()))
 								continue;
@@ -243,7 +237,7 @@ public class BGListener implements Listener {
 							String text = BGFiles.abconf.getString("AB.22.target");
 							text = text.replace("<player>", p.getName());
 							BGChat.printPlayerChat(target, text);
-							plugin.cooldown.freezeCooldown(target);
+							BGCooldown.freezeCooldown(target);
 						}	
 					}
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.22.success"));
@@ -257,15 +251,15 @@ public class BGListener implements Listener {
 			e.printStackTrace();
 		}
 
-		if ((p.getItemInHand().getType() == Material.COMPASS & this.plugin.COMPASS
+		if ((p.getItemInHand().getType() == Material.COMPASS & BGMain.COMPASS
 				.booleanValue())) {
 			Boolean found = Boolean.valueOf(false);
 			for (int i = 0; i < 300; i++) {
 				List<Entity> entities = p.getNearbyEntities(i, 64.0D, i);
 				for (Entity e : entities) {
-					if ((!e.getType().equals(EntityType.PLAYER))|| plugin.isSpectator((Player) e) || plugin.isGameMaker((Player) e))
+					if ((!e.getType().equals(EntityType.PLAYER))|| BGMain.isSpectator((Player) e) || BGMain.isGameMaker((Player) e))
 						continue;
-					if(plugin.TEAM) {
+					if(BGMain.TEAM) {
 						if(BGTeam.isInTeam(p, ((Player) e).getName()))
 								continue;
 					}
@@ -286,47 +280,47 @@ public class BGListener implements Listener {
 			if (!found.booleanValue()) {
 				BGChat.printPlayerChat(p,
 						"No players in range. Compass points to spawn.");
-				p.setCompassTarget(this.plugin.spawn);
+				p.setCompassTarget(BGMain.spawn);
 			}
 		}		
 	}
 
 	@EventHandler
 	public void onServerPing(ServerListPingEvent event) {
-		if (plugin.DENY_LOGIN)
-			event.setMotd(plugin.MOTD_PROGRESS_MSG.replace("&", "§"));
+		if (BGMain.DENY_LOGIN)
+			event.setMotd(BGMain.MOTD_PROGRESS_MSG.replace("&", "§"));
 		else
-			event.setMotd(plugin.MOTD_COUNTDOWN_MSG.replace("&", "§").replace("<time>", plugin.TIME(BGMain.COUNTDOWN)));
+			event.setMotd(BGMain.MOTD_COUNTDOWN_MSG.replace("&", "§").replace("<time>", BGMain.TIME(BGMain.COUNTDOWN)));
 	}
 
 	@EventHandler
 	public void onBucketFill(PlayerBucketFillEvent event) {
-		if(plugin.isSpectator(event.getPlayer())) {
+		if(BGMain.isSpectator(event.getPlayer())) {
 			event.setCancelled(true);
 			return;
 		}
-		if (this.plugin.DENY_BLOCKBREAK.booleanValue())
+		if (BGMain.DENY_BLOCKBREAK.booleanValue())
 			event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onBucketEmpty(PlayerBucketEmptyEvent event) {
-		if(plugin.isSpectator(event.getPlayer())) {
+		if(BGMain.isSpectator(event.getPlayer())) {
 			event.setCancelled(true);
 			return;
 		}
-		if (this.plugin.DENY_BLOCKPLACE.booleanValue())
+		if (BGMain.DENY_BLOCKPLACE.booleanValue())
 			event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onEntityShootArrow(EntityShootBowEvent event) {
 		if(event.getEntity() instanceof Player)
-			if(plugin.isSpectator((Player) event.getEntity())) {
+			if(BGMain.isSpectator((Player) event.getEntity())) {
 				event.setCancelled(true);
 				return;
 			}
-		if (((event.getEntity() instanceof Player)) && (this.plugin.DENY_SHOOT_BOW.booleanValue())) {
+		if (((event.getEntity() instanceof Player)) && (BGMain.DENY_SHOOT_BOW.booleanValue())) {
 			event.getBow().setDurability((short) 0);
 			event.setCancelled(true);
 		}
@@ -341,12 +335,12 @@ public class BGListener implements Listener {
 			LivingEntity shooter = arrow.getShooter();
 			if (shooter.getType() == EntityType.PLAYER) {
 				Player player = (Player) shooter;
-				if(plugin.isSpectator(player)) {
+				if(BGMain.isSpectator(player)) {
 					arrow.remove();
 					return;
 				}
 				if (BGKit.hasAbility(player, Integer.valueOf(1))) {
-					plugin.getServer().getWorlds().get(0).createExplosion(arrow.getLocation(), 2.0F, false);
+					Bukkit.getServer().getWorlds().get(0).createExplosion(arrow.getLocation(), 2.0F, false);
 					arrow.remove();
 				} else {
 					return;
@@ -361,7 +355,7 @@ public class BGListener implements Listener {
 			LivingEntity shooter = ball.getShooter();
 			if (shooter.getType() == EntityType.PLAYER) {
 				Player player = (Player) shooter;
-				if(plugin.isSpectator(player)) {
+				if(BGMain.isSpectator(player)) {
 					return;
 				}
 				if (BGKit.hasAbility(player, Integer.valueOf(3)).booleanValue()) {
@@ -386,17 +380,17 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
-		if(plugin.isSpectator(event.getPlayer())) {
+		if(BGMain.isSpectator(event.getPlayer())) {
 			event.setCancelled(true);
 			return;
 		}
-		if (this.plugin.DENY_ITEMDROP.booleanValue())
+		if (BGMain.DENY_ITEMDROP.booleanValue())
 			event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (this.plugin.DENY_DAMAGE_ENTITY) {
+		if (BGMain.DENY_DAMAGE_ENTITY) {
 			event.setCancelled(true);
 			return;
 		}
@@ -421,11 +415,11 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-		if(plugin.isSpectator(event.getPlayer()) || plugin.isGameMaker(event.getPlayer())) {
+		if(BGMain.isSpectator(event.getPlayer()) || BGMain.isGameMaker(event.getPlayer())) {
 			event.setCancelled(true);
 			return;
 		}
-		if (this.plugin.DENY_ITEMPICKUP.booleanValue())
+		if (BGMain.DENY_ITEMPICKUP.booleanValue())
 			event.setCancelled(true);
 	}
 
@@ -433,12 +427,12 @@ public class BGListener implements Listener {
 	public void onPlayerKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
 		
-		if(plugin.isGameMaker(p))
-			plugin.remGameMaker(p);
-		if(plugin.isSpectator(p))
-			plugin.remSpectator(p);
+		if(BGMain.isGameMaker(p))
+			BGMain.remGameMaker(p);
+		if(BGMain.isSpectator(p))
+			BGMain.remSpectator(p);
 		
-		if (this.plugin.DENY_LOGIN.booleanValue() || plugin.ADV_CHAT_SYSTEM)
+		if (BGMain.DENY_LOGIN.booleanValue() || BGMain.ADV_CHAT_SYSTEM)
 			event.setLeaveMessage(null);
 	}
 
@@ -446,17 +440,17 @@ public class BGListener implements Listener {
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		Player p = event.getPlayer();
 
-		if (plugin.DENY_LOGIN &&
-				!(plugin.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) &&
+		if (BGMain.DENY_LOGIN &&
+				!(BGMain.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) &&
 				!(p.hasPermission("bg.admin.logingame") || p.hasPermission("bg.admin.*"))) {
-			event.setKickMessage(ChatColor.RED + plugin.GAME_IN_PROGRESS_MSG);
+			event.setKickMessage(ChatColor.RED + BGMain.GAME_IN_PROGRESS_MSG);
 			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, event.getKickMessage());
 		} else if (event.getResult() == Result.KICK_FULL) {
 			if (p.hasPermission("bg.vip.full") || p.hasPermission("bg.admin.full") 
-					|| Bukkit.getServer().getMaxPlayers() > plugin.getGamers().length) {
+					|| Bukkit.getServer().getMaxPlayers() > BGMain.getGamers().length) {
 				event.allow();
 			} else {
-				event.setKickMessage(ChatColor.RED + plugin.SERVER_FULL_MSG.replace("<players>", Integer.toString(Bukkit.getOnlinePlayers().length)));
+				event.setKickMessage(ChatColor.RED + BGMain.SERVER_FULL_MSG.replace("<players>", Integer.toString(Bukkit.getOnlinePlayers().length)));
 			}
 		}
 
@@ -466,27 +460,25 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onPlayerOutBorder(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
-		if (this.plugin.DENY_CHECK_WORLDBORDER.booleanValue()) {
+		if (BGMain.DENY_CHECK_WORLDBORDER.booleanValue()) {
 			return;
 		}
-		if (!this.plugin.inBorder(event.getTo())) {
-			if (this.plugin.inBorder(event.getFrom())) {
-				BGChat.printPlayerChat(p, this.plugin.WORLD_BORDER_MSG);
+		if (!BGMain.inBorder(event.getTo())) {
+			if (BGMain.inBorder(event.getFrom())) {
+				BGChat.printPlayerChat(p, BGMain.WORLD_BORDER_MSG);
 				event.setTo(event.getFrom());
 				p.teleport(event.getFrom());
-				this.plugin.getClass();
 				Bukkit.getServer().getWorlds().get(0)
 						.playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 5);
-				this.plugin.getClass();
 				Bukkit.getServer().getWorlds().get(0)
 						.playEffect(p.getLocation(), Effect.SMOKE, 5);
 				return;
 			}
 			p.teleport(p.getWorld().getSpawnLocation().add(0.0D, 20.0D, 0.0D));
-			this.plugin.getClass();
+			
 			Bukkit.getServer().getWorlds().get(0)
 					.playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 5);
-			this.plugin.getClass();
+			
 			Bukkit.getServer().getWorlds().get(0)
 					.playEffect(p.getLocation(), Effect.SMOKE, 5);
 		}
@@ -496,13 +488,13 @@ public class BGListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 		
-		if (!this.plugin.COMPASS.booleanValue() || !this.plugin.AUTO_COMPASS.booleanValue())
+		if (!BGMain.COMPASS.booleanValue() || !BGMain.AUTO_COMPASS.booleanValue())
 			return;
 		Boolean found = Boolean.valueOf(false);
 		for (int i = 0; i < 300; i++) {
 			List<Entity> entities = p.getNearbyEntities(i, 64.0D, i);
 			for (Entity e : entities) {
-				if ((e.getType().equals(EntityType.PLAYER)) && !plugin.isSpectator((Player) e)) {
+				if ((e.getType().equals(EntityType.PLAYER)) && !BGMain.isSpectator((Player) e)) {
 					p.setCompassTarget(e.getLocation());
 					found = Boolean.valueOf(true);
 					break;
@@ -512,7 +504,7 @@ public class BGListener implements Listener {
 				break;
 		}
 		if (!found.booleanValue()) {
-			p.setCompassTarget(this.plugin.spawn);
+			p.setCompassTarget(BGMain.spawn);
 		}
 	}
 
@@ -531,7 +523,7 @@ public class BGListener implements Listener {
 	public void onFall(EntityDamageEvent e) {
 		if (e.getEntity() instanceof Player) {
 			Player p = (Player) e.getEntity();
-			if(plugin.isSpectator(p))
+			if(BGMain.isSpectator(p))
 				return;
 			if (BGKit.hasAbility(p, Integer.valueOf(8))) {
 				if (e.getCause() == DamageCause.FALL) {
@@ -543,10 +535,10 @@ public class BGListener implements Listener {
 							.getNearbyEntities(5, 5, 5);
 					for (Entity target : nearbyEntities) {
 						if (target instanceof Player) {
-							if(plugin.isSpectator((Player) target) || plugin.isGameMaker((Player) target))
+							if(BGMain.isSpectator((Player) target) || BGMain.isGameMaker((Player) target))
 								continue;
 							Player t = (Player) target;
-							if(plugin.TEAM) {
+							if(BGMain.TEAM) {
 								
 								if(BGTeam.isInTeam(p, t.getName()))
 									continue;
@@ -569,11 +561,11 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (!plugin.DENY_LOGIN & plugin.ADV_CHAT_SYSTEM) {
+		if (!BGMain.DENY_LOGIN & BGMain.ADV_CHAT_SYSTEM) {
 			BGChat.printDeathChat("§e" + event.getJoinMessage());
 		}
 
-		if (plugin.DENY_LOGIN || plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.DENY_LOGIN || BGMain.ADV_CHAT_SYSTEM) {
 			event.setJoinMessage(null);
 		}
 
@@ -589,21 +581,21 @@ public class BGListener implements Listener {
 		p.setFoodLevel(20);
 		p.setExp(0);
 		
-		if (plugin.DENY_LOGIN) {
+		if (BGMain.DENY_LOGIN) {
 			if (p.hasPermission("bg.admin.gamemaker") || p.hasPermission("bg.admin.*")) {
-				plugin.addGameMaker(p);
-			} else if(plugin.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) {
-				plugin.addSpectator(p);
+				BGMain.addGameMaker(p);
+			} else if(BGMain.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) {
+				BGMain.addSpectator(p);
 			}
 		} else {
-			if (!plugin.ADV_CHAT_SYSTEM && !plugin.ITEM_MENU)
+			if (!BGMain.ADV_CHAT_SYSTEM && !BGMain.ITEM_MENU)
 				BGChat.printKitChat(p);
 		}
 
-		if(plugin.isSpectator(p)) {
+		if(BGMain.isSpectator(p)) {
 			p.setPlayerListName(ChatColor.GRAY + getShortStr(p.getName()) + ChatColor.RESET);
 			p.setDisplayName(ChatColor.GRAY + p.getName() + ChatColor.RESET);
-		} else if (plugin.winner(p)) {
+		} else if (BGMain.winner(p)) {
 			p.setPlayerListName(ChatColor.GOLD + getShortStr(p.getName())
 					+ ChatColor.RESET);
 			p.setDisplayName(ChatColor.GOLD + p.getName() + ChatColor.RESET);
@@ -622,13 +614,13 @@ public class BGListener implements Listener {
 			p.setDisplayName(p.getName());
 		}
 		
-		if(!plugin.DENY_LOGIN) {
+		if(!BGMain.DENY_LOGIN) {
 		//Creating a written book.
 		List<String> pages = BGFiles.bookconf.getStringList("content");
 		List<String> content = new ArrayList<String>();
 		List<String> page = new ArrayList<String>();
 		for(String line : pages)  {
-			line = line.replace("<server_title>", plugin.SERVER_TITLE);
+			line = line.replace("<server_title>", BGMain.SERVER_TITLE);
 			line = line.replace("<space>", "§r\n");
 			line = line.replace("&", "§");
 			if(!line.contains("<newpage>")) {
@@ -658,24 +650,24 @@ public class BGListener implements Listener {
 		
 		String playerName = p.getName();
 		
-		if (plugin.SQL_USE) {
-			Integer PL_ID = plugin.getPlayerID(playerName);
+		if (BGMain.SQL_USE) {
+			Integer PL_ID = BGMain.getPlayerID(playerName);
 			if (PL_ID == null) {
-				plugin.SQLquery("INSERT INTO `PLAYERS` (`NAME`) VALUES ('"
+				BGMain.SQLquery("INSERT INTO `PLAYERS` (`NAME`) VALUES ('"
 						+ playerName + "') ;");
 			}
 		}
 		
-		if (plugin.REW) {
-			Integer PL_ID = plugin.getCoins(plugin.getPlayerID(playerName));
+		if (BGMain.REW) {
+			Integer PL_ID = BGMain.getCoins(BGMain.getPlayerID(playerName));
 			if (PL_ID == null) {
-				plugin.reward.createUser(playerName);
+				BGReward.createUser(playerName);
 			}
 		}
 		
 		if(p.hasPermission("bg.admin.check")) {
-			if(!plugin.getDescription().getVersion().contains("-DEV")) {
-				Updater updater = new Updater(plugin, "bukkitgames", plugin.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+			if(!BGMain.instance.getDescription().getVersion().contains("-DEV")) {
+				Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			
 				if (update) {
@@ -709,18 +701,18 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player p = event.getPlayer();
-		if(plugin.isSpectator(p)) {
+		if(BGMain.isSpectator(p)) {
 			event.setCancelled(true);
 			return;
 		}
 		
-		if ((this.plugin.DENY_BLOCKBREAK.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
+		if ((BGMain.DENY_BLOCKBREAK.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
 				|| !p.hasPermission("bg.admin.*")))) {
 			event.setCancelled(true);
 			return;
 		}
 
-		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
 			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
 			event.setCancelled(true);
 			return;
@@ -728,13 +720,13 @@ public class BGListener implements Listener {
 		
 		Block b = event.getBlock();
 		
-		if(plugin.DEATH_SG_PROTECTED && plugin.sign.signs.contains(b.getLocation())) {
+		if(BGMain.DEATH_SG_PROTECTED && BGSign.signs.contains(b.getLocation())) {
 				event.setCancelled(true);
 				return;
 		}
 		
 		if (BGKit.hasAbility(p, 2) && b.getType() == Material.LOG) {
-			World w = Bukkit.getServer().getWorld(plugin.WORLD_TEMPOARY_NAME);
+			World w = Bukkit.getServer().getWorld(BGMain.WORLD_TEMPOARY_NAME);
 			Double y = b.getLocation().getY() + 1;
 			Location l = new Location(w, b.getLocation().getX(), y, b
 					.getLocation().getZ());
@@ -783,8 +775,8 @@ public class BGListener implements Listener {
 	
 	@EventHandler
 	public void onBlockBurn(BlockBurnEvent event) {
-		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || 
-			(plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || 
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || 
+			(BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || 
 			BGFBattle.isBattleBlock(event.getBlock())) {
 			
 			event.setCancelled(true);
@@ -795,17 +787,17 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player p = event.getPlayer();
-		if(plugin.isSpectator(p)) {
+		if(BGMain.isSpectator(p)) {
 			event.setCancelled(true);
 			return;
 		}
-		if ((this.plugin.DENY_BLOCKPLACE.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
+		if ((BGMain.DENY_BLOCKPLACE.booleanValue() & (!p.hasPermission("bg.admin.editblocks") 
 				|| !p.hasPermission("bg.admin.*")))) {
 			event.setCancelled(true);
 			return;
 		}
 		
-		if((plugin.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (plugin.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
 			BGChat.printPlayerChat(p, "§cYou can't place this block!");
 			event.setCancelled(true);
 			return;
@@ -850,20 +842,20 @@ public class BGListener implements Listener {
 	
 	@EventHandler
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-		if(plugin.isSpectator(event.getPlayer())) {
-			if(plugin.ADV_CHAT_SYSTEM) {
+		if(BGMain.isSpectator(event.getPlayer())) {
+			if(BGMain.ADV_CHAT_SYSTEM) {
 				BGChat.printPlayerChat(event.getPlayer(), "§cSpectators can't chat.");
 				event.setCancelled(true);			
 				return;
 			} else {
 				event.getRecipients().clear();
-				event.getRecipients().addAll(plugin.getSpectators());
+				event.getRecipients().addAll(BGMain.getSpectators());
 				event.getRecipients().addAll(getOnlineOps());
 				event.setFormat("§o[SPECTATORS] §r" + event.getFormat());
 			}
 		}
 			
-		if (plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.ADV_CHAT_SYSTEM) {
 			String m = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
 			String s = ChatColor.stripColor(m);
 			if(s.length() <= 53) {
@@ -890,30 +882,30 @@ public class BGListener implements Listener {
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player p = event.getPlayer();
 		
-		if(plugin.isGameMaker(p)) {
+		if(BGMain.isGameMaker(p)) {
 			event.setQuitMessage(null);
-			plugin.remGameMaker(p);
+			BGMain.remGameMaker(p);
 			return;
 		}
 		
-		if (plugin.isSpectator(p)) {
+		if (BGMain.isSpectator(p)) {
 			event.setQuitMessage(null);
-			plugin.remSpectator(p);
+			BGMain.remSpectator(p);
 			return;
 		}
 		
-		if (!plugin.DENY_LOGIN.booleanValue() & plugin.ADV_CHAT_SYSTEM) {
+		if (!BGMain.DENY_LOGIN.booleanValue() & BGMain.ADV_CHAT_SYSTEM) {
 			BGChat.printDeathChat("§e" + event.getQuitMessage());
 		}
 
-		if (this.plugin.DENY_LOGIN.booleanValue() || plugin.ADV_CHAT_SYSTEM) {
+		if (BGMain.DENY_LOGIN.booleanValue() || BGMain.ADV_CHAT_SYSTEM) {
 			event.setQuitMessage(null);
 		}
 
-		if (this.plugin.QUIT_MSG.booleanValue() & !p.isDead()) {
+		if (BGMain.QUIT_MSG.booleanValue() & !p.isDead()) {
 			BGChat.printDeathChat(p.getName() + " left the game.");
-			if (!plugin.ADV_CHAT_SYSTEM) {
-				BGChat.printDeathChat(this.plugin.getGamers().length - 1
+			if (!BGMain.ADV_CHAT_SYSTEM) {
+				BGChat.printDeathChat(BGMain.getGamers().length - 1
 						+ " players remaining.");
 				BGChat.printDeathChat("");
 			}
@@ -924,22 +916,22 @@ public class BGListener implements Listener {
 					.strikeLightningEffect(light.add(0.0D, 100.0D, 0.0D));
 		}
 
-		if (this.plugin.NEW_WINNER != p.getName()
-				& this.plugin.DENY_LOGIN.booleanValue()) {
+		if (BGMain.NEW_WINNER != p.getName()
+				& BGMain.DENY_LOGIN.booleanValue()) {
 			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(this.plugin, new Runnable() {
+					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
 						public void run() {
-							plugin.checkwinner();
+							BGMain.checkwinner();
 
-							if (plugin.SQL_USE) {
-								Integer PL_ID = plugin.getPlayerID(last_quit);
-								if (last_quit == plugin.NEW_WINNER) {
+							if (BGMain.SQL_USE) {
+								Integer PL_ID = BGMain.getPlayerID(last_quit);
+								if (last_quit == BGMain.NEW_WINNER) {
 									
 								} else {
-									plugin.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'QUIT' WHERE `REF_PLAYER` = "
+									BGMain.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'QUIT' WHERE `REF_PLAYER` = "
 											+ PL_ID
 											+ " AND `REF_GAME` = "
-											+ plugin.SQL_GAMEID + " ;");
+											+ BGMain.SQL_GAMEID + " ;");
 								}
 							}
 						}
@@ -954,15 +946,15 @@ public class BGListener implements Listener {
 		Entity defender = event.getEntity();
 		
 		if(damager instanceof Player)
-			if(plugin.isSpectator((Player) damager)) {
+			if(BGMain.isSpectator((Player) damager)) {
 				event.setCancelled(true);
 				return;
 			}
 		
-		if (this.plugin.DENY_DAMAGE_ENTITY & !(event.getEntity() instanceof Player)) {
+		if (BGMain.DENY_DAMAGE_ENTITY & !(event.getEntity() instanceof Player)) {
 			return;
 		}
-		if (this.plugin.DENY_DAMAGE_PLAYER & event.getEntity() instanceof Player) {
+		if (BGMain.DENY_DAMAGE_PLAYER & event.getEntity() instanceof Player) {
 			return;
 		}
 		if (event.getEntity().isDead()) {
@@ -986,8 +978,8 @@ public class BGListener implements Listener {
 								BGChat.printDeathChat(v.getName()
 										+ " was headshotted by " + p.getName()
 										+ ".");
-								if (!plugin.ADV_CHAT_SYSTEM) {
-									BGChat.printDeathChat((this.plugin
+								if (!BGMain.ADV_CHAT_SYSTEM) {
+									BGChat.printDeathChat((BGMain
 											.getGamers().length - 1)
 											+ " players remaining.");
 									BGChat.printDeathChat("");
@@ -1003,24 +995,24 @@ public class BGListener implements Listener {
 										+ " was headshotted by " + p.getName()
 										+ ".");
 
-								if(plugin.REW && plugin.COINS_FOR_KILL != 0){
-									plugin.reward.giveCoins(p.getName(), plugin.COINS_FOR_KILL);
-									if(plugin.COINS_FOR_KILL == 1)
+								if(BGMain.REW && BGMain.COINS_FOR_KILL != 0){
+									BGReward.giveCoins(p.getName(), BGMain.COINS_FOR_KILL);
+									if(BGMain.COINS_FOR_KILL == 1)
 										BGChat.printPlayerChat(p, "You got 1 Coin for killing "+v.getName());
 									else
-										BGChat.printPlayerChat(p, "You got "+plugin.COINS_FOR_KILL+" Coins for killing "+v.getName());
+										BGChat.printPlayerChat(p, "You got "+BGMain.COINS_FOR_KILL+" Coins for killing "+v.getName());
 								}
-								if (plugin.SQL_USE) {
-									Integer PL_ID = plugin.getPlayerID(v
+								if (BGMain.SQL_USE) {
+									Integer PL_ID = BGMain.getPlayerID(v
 											.getName());
-									Integer KL_ID = plugin.getPlayerID(p
+									Integer KL_ID = BGMain.getPlayerID(p
 											.getName());
-									plugin.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `REF_KILLER` = "
+									BGMain.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `REF_KILLER` = "
 											+ KL_ID
 											+ ", `DEATH_REASON` = 'HEADSHOT' WHERE `REF_PLAYER` = "
 											+ PL_ID
 											+ " AND `REF_GAME` = "
-											+ plugin.SQL_GAMEID + " ;");
+											+ BGMain.SQL_GAMEID + " ;");
 								}
 							} else {
 								helmet.setDurability((short) (helmet
@@ -1059,7 +1051,7 @@ public class BGListener implements Listener {
 						int random = (int) (Math.random()* (BGFiles.abconf.getInt("AB.13.Chance")-1)+1);
 						if (random == 1) {
 							monkList.add(dam);
-							plugin.cooldown.monkCooldown(dam);
+							BGCooldown.monkCooldown(dam);
 							def.getInventory().clear(def.getInventory().getHeldItemSlot());
 							BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.13.Success"));
 							BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.13.Success"));
@@ -1076,7 +1068,7 @@ public class BGListener implements Listener {
 						int random = (int) (Math.random()* (BGFiles.abconf.getInt("AB.15.Chance")-1)+1);
 						if(random == 1) {
 							thiefList.add(dam);
-							plugin.cooldown.thiefCooldown(dam);
+							BGCooldown.thiefCooldown(dam);
 							dam.getInventory().clear(dam.getInventory().getHeldItemSlot());
 							dam.getInventory().addItem(def.getItemInHand());
 							def.getInventory().clear(def.getInventory().getHeldItemSlot());
@@ -1098,17 +1090,17 @@ public class BGListener implements Listener {
 						viperList.add(def);
 						BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.19.Damager"));
 						BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.19.Defender"));
-						plugin.cooldown.viperCooldown(def);
+						BGCooldown.viperCooldown(def);
 					}
 				}
 			}
 			
 			EntityType mob = defender.getType();
 			
-			if (plugin.ADV_ABI && BGKit.hasAbility(dam, 17) && BGDisguise.getDisguiseType(mob) != null) {
+			if (BGMain.ADV_ABI && BGKit.hasAbility(dam, 17) && BGDisguise.getDisguiseType(mob) != null) {
 				
 				DisguiseType mt = BGDisguise.getDisguiseType(mob);
-				plugin.dis.disguise(dam, mt);
+				BGDisguise.disguise(dam, mt);
 			}
 			
 			if (BGKit.hasAbility(dam, 18) && dam.getItemInHand().getType() == Material.AIR) {
@@ -1121,18 +1113,18 @@ public class BGListener implements Listener {
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) {
-			if(plugin.isSpectator((Player) event.getEntity())) {
+			if(BGMain.isSpectator((Player) event.getEntity())) {
 				event.setCancelled(true);
 				return;
 			}
 		}
 		
-		if ((this.plugin.DENY_DAMAGE_PLAYER.booleanValue() & event.getEntity() instanceof Player)) {
+		if ((BGMain.DENY_DAMAGE_PLAYER.booleanValue() & event.getEntity() instanceof Player)) {
 			event.setCancelled(true);
 			return;
 		}
 
-		if ((this.plugin.DENY_DAMAGE_ENTITY.booleanValue() & !(event
+		if ((BGMain.DENY_DAMAGE_ENTITY.booleanValue() & !(event
 				.getEntity() instanceof Player))) {
 			event.setCancelled(true);
 			return;
@@ -1153,8 +1145,8 @@ public class BGListener implements Listener {
 		Entity en = event.getEntity();
 		if (en.getType() == EntityType.PLAYER) {
 			Player player = (Player)en;
-			if(BGKit.hasAbility(player, 17) && plugin.ADV_ABI) {
-				plugin.dis.unDisguise(player);
+			if(BGKit.hasAbility(player, 17) && BGMain.ADV_ABI) {
+				BGDisguise.unDisguise(player);
 			}
 			if(BGKit.hasAbility(player, 18)) {
 				event.setDamage(event.getDamage() - 1);
@@ -1167,7 +1159,7 @@ public class BGListener implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		Player dp = event.getEntity();
 		
-		if (plugin.isSpectator(dp) || plugin.isGameMaker(dp)) {
+		if (BGMain.isSpectator(dp) || BGMain.isGameMaker(dp)) {
 			event.setDeathMessage(null);
 			event.getDrops().clear();
 			event.setDroppedExp(0);
@@ -1176,10 +1168,10 @@ public class BGListener implements Listener {
 		
 		if(BGKit.hasAbility(dp, 23)) {
 			
-			plugin.getServer().getWorlds().get(0).createExplosion(dp.getLocation(), 2.5F, BGFiles.abconf.getBoolean("AB.23.Burn"));
+			Bukkit.getServer().getWorlds().get(0).createExplosion(dp.getLocation(), 2.5F, BGFiles.abconf.getBoolean("AB.23.Burn"));
 		}
 		
-		if (plugin.DEATH_SIGNS) {
+		if (BGMain.DEATH_SIGNS) {
 			Location loc = dp.getLocation();
 			String fl = BGFiles.dsign.getString("FIRST_LINE");
 			String sl = BGFiles.dsign.getString("SECOND_LINE");
@@ -1196,7 +1188,7 @@ public class BGListener implements Listener {
 			if(fol != null)
 				fol = fol.replace("[name]", dp.getName());
 			
-			plugin.sign.createSign(loc, fl, sl, tl, fol);
+			BGSign.createSign(loc, fl, sl, tl, fol);
 		}
 		
 		
@@ -1209,12 +1201,12 @@ public class BGListener implements Listener {
 					killer.setFoodLevel(20);
 				}
 			}
-			if(plugin.REW && last_headshot != dp.getName() && plugin.COINS_FOR_KILL != 0){
-				plugin.reward.giveCoins(killer.getName(), plugin.COINS_FOR_KILL);
-				if(plugin.COINS_FOR_KILL == 1)
+			if(BGMain.REW && last_headshot != dp.getName() && BGMain.COINS_FOR_KILL != 0){
+				BGReward.giveCoins(killer.getName(), BGMain.COINS_FOR_KILL);
+				if(BGMain.COINS_FOR_KILL == 1)
 					BGChat.printPlayerChat(killer, "You got 1 Coin for killing "+dp.getName());
 				else
-					BGChat.printPlayerChat(killer, "You got "+plugin.COINS_FOR_KILL+" Coins for killing "+dp.getName());
+					BGChat.printPlayerChat(killer, "You got "+BGMain.COINS_FOR_KILL+" Coins for killing "+dp.getName());
 			}
 		}
 
@@ -1223,15 +1215,15 @@ public class BGListener implements Listener {
 			return;
 		}
 
-		if (plugin.DEATH_MSG) {
+		if (BGMain.DEATH_MSG) {
 			Player p = event.getEntity();
 
-			if (plugin.SQL_USE) {
-				Integer PL_ID = plugin.getPlayerID(p.getName());
+			if (BGMain.SQL_USE) {
+				Integer PL_ID = BGMain.getPlayerID(p.getName());
 
 				Integer KL_ID = null;
 				if (p.getKiller() != null) {
-					KL_ID = plugin.getPlayerID(p.getKiller().getName());
+					KL_ID = BGMain.getPlayerID(p.getKiller().getName());
 				} else {
 					KL_ID = null;
 				}
@@ -1243,21 +1235,21 @@ public class BGListener implements Listener {
 					
 				}
 
-				plugin.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `REF_KILLER` = "
+				BGMain.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `REF_KILLER` = "
 						+ KL_ID
 						+ ", `DEATH_REASON` = '"
 						+ cause
 						+ "' WHERE `REF_PLAYER` = "
 						+ PL_ID
-						+ " AND `REF_GAME` = " + plugin.SQL_GAMEID + " ;");
+						+ " AND `REF_GAME` = " + BGMain.SQL_GAMEID + " ;");
 			}
 			
 			Location light = p.getLocation();
 			p.kickPlayer(ChatColor.RED + event.getDeathMessage() + ".");
 			
 			BGChat.printDeathChat(event.getDeathMessage() + ".");
-			if (!plugin.ADV_CHAT_SYSTEM) {
-				BGChat.printDeathChat(this.plugin.getGamers().length + " players remaining.");
+			if (!BGMain.ADV_CHAT_SYSTEM) {
+				BGChat.printDeathChat(BGMain.getGamers().length + " players remaining.");
 				BGChat.printDeathChat("");
 			}
 			Bukkit.getServer().getWorlds().get(0).strikeLightningEffect(light.add(0, 100, 0));

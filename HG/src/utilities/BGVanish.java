@@ -8,16 +8,11 @@ import main.BGMain;
 import org.bukkit.entity.Player;
 
 public class BGVanish {
-	private static BGMain plugin;
 	Logger log = BGMain.getPluginLogger();
 	static ArrayList<String> vanished = new ArrayList<String>();
 
-	public BGVanish(BGMain ins) {
-		plugin = ins;
-	}
-
 	public static void makeVanished(Player p) {
-		for (Player player : plugin.getPlayers()) {
+		for (Player player : BGMain.getPlayers()) {
 			if (player.getName().equals(p.getName())) {
 				continue;
 			}
@@ -33,7 +28,7 @@ public class BGVanish {
 	}
 
 	public static void updateVanished() {
-		for (Player p : plugin.getPlayers())
+		for (Player p : BGMain.getPlayers())
 			if (isVanished(p)) {
 				makeVanished(p);
 			} else {
@@ -42,7 +37,7 @@ public class BGVanish {
 	}
 
 	public static void makeVisible(Player p) {
-		for (Player player : plugin.getPlayers()) {
+		for (Player player : BGMain.getPlayers()) {
 			player.showPlayer(p);
 		}
 		vanished.remove(p.getName());
