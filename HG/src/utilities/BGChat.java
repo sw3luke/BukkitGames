@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 public class BGChat {
-	private static BGMain plugin;
 	static Integer TIP_COUNT = 0;
 	static ArrayList<String> TIPS = new ArrayList<String>();
 	private static Logger log = BGMain.getPluginLogger();
@@ -33,9 +32,7 @@ public class BGChat {
 	
 	static Boolean update = true;
 
-	public BGChat(BGMain ins) {
-		plugin = ins;
-		
+	public BGChat() {		
 		CHAT_MSG[0] = "";
 		CHAT_MSG[1] = "";
 		CHAT_MSG[2] = "";
@@ -123,7 +120,7 @@ public class BGChat {
 			updateChat(player);
 			final Player pl = player;
 			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
+					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
 						public void run() {
 							BGChat.PLAYER_MSG.remove(pl);
 						}
@@ -139,7 +136,7 @@ public class BGChat {
 			updateChat();
 			final Player pl = player;
 			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
+					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
 						public void run() {
 							BGChat.HELP_CHAT.remove(pl);
 						}
@@ -178,7 +175,7 @@ public class BGChat {
 			updateChat();
 			final Player pl = player;
 			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
+					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
 						public void run() {
 							BGChat.KIT_CHAT.remove(pl);
 						}
@@ -226,7 +223,7 @@ public class BGChat {
 		                event.setWillClose(true);
 		                event.setWillDestroy(true);
 		            }
-		        }, plugin);
+		        }, BGMain.instance);
 			 
 			 Integer mypos = 0;
 			 Integer othpos = 1;
@@ -350,7 +347,7 @@ public class BGChat {
 			updateChat();
 			final Player pl = player;
 			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(plugin, new Runnable() {
+					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
 						public void run() {
 							BGChat.KITINFO_CHAT.remove(pl);
 						}

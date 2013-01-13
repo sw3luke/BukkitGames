@@ -194,8 +194,9 @@ public class BGMain extends JavaPlugin {
 	}
 
 	private void registerEvents() {
+		BGListener bl = new BGListener();
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(new BGListener(), this);
+		pm.registerEvents(bl, this);
 	}
 		
 	public void registerCommands() {
@@ -276,6 +277,7 @@ public class BGMain extends JavaPlugin {
 		registerEvents();
 		registerCommands();
 		new BGKit();
+		new BGChat();
 		
 		log.info("Loading configuration options.");
 		DEATH_SIGNS = Boolean.valueOf(getConfig().getBoolean("DEATH_SIGNS"));
@@ -711,10 +713,18 @@ public class BGMain extends JavaPlugin {
 				}
 				final Boolean R = REW;
 				final Integer CFW = COINS_FOR_WIN;
+				String text = "";
 				
-				BGChat.printPlayerChat(pl, "§6§lYOU HAVE WON THIS GAME!");
+				if(R && CFW != 0) {
+					text = "You got ";
+					if(CFW == 1)
+						text += "1 coin for winning the game!";
+					else
+						text += CFW+" coins for winning the game!";
+				} 
+				BGChat.printPlayerChat(pl, "§6§lYOU HAVE WON THIS GAME!" + text);
 				
-				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
+				final Integer s = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 					
 					@Override
 					public void run() {
@@ -735,19 +745,8 @@ public class BGMain extends JavaPlugin {
 					
 					@Override
 					public void run() {
-						if(R && CFW != 0) {
-							String text = "You got ";
-							if(CFW == 1)
-								text += "1 Coin for winning the game!";
-							else
-								text += CFW+" Coins for winning the game!";
-							pl.kickPlayer(ChatColor.GOLD
-									+ "You are the winner of this game!"+
-									'\n'+ text);
-						} else {
-							pl.kickPlayer(ChatColor.GOLD
-									+ "You are the winner of this game!");
-						}
+						Bukkit.getServer().getScheduler().cancelTask(s);
+						pl.kickPlayer("§6§lYOU HAVE WON THIS GAME!");
 						Bukkit.getServer().shutdown();
 					}
 					
