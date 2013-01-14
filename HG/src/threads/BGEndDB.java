@@ -13,7 +13,6 @@ public class BGEndDB extends Thread{
 	private Connection con;
 	
 	public BGEndDB(BGMain plugin, Logger log, Connection con) {
-		
 		setDaemon(false);
 		this.log = log;
 		this.con = con;
@@ -27,6 +26,7 @@ public class BGEndDB extends Thread{
 			con.close();
 		} catch (SQLException ex) {
 			log.warning("Error while closing the connection...");
+			log.warning(ex.getMessage());
 		} catch (NullPointerException ex) {
 			log.warning("Error while closing the connection...");
 		}

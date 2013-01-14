@@ -549,7 +549,7 @@ public class BGListener implements Listener {
 				BGChat.printKitChat(p);
 		}
 
-		if(BGMain.isSpectator(p)) {
+		if(BGMain.isSpectator(p) || BGMain.isGameMaker(p)) {
 			p.setPlayerListName(ChatColor.GRAY + getShortStr(p.getName()) + ChatColor.RESET);
 			p.setDisplayName(ChatColor.GRAY + p.getName() + ChatColor.RESET);
 		} else if (BGMain.winner(p)) {
@@ -572,7 +572,6 @@ public class BGListener implements Listener {
 		}
 		
 		if(!BGMain.DENY_LOGIN) {
-		//Creating a written book.
 		List<String> pages = BGFiles.bookconf.getStringList("content");
 		List<String> content = new ArrayList<String>();
 		List<String> page = new ArrayList<String>();
@@ -617,10 +616,7 @@ public class BGListener implements Listener {
 		}
 		
 		if (BGMain.REW) {
-			Integer PL_ID = BGMain.getCoins(BGMain.getPlayerID(playerName));
-			if (PL_ID == null) {
-				BGReward.createUser(playerName);
-			}
+			BGReward.createUser(playerName);
 		}
 		
 		if(p.hasPermission("bg.admin.check")) {
@@ -684,7 +680,7 @@ public class BGListener implements Listener {
 		}
 		
 		if (BGKit.hasAbility(p, 2) && b.getType() == Material.LOG) {
-			World w = Bukkit.getServer().getWorld(BGMain.WORLD_TEMPOARY_NAME);
+			World w = Bukkit.getServer().getWorlds().get(0);
 			Double y = b.getLocation().getY() + 1;
 			Location l = new Location(w, b.getLocation().getX(), y, b
 					.getLocation().getZ());

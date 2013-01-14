@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
+import org.bukkit.plugin.Plugin;
+
 
 import main.BGMain;
 
@@ -14,7 +16,7 @@ public class BGQuery extends Thread{
 	private Logger log;
 	private Connection con;
 	
-	public BGQuery(String sql, Logger log, Connection con, BGMain plugin) {
+	public BGQuery(String sql, Logger log, Connection con, Plugin plugin) {
 		
 		setDaemon(false);
 		
@@ -33,7 +35,7 @@ public class BGQuery extends Thread{
 		} catch (SQLException ex) {
 			log.warning("Error with following query: "
 					+ sql);
-			log.warning("MySQL-Error: " + ex.getMessage());
+			log.warning(ex.getMessage());
 			BGMain.SQLdisconnect();
 		} catch (NullPointerException ex) {
 			log.warning("Error while performing a query. (NullPointerException)");

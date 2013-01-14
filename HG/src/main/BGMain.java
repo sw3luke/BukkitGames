@@ -91,7 +91,6 @@ public class BGMain extends JavaPlugin {
 	public static Integer MINIMUM_PLAYERS = Integer.valueOf(1);
 	public static final Integer WINNER_PLAYERS = Integer.valueOf(1);
 	public static Integer END_GAME_TIME = Integer.valueOf(25);
-	public static final String WORLD_TEMPOARY_NAME = "world";
 	public static Boolean REGEN_WORLD = false;
 	public static Boolean RANDOM_START = false;
 	public static Boolean SHOW_TIPS = true;
@@ -163,7 +162,7 @@ public class BGMain extends JavaPlugin {
 		}
 		
 		log.info("Deleting old world.");
-		Bukkit.getServer().unloadWorld("world", false);
+		Bukkit.getServer().unloadWorld(Bukkit.getServer().getWorlds().get(0), false);
 		deleteDir(new File("world"));
 
 		Random r = new Random();
@@ -899,6 +898,7 @@ public class BGMain extends JavaPlugin {
 			log.warning("No MySQL driver found!");
 		} catch (SQLException ex) {
 			log.warning("Error while fetching MySQL connection!");
+			log.warning(ex.getMessage());
 		} catch (Exception ex) {
 			log.warning("Unknown error while fetchting MySQL connection.");
 		}
@@ -917,11 +917,8 @@ public class BGMain extends JavaPlugin {
 
 	public static void SQLdisconnect() {
 		BGEndDB end = new BGEndDB(instance, log, con);
-		
 		ExecutorService executor = Executors.newCachedThreadPool();
-		
 		executor.execute(end);
-		
 		executor.shutdown();
 	}
 	
