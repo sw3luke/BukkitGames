@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import utilities.BGChat;
+import utilities.enums.BorderType;
 
 public class WorldBorderTimer {
 
@@ -26,24 +27,31 @@ public class WorldBorderTimer {
 				
 				Random r = new Random();
 				for(Player p : BGMain.getPlayers()) {						
-					if (!BGMain.inBorder(p.getLocation())) {
-						BGChat.printPlayerChat(p, "§c" + BGMain.instance.getConfig().getString("MESSAGE.WORLD_BORDER"));
+					if (!BGMain.inBorder(p.getLocation(), BorderType.STOP)) {
+						BGChat.printPlayerChat(p, "§c§l" + BGMain.instance.getConfig().getString("MESSAGE.WORLD_BORDER"));
 						
-						if(BGMain.isGameMaker(p) || BGMain.isSpectator(p)) {
+						if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.DENY_DAMAGE_PLAYER) {
+							if(p.isInsideVehicle())
+								p.getVehicle().eject();
 							p.teleport(locations.containsKey(p) ? locations.get(p) : BGMain.getSpawn());
 							locations.put(p, p.getLocation());
 							continue;
 						}
 						
-						p.damage(r.nextBoolean() ? 2 : 1);
+						p.damage(r.nextBoolean() ? 4 : 3);
+						continue;
 					}
 					
-					if(BGMain.isGameMaker(p) || BGMain.isSpectator(p))
+					if(!BGMain.inBorder(p.getLocation(), BorderType.WARN) && BGMain.DENY_LOGIN) {
+						BGChat.printPlayerChat(p, "§c§o" + "You are coming close the world-border!");
+					}
+					
+					if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.DENY_DAMAGE_PLAYER)
 						locations.put(p, p.getLocation());
 				}
 			}
 			
-		}, 0, 20*5);
+		}, 0, 20*2);
 	}
 	
 	public static void cancel() {

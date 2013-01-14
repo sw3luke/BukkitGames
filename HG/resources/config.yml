@@ -73,9 +73,6 @@ TEAM: true
 # Death signs mark Player death places! (Lines can be configured in deathsign.yml).
 DEATH_SIGNS: true
 
-# What should the server run in order to restart the server?
-RESTART_SERVER_COMMAND: 'stop'
-
 # Regenerate world? (true: every round there will be a new world/ false: see world.yml for configs).
 REGEN_WORLD: true
 

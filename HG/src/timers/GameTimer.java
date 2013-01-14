@@ -19,7 +19,7 @@ public class GameTimer {
 			@Override
 			public void run() {
 				BGMain.GAME_RUNNING_TIME++;
-
+				BGChat.printTimeChat("");
 				BGMain.checkwinner();
 				BGVanish.updateVanished();
 

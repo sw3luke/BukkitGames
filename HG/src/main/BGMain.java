@@ -66,6 +66,7 @@ import utilities.BGReward;
 import utilities.BGVanish;
 import utilities.Border;
 import utilities.Metrics;
+import utilities.enums.BorderType;
 
 import events.BGListener;
 
@@ -127,7 +128,6 @@ public class BGMain extends JavaPlugin {
 	public static Boolean SPECTATOR_SYSTEM = false;
 	public static Boolean SQL_DSC = false;
 	public static Location spawn;
-	public static String STOP_CMD = "";
 	public static String LAST_WINNER = "";
 	public static ArrayList<Player> spectators = new ArrayList<Player>();
 	public static ArrayList<Player> gamemakers = new ArrayList<Player>();
@@ -324,7 +324,6 @@ public class BGMain extends JavaPlugin {
 		END_GAME_TIME = Integer.valueOf(getConfig().getInt("TIME.INCREASE_DIFFICULTY-MIN"));
 		COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
-		STOP_CMD = getConfig().getString("RESTART_SERVER_COMMAND");
 		ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
 		
 		if (ADV_ABI) {
@@ -345,8 +344,8 @@ public class BGMain extends JavaPlugin {
 			BGCornucopia.createCorn();
 		}
 		
-		if(BGMain.WORLDRADIUS.intValue() < 50) {
-			log.warning("Worldborder radius has to be 50 or higher!");
+		if(BGMain.WORLDRADIUS < 60) {
+			log.warning("Worldborder radius has to be 60 or higher!");
 			getServer().getPluginManager().disablePlugin(this);
 		}
 
@@ -377,12 +376,14 @@ public class BGMain extends JavaPlugin {
 		World thisWorld = getServer().getWorlds().get(0);
 		spawn = thisWorld.getSpawnLocation();
 
-		Border newBorder = new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS.intValue());
+		Border newBorder1 = new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS, BorderType.STOP);
+		Border newBorder2 = new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS - 10, BorderType.WARN);
 		if (!BORDERS.containsKey(thisWorld)) {
 			ArrayList<Border> newArray = new ArrayList<Border>();
 			BORDERS.put(thisWorld, newArray);
 		}
-		((ArrayList<Border>) BORDERS.get(thisWorld)).add(newBorder);
+		((ArrayList<Border>) BORDERS.get(thisWorld)).add(newBorder1);
+		((ArrayList<Border>) BORDERS.get(thisWorld)).add(newBorder2);
 
 		COUNTDOWN = COUNTDOWN_SECONDS;
 		FINAL_COUNTDOWN = FINAL_COUNTDOWN_SECONDS;
@@ -441,7 +442,7 @@ public class BGMain extends JavaPlugin {
 		log.info("Plugin disabled");
 		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
 		
-		getServer().dispatchCommand(getServer().getConsoleSender(), STOP_CMD);
+		Bukkit.getServer().shutdown();
 	}
 
 	private void copyDirectory(File sourceLocation, File targetLocation)
@@ -486,10 +487,13 @@ public class BGMain extends JavaPlugin {
 		}
 	}
 
-	public static boolean inBorder(Location checkHere) {
+	public static boolean inStopBorder(Location checkHere) {
 		if (!BORDERS.containsKey(checkHere.getWorld()))
 			return true;
+		
 		for (Border amIHere : BORDERS.get(checkHere.getWorld())) {
+			if(amIHere.type != BorderType.STOP)
+				continue;
 			int X = (int) Math.abs(amIHere.centerX - checkHere.getBlockX());
 			int Z = (int) Math.abs(amIHere.centerZ - checkHere.getBlockZ());
 			if ((X < amIHere.definiteSq) && (Z < amIHere.definiteSq))
@@ -502,6 +506,39 @@ public class BGMain extends JavaPlugin {
 		return false;
 	}
 	
+	public static boolean inBorder(Location c, BorderType t) {
+		if(t == BorderType.STOP) {
+			return inStopBorder(c);
+		}
+		
+		if(t == BorderType.WARN) {
+			if(!inWarnBorder(c) && inStopBorder(c))
+				return false;
+			else
+				return true;
+		}
+		return true;
+	}
+	
+	public static boolean inWarnBorder(Location checkHere) {
+		if (!BORDERS.containsKey(checkHere.getWorld()))
+			return true;
+		
+		for (Border amIHere : BORDERS.get(checkHere.getWorld())) {
+			if(amIHere.type != BorderType.WARN)
+				continue;
+			int X = (int) Math.abs(amIHere.centerX - checkHere.getBlockX());
+			int Z = (int) Math.abs(amIHere.centerZ - checkHere.getBlockZ());
+			if ((X < amIHere.definiteSq) && (Z < amIHere.definiteSq))
+				return true;
+			if ((X > amIHere.radius) || (Z > amIHere.radius))
+				continue;
+			if (X * X + Z * Z < amIHere.radiusSq)
+				return true;
+		}
+		return false;
+	}
+		
 	public static Location getSpawn() {
 		Location loc = Bukkit.getWorlds().get(0).getSpawnLocation();
 		loc.setY(Bukkit.getWorlds().get(0).getHighestBlockYAt(Bukkit.getWorlds().get(0).getSpawnLocation()) + 1.5);
@@ -605,7 +642,7 @@ public class BGMain extends JavaPlugin {
 				p.teleport(loc);
 			} else {
 				Location tploc = getRandomLocation();
-				while(!inBorder(tploc)) {
+				while(!inBorder(tploc,BorderType.WARN)) {
 					tploc = getRandomLocation();
 				}
 				tploc.setY(Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(tploc) + 1.5);
@@ -669,7 +706,7 @@ public class BGMain extends JavaPlugin {
 				(random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS));
 			int newY = Bukkit.getWorlds().get(0).getHighestBlockYAt(loc);
 			loc.setY(newY);
-		} while(!BGMain.inBorder(loc));
+		} while(!BGMain.inBorder(loc, BorderType.WARN));
 		return loc;
 	}
 
@@ -696,7 +733,8 @@ public class BGMain extends JavaPlugin {
 				
 				final Player pl = getGamers()[0];
 				pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1.0F, (byte) 1);
-								
+				DENY_DAMAGE_PLAYER = true;
+				
 				if(SQL_USE) {
 					Integer PL_ID = getPlayerID(winnername);
 					SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'WINNER' WHERE `REF_PLAYER` = "

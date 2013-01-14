@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import utilities.BGChat;
 import utilities.BGKit;
 import utilities.BGTeam;
+import utilities.enums.BorderType;
 
 public class BGPlayer implements CommandExecutor{
 
@@ -247,9 +248,8 @@ public class BGPlayer implements CommandExecutor{
 					
 					Location loc = new Location(Bukkit.getServer().getWorlds().get(0), x, Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(x, z)+1.5, z);
 					
-					if(!BGMain.inBorder(loc)) {
-						
-						BGChat.printPlayerChat(p, "§eThis cords are not in the worldborder!");
+					if(!BGMain.inBorder(loc, BorderType.WARN)) {
+						BGChat.printPlayerChat(p, "§eThis coords are not in the worldborder!");
 						return true;
 					}
 					BGChat.printPlayerChat(p, "§eTeleport to X: "+x+" Z: "+z);
