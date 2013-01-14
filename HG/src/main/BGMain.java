@@ -56,6 +56,7 @@ import threads.BGQuery;
 import timers.GameTimer;
 import timers.InvincibilityTimer;
 import timers.PreGameTimer;
+import timers.WorldBorderTimer;
 import utilities.BGChat;
 import utilities.BGCornucopia;
 import utilities.BGDisguise;
@@ -327,7 +328,7 @@ public class BGMain extends JavaPlugin {
 		ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
 		
 		if (ADV_ABI) {
-			log.info("Enabeling the advanced abilities.");
+			log.info("Enableing the advanced abilities.");
 			new BGDisguise();
 		}
 		
@@ -406,7 +407,8 @@ public class BGMain extends JavaPlugin {
 		Location loc = randomLocation(spawn.getChunk()).add(0.0D, 30.0D,0.0D);
 		Bukkit.getServer().getWorlds().get(0).loadChunk(loc.getChunk());
 		new PreGameTimer();
-
+		new WorldBorderTimer();
+		
 		PluginDescriptionFile pdfFile = getDescription();
 		log.info("Plugin enabled");
 		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
@@ -434,7 +436,7 @@ public class BGMain extends JavaPlugin {
 			p.kickPlayer(ChatColor.YELLOW + "Server is restarting!");
 		}
 		
-		Bukkit.getServer().unloadWorld("world", false);
+		Bukkit.getServer().unloadWorld(Bukkit.getServer().getWorlds().get(0), false);
 		
 		log.info("Plugin disabled");
 		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
@@ -667,7 +669,7 @@ public class BGMain extends JavaPlugin {
 				(random.nextBoolean() ? 1 : -1) * random.nextInt(WORLDRADIUS));
 			int newY = Bukkit.getWorlds().get(0).getHighestBlockYAt(loc);
 			loc.setY(newY);
-		}while(!BGMain.inBorder(loc));
+		} while(!BGMain.inBorder(loc));
 		return loc;
 	}
 

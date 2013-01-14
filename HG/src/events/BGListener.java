@@ -10,7 +10,6 @@ import main.BGMain;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.CropState;
-import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,7 +24,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -56,12 +54,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.potion.PotionEffect;
@@ -105,28 +103,6 @@ public class BGListener implements Listener {
 			event.setCancelled(true);
 	}
 	
-	@EventHandler
-	public void onVehicleMove(VehicleMoveEvent event) {
-		if (BGMain.DENY_CHECK_WORLDBORDER.booleanValue()) {
-			return;
-		}
-		if (BGMain.inBorder(event.getTo()))
-			return;
-		Vehicle s = event.getVehicle();
-		if (s.isEmpty())
-			return;
-		Entity Passenger = s.getPassenger();
-		if (!(Passenger instanceof Player))
-			return;
-
-		BGChat.printPlayerChat((Player) Passenger, BGMain.WORLD_BORDER_MSG);
-		s.teleport(event.getFrom());
-		Bukkit.getServer().getWorlds().get(0)
-				.playEffect(s.getLocation(), Effect.ENDER_SIGNAL, 5);
-		Bukkit.getServer().getWorlds().get(0)
-				.playEffect(s.getLocation(), Effect.SMOKE, 5);
-	}
-
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
@@ -458,33 +434,6 @@ public class BGListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerOutBorder(PlayerMoveEvent event) {
-		Player p = event.getPlayer();
-		if (BGMain.DENY_CHECK_WORLDBORDER.booleanValue()) {
-			return;
-		}
-		if (!BGMain.inBorder(event.getTo())) {
-			if (BGMain.inBorder(event.getFrom())) {
-				BGChat.printPlayerChat(p, BGMain.WORLD_BORDER_MSG);
-				event.setTo(event.getFrom());
-				p.teleport(event.getFrom());
-				Bukkit.getServer().getWorlds().get(0)
-						.playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 5);
-				Bukkit.getServer().getWorlds().get(0)
-						.playEffect(p.getLocation(), Effect.SMOKE, 5);
-				return;
-			}
-			p.teleport(p.getWorld().getSpawnLocation().add(0.0D, 20.0D, 0.0D));
-			
-			Bukkit.getServer().getWorlds().get(0)
-					.playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 5);
-			
-			Bukkit.getServer().getWorlds().get(0)
-					.playEffect(p.getLocation(), Effect.SMOKE, 5);
-		}
-	}
-
-	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
 		
@@ -500,7 +449,7 @@ public class BGListener implements Listener {
 					break;
 				}
 			}
-			if (found.booleanValue())
+			if (found)
 				break;
 		}
 		if (!found.booleanValue()) {
@@ -556,6 +505,9 @@ public class BGListener implements Listener {
 
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		if(event.getCause() == TeleportCause.NETHER_PORTAL || event.getCause() == TeleportCause.END_PORTAL)
+			event.setCancelled(true);
+		
 		BGVanish.updateVanished();
 	}
 
@@ -640,6 +592,7 @@ public class BGListener implements Listener {
 		page.clear();
 		
 		ItemStack item = new ItemStack(387,1);
+		
 		BookMeta im = (BookMeta) item.getItemMeta();
 			im.setPages(content);
 			im.setAuthor(BGFiles.bookconf.getString("author"));
