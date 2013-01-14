@@ -13,6 +13,7 @@ import org.bukkit.CropState;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -125,6 +126,7 @@ public class BGListener implements Listener {
 						PotionEffectType.INCREASE_DAMAGE, BGFiles.abconf.getInt("AB.5.Duration") * 20, 0));
 				p.getInventory().removeItem(
 						new ItemStack[] { new ItemStack(Material.COOKIE, 1) });
+				p.playSound(p.getLocation(), Sound.BURP, 1.0F, (byte) 1);
 			}
 		}
 		
@@ -136,11 +138,8 @@ public class BGListener implements Listener {
 				Vector lookat = player.getLocation().getDirection().multiply(10);
 				fire = player.getWorld().spawn(player.getLocation().add(lookat), Fireball.class);
 				fire.setShooter(player);
-
-				p.getInventory()
-						.removeItem(
-								new ItemStack[] { new ItemStack(
-										Material.FIREBALL, 1) });
+				p.playSound(p.getLocation(), Sound.FIRE, 1.0F, (byte) 1);
+				p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.FIREBALL, 1) });
 			}
 		}
 		
@@ -179,8 +178,9 @@ public class BGListener implements Listener {
 						}
 						player.hidePlayer(p);
 					}
+					p.playSound(p.getLocation(), Sound.PORTAL_TRIGGER, 1.0F, (byte) 1);
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.invisible"));
-				}else {
+				} else {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
 				}
 			}
@@ -195,7 +195,7 @@ public class BGListener implements Listener {
 					p.getInventory().removeItem(new ItemStack[] {new ItemStack(Material.WATCH,1)});
 					
 					int radius = BGFiles.abconf.getInt("AB.22.radius");
-					
+					p.playSound(p.getLocation(), Sound.AMBIENCE_CAVE, 1.0F, (byte) 1);
 					List<Entity> entities = p.getNearbyEntities(radius+30, radius+30, radius+30);
 					for(Entity e : entities) {
 						
@@ -214,6 +214,7 @@ public class BGListener implements Listener {
 							text = text.replace("<player>", p.getName());
 							BGChat.printPlayerChat(target, text);
 							BGCooldown.freezeCooldown(target);
+							p.playSound(p.getLocation(), Sound.AMBIENCE_CAVE, 1.0F, (byte) 1);
 						}	
 					}
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.22.success"));
@@ -250,8 +251,10 @@ public class BGListener implements Listener {
 					break;
 				}
 
-				if (found.booleanValue())
+				if (found.booleanValue()) {
+					p.playSound(p.getLocation(), Sound.CLICK, 1.0F, (byte) 1);
 					break;
+				}
 			}
 			if (!found.booleanValue()) {
 				BGChat.printPlayerChat(p,
@@ -464,6 +467,7 @@ public class BGListener implements Listener {
 			if (e.getEntityType() == EntityType.PIG) {
 				e.getDrops().clear();
 				e.getDrops().add(new ItemStack(Material.PORK, BGFiles.abconf.getInt("AB.7.Amount")));
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 			}
 		}
 	}
@@ -479,6 +483,7 @@ public class BGListener implements Listener {
 					if (e.getDamage() > 4) {
 						e.setCancelled(true);
 						p.damage(4);
+						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 					}
 					List<Entity> nearbyEntities = e.getEntity()
 							.getNearbyEntities(5, 5, 5);
@@ -688,6 +693,7 @@ public class BGListener implements Listener {
 				y++;
 				l.setY(y);
 			}
+			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 		}		
 	}
 	
@@ -758,15 +764,19 @@ public class BGListener implements Listener {
 		
 		Block block = event.getBlockPlaced();
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.CROPS) {
+			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 			block.setData(CropState.RIPE.getData());
 		}
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.MELON_SEEDS) {
+			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 			block.setData(CropState.RIPE.getData());
 		}
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.PUMPKIN_SEEDS) {
+			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 			block.setData(CropState.RIPE.getData());
 		}
 		if (BGKit.hasAbility(p, 10) && block.getType() == Material.SAPLING) {
+			p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 			TreeType t = getTree(block.getData());
 			Bukkit.getServer().getWorlds().get(0).generateTree(block.getLocation(), t);
 		}
@@ -931,6 +941,7 @@ public class BGListener implements Listener {
 								BGChat.printDeathChat(v.getName()
 										+ " was headshotted by " + p.getName()
 										+ ".");
+								p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 								if (!BGMain.ADV_CHAT_SYSTEM) {
 									BGChat.printDeathChat((BGMain
 											.getGamers().length - 1)
@@ -1008,6 +1019,7 @@ public class BGListener implements Listener {
 							def.getInventory().clear(def.getInventory().getHeldItemSlot());
 							BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.13.Success"));
 							BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.13.Success"));
+							dam.playSound(dam.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 						}
 					}else {
 						
@@ -1027,6 +1039,7 @@ public class BGListener implements Listener {
 							def.getInventory().clear(def.getInventory().getHeldItemSlot());
 							BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.15.Success"));
 							BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.15.Success"));
+							dam.playSound(dam.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 						}
 					}else {
 						
@@ -1044,6 +1057,7 @@ public class BGListener implements Listener {
 						BGChat.printPlayerChat(dam, BGFiles.abconf.getString("AB.19.Damager"));
 						BGChat.printPlayerChat(def, BGFiles.abconf.getString("AB.19.Defender"));
 						BGCooldown.viperCooldown(def);
+						dam.playSound(dam.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 					}
 				}
 			}
@@ -1057,7 +1071,7 @@ public class BGListener implements Listener {
 			}
 			
 			if (BGKit.hasAbility(dam, 18) && dam.getItemInHand().getType() == Material.AIR) {
-				
+
 				event.setDamage(event.getDamage()+ 4);
 			}
 		}
@@ -1092,6 +1106,7 @@ public class BGListener implements Listener {
 						PotionEffectType.INCREASE_DAMAGE, 200, 1));
 				p.addPotionEffect(new PotionEffect(
 						PotionEffectType.FIRE_RESISTANCE, 260, 1));
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 			}
 		}
 		

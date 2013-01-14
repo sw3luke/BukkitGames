@@ -7,6 +7,7 @@ import main.BGMain;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import utilities.BGChat;
@@ -28,6 +29,7 @@ public class WorldBorderTimer {
 				Random r = new Random();
 				for(Player p : BGMain.getPlayers()) {						
 					if (!BGMain.inBorder(p.getLocation(), BorderType.STOP)) {
+						p.playSound(p.getLocation(), Sound.FIZZ, 1.0F, (byte) 1);
 						BGChat.printPlayerChat(p, "§c§l" + BGMain.instance.getConfig().getString("MESSAGE.WORLD_BORDER"));
 						
 						if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.DENY_DAMAGE_PLAYER) {
@@ -43,7 +45,8 @@ public class WorldBorderTimer {
 					}
 					
 					if(!BGMain.inBorder(p.getLocation(), BorderType.WARN) && BGMain.DENY_LOGIN) {
-						BGChat.printPlayerChat(p, "§c§o" + "You are coming close the world-border!");
+						p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, (byte) 1);
+						BGChat.printPlayerChat(p, "§c§o" + "You are coming close to the world-border!");
 					}
 					
 					if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.DENY_DAMAGE_PLAYER)
