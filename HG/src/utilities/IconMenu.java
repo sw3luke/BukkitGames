@@ -1,13 +1,12 @@
 package utilities;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
- 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -18,64 +17,57 @@ import org.bukkit.plugin.Plugin;
 public class IconMenu implements Listener {
  
     private String name;
+    private String owner;
     private int size;
     private OptionClickEventHandler handler;
     private Plugin plugin;
-    private Boolean reg = false;
-    private HashMap<Player, String[]> optionNames = new HashMap<Player, String[]>();
-    private HashMap<Player, ItemStack[]> optionIcons = new HashMap<Player, ItemStack[]>();
+   
+    private String[] optionNames;
+    private ItemStack[] optionIcons;
     
-    
-    public IconMenu(Player p, String name, int size, OptionClickEventHandler handler, Plugin plugin) {
+    public IconMenu(String name, String owner, int size, OptionClickEventHandler handler, Plugin plugin) {
         this.name = name;
         this.size = size;
+        this.owner = owner;
         this.handler = handler;
         this.plugin = plugin;
-        if(optionNames.containsKey(p))
-        	optionNames.remove(p);
-        if(optionIcons.containsKey(p))
-        	optionIcons.remove(p);
-        optionNames.put(p, new String[size]);
-        optionIcons.put(p, new ItemStack[size]);
-        
-        if(!reg) {
-        	Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
-        	reg = true;
-        }
+        this.optionNames = new String[size];
+        this.optionIcons = new ItemStack[size];
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
    
-    public IconMenu setOption(Player p, int position, ItemStack icon, String name, String... info) {
-        optionNames.get(p)[position] = name;
-        optionIcons.get(p)[position] = setItemNameAndLore(icon, name, info);
+    public IconMenu setOption(int position, ItemStack icon, String name, String... info) {
+        optionNames[position] = name;
+        optionIcons[position] = setItemNameAndLore(icon, name, info);
         return this;
     }
    
     public void open(Player player) {
         Inventory inventory = Bukkit.createInventory(player, size, name);
-        for (int i = 0; i < optionIcons.get(player).length; i++) {
-            if (optionIcons.get(player)[i] != null) {
-                inventory.setItem(i, optionIcons.get(player)[i]);
+        for (int i = 0; i < optionIcons.length; i++) {
+            if (optionIcons[i] != null) {
+                inventory.setItem(i, optionIcons[i]);
             }
         }
         player.openInventory(inventory);
     }
    
-    public void destroy(Player p) {
-        //HandlerList.unregisterAll(this);
-        //handler = null;
-        //plugin = null;
-        optionNames.remove(p);
-        optionIcons.remove(p);
+    public void destroy() {
+        HandlerList.unregisterAll(this);
+        handler = null;
+        plugin = null;
+        optionNames = null;
+        optionIcons = null;
     }
    
     @EventHandler(priority=EventPriority.MONITOR)
     void onInventoryClick(InventoryClickEvent event) {
-        if (event.getInventory().getTitle().equals(name)) {
+        if (event.getInventory().getTitle().equals(name) && event.getWhoClicked().getName().equals(owner)) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
-            if (slot >= 0 && slot < size && optionNames.containsKey((Player) event.getWhoClicked()) && optionNames.get((Player) event.getWhoClicked())[slot] != null) {
+            if (slot >= 0 && slot < size && optionNames[slot] != null) {
                 Plugin plugin = this.plugin;
-                OptionClickEvent e = new OptionClickEvent((Player)event.getWhoClicked(), slot, optionNames.get((Player) event.getWhoClicked())[slot]);
+                OptionClickEvent e = new OptionClickEvent((Player)event.getWhoClicked(), slot, optionNames[slot]);
                 handler.onOptionClick(e);
                 if (e.willClose()) {
                     final Player p = (Player)event.getWhoClicked();
@@ -86,7 +78,7 @@ public class IconMenu implements Listener {
                     }, 1);
                 }
                 if (e.willDestroy()) {
-                    destroy((Player) event.getWhoClicked());
+                    destroy();
                 }
             }
         }
@@ -104,11 +96,11 @@ public class IconMenu implements Listener {
         private boolean destroy;
        
         public OptionClickEvent(Player player, int position, String name) {
-        	this.player = player;
-        	this.position = position;
-        	this.name = name;
-            close = true;
-            destroy = false;
+            this.player = player;
+            this.position = position;
+            this.name = name;
+            this.close = true;
+            this.destroy = false;
         }
        
         public Player getPlayer() {
@@ -136,16 +128,16 @@ public class IconMenu implements Listener {
         }
        
         public void setWillDestroy(boolean destroy) {
-        	this.destroy = destroy;
+            this.destroy = destroy;
         }
     }
    
     private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
     	ItemMeta im = item.getItemMeta();
-			im.setDisplayName(name);
-			im.setLore(Arrays.asList(lore));
-		item.setItemMeta(im);
-		return item;
+    		im.setDisplayName(name);
+    		im.setLore(Arrays.asList(lore));
+    	item.setItemMeta(im);
+        return item;
     }
    
 }

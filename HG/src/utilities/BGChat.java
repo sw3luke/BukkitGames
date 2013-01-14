@@ -29,6 +29,7 @@ public class BGChat {
 	static HashMap<Player, String> KITINFO_CHAT = new HashMap<Player, String>();
 	static String[] CHAT_MSG = new String[6];
 	static HashMap<Integer, String> ABILITY_DESC = new HashMap<Integer, String>();
+	static HashMap<Player, IconMenu> MENUS = new HashMap<Player, IconMenu>();
 	
 	static Boolean update = true;
 
@@ -215,13 +216,18 @@ public class BGChat {
 				 }
 			 }
 			 
+			 if(MENUS.containsKey(player)) {
+				 MENUS.get(player).destroy();
+				 MENUS.remove(player);
+			 }
+			 
 			 final Player pl = player;
-			 IconMenu menu = new IconMenu(pl, "Select a kit", invsize, new IconMenu.OptionClickEventHandler() {
+			 IconMenu menu = new IconMenu("Select a kit", pl.getName(), invsize, new IconMenu.OptionClickEventHandler() {
 		            @Override
 		            public void onOptionClick(IconMenu.OptionClickEvent event) {
 		            	BGKit.setKit(pl, ChatColor.stripColor(event.getName()));
 		                event.setWillClose(true);
-		                event.setWillDestroy(true);
+		                event.setWillDestroy(false);
 		            }
 		        }, BGMain.instance);
 			 
@@ -306,7 +312,7 @@ public class BGChat {
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(pl, mypos, new ItemStack(kitem, 1), "§a" + kitname, info);
+							menu.setOption(mypos, new ItemStack(kitem, 1), "§a" + kitname, info);
 							mypos++;
 						} else {
 							if(BGMain.REW) {
@@ -319,7 +325,7 @@ public class BGChat {
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(pl, invsize - othpos, new ItemStack(kitem, 1), "§c" + kitname, info);
+							menu.setOption(invsize - othpos, new ItemStack(kitem, 1), "§c" + kitname, info);
 							othpos++;
 						}
 					container.clear();
@@ -328,6 +334,7 @@ public class BGChat {
 					e.printStackTrace();
 				}	
 			 }
+			 MENUS.put(pl, menu);
 			 menu.open(player);
 		}
 	}

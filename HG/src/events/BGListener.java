@@ -1120,7 +1120,6 @@ public class BGListener implements Listener {
 		}
 		
 		if(BGKit.hasAbility(dp, 23)) {
-			
 			Bukkit.getServer().getWorlds().get(0).createExplosion(dp.getLocation(), 2.5F, BGFiles.abconf.getBoolean("AB.23.Burn"));
 		}
 		
