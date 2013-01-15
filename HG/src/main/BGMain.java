@@ -162,7 +162,7 @@ public class BGMain extends JavaPlugin {
 		}
 		
 		log.info("Deleting old world.");
-		Bukkit.getServer().unloadWorld(Bukkit.getServer().getWorlds().get(0), false);
+		Bukkit.getServer().unloadWorld("world", false);
 		deleteDir(new File("world"));
 
 		Random r = new Random();
