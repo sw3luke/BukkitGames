@@ -83,20 +83,7 @@ public class BGConsole implements CommandExecutor {
 		
 		if(cmd.getName().equalsIgnoreCase("bgversion")) {
 			if(sender.hasPermission("bg.admin.check")) {
-				Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-				if (update) {
-					String newversion = updater.getLatestVersionString();
-					if(p != null)
-						BGChat.printPlayerChat(p, "§6Update available: " + newversion + " §r/bgdownload");
-					else
-						sender.sendMessage("§6Update available: " + newversion + " §r/bgdownload");
-				} else {
-					if(p != null)
-						BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
-					else
-						sender.sendMessage("§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
-				}
+				BGMain.checkVersion(sender, p);
 			} else {
 				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
 				return true;

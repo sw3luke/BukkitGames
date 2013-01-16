@@ -38,6 +38,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.FireworkEffect.Type;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -66,6 +67,7 @@ import utilities.BGReward;
 import utilities.BGVanish;
 import utilities.Border;
 import utilities.Metrics;
+import utilities.Updater;
 import utilities.enums.BorderType;
 
 import events.BGListener;
@@ -1010,5 +1012,22 @@ public class BGMain extends JavaPlugin {
 	
 	public static File getPFile() {
 		return instance.getFile();
+	}
+	
+	public static void checkVersion(CommandSender sender, Player p) {
+		Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+		boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+		if (update) {
+			String newversion = updater.getLatestVersionString();
+			if(p != null)
+				BGChat.printPlayerChat(p, "§6Update available: " + newversion + " §r/bgdownload");
+			else
+				sender.sendMessage("§6Update available: " + newversion + " §r/bgdownload");
+		} else {
+			if(p != null)
+				BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
+			else
+				sender.sendMessage("§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
+		}
 	}
 }

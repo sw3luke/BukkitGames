@@ -81,7 +81,6 @@ import utilities.BGReward;
 import utilities.BGSign;
 import utilities.BGTeam;
 import utilities.BGVanish;
-import utilities.Updater;
 
 public class BGListener implements Listener {
 	Logger log = BGMain.getPluginLogger();
@@ -620,15 +619,7 @@ public class BGListener implements Listener {
 		}
 		
 		if(p.hasPermission("bg.admin.check")) {
-			if(!BGMain.instance.getDescription().getVersion().contains("-DEV")) {
-				Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-			
-				if (update) {
-					String newversion = updater.getLatestVersionString();
-					BGChat.printPlayerChat(p, "§bUpdate available: " + newversion + " §r/bgdownload");
-				}
-			}
+			BGMain.checkVersion(null, p);
 		}
 	}
 

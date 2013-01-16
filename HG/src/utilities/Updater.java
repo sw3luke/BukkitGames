@@ -552,6 +552,7 @@ public class Updater
             if(title.split("v").length == 2)
             {
                 String remoteVersion = title.split("v")[1].split(" ")[0]; // Get the newest file's version number
+              //TODO: Check if build is DEV and announce when there is a new DEV build out
                 if(hasTag(version) || version.equalsIgnoreCase(remoteVersion))
                 {
                     // We already have the latest version, or this build is tagged for no-update
