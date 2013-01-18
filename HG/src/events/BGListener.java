@@ -358,6 +358,10 @@ public class BGListener implements Listener {
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		if(BGMain.isSpectator(event.getPlayer())) {
 			event.setCancelled(true);
+			event.getPlayer().getInventory().clear();
+			for(int i=0;i<=8;i++) {
+				event.getPlayer().getInventory().setItem(i, new ItemStack(Material.CROPS, 1));
+			}
 			return;
 		}
 		if (BGMain.DENY_ITEMDROP.booleanValue())
