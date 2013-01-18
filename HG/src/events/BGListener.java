@@ -167,7 +167,7 @@ public class BGListener implements Listener {
 					Player[] players = Bukkit.getServer().getOnlinePlayers();
 					
 					BGCooldown.showPlayerCooldown(p, players);
-					p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.APPLE, 1)});
+					p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.APPLE, 1) });
 					for(Player player : players) {
 						if(player.getName().equals(p.getName())) {
 							continue;
@@ -227,8 +227,7 @@ public class BGListener implements Listener {
 			e.printStackTrace();
 		}
 
-		if ((p.getItemInHand().getType() == Material.COMPASS & BGMain.COMPASS
-				.booleanValue())) {
+		if ((p.getItemInHand().getType() == Material.COMPASS & BGMain.COMPASS)) {
 			Boolean found = Boolean.valueOf(false);
 			for (int i = 0; i < 300; i++) {
 				List<Entity> entities = p.getNearbyEntities(i, 64.0D, i);
@@ -251,7 +250,6 @@ public class BGListener implements Listener {
 				}
 
 				if (found.booleanValue()) {
-					p.playSound(p.getLocation(), Sound.CLICK, 1.0F, (byte) 1);
 					break;
 				}
 			}
