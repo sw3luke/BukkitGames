@@ -767,7 +767,6 @@ public class BGMain extends JavaPlugin {
 				
 				final Integer s = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 					
-					@Override
 					public void run() {
 						Random r = new Random();
 						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(0, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
