@@ -170,6 +170,15 @@ public class BGListener implements Listener {
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.Expired"));
 				}
 			}
+			
+			if (BGKit.hasAbility(p, 21) && p.getItemInHand()
+					.getType() == Material.POTATO && (a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {
+				
+				p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.POTATO, 1) });
+				p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, BGFiles.abconf.getInt("AB.21.Duration") * 20, 1));
+				p.playSound(p.getLocation(), Sound.ENDERMAN_IDLE, 1.0F, (byte) 1);
+			}
+			
 			if(BGKit.hasAbility(p, 22) && !BGMain.DENY_DAMAGE_PLAYER &&
 					p.getItemInHand().getType() == Material.WATCH &&
 					(a == Action.RIGHT_CLICK_AIR || a == Action.RIGHT_CLICK_BLOCK)) {

@@ -45,7 +45,7 @@ AB:
     Expired: Cooldown has not expired!
     Success: Item was stolen.
   '16':
-    Desc: If you eat an apple you are invisible for 6 seconds.
+    Desc: If you eat an apple you are invisible for some seconds.
     Cooldown: 60
     Expired: Cooldown has not expired!
     Duration: 6
@@ -66,7 +66,8 @@ AB:
   '20':
     Desc: Mobs don't attack you until you attack them first.
   '21':
-    Desc: You can see people with Ghost Ability.
+    Desc: You can see in the night, when eating a potato!
+    Duration: 10
   '22':
     Desc: You can freeze other players with a watch!
     radius: 30
