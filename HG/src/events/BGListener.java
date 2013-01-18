@@ -132,11 +132,9 @@ public class BGListener implements Listener {
 		if (a == Action.LEFT_CLICK_BLOCK || a == Action.LEFT_CLICK_AIR) {
 			if (BGKit.hasAbility(p, Integer.valueOf(4)) && p.getItemInHand() != null && 
 					p.getItemInHand().getType().equals(Material.FIREBALL)) {
-				Player player = p;
-				Fireball fire;
-				Vector lookat = player.getLocation().getDirection().multiply(10);
-				fire = player.getWorld().spawn(player.getLocation().add(lookat), Fireball.class);
-				fire.setShooter(player);
+				Vector lookat = p.getLocation().getDirection().multiply(10);
+				Fireball fire = p.getWorld().spawn(p.getLocation().add(lookat), Fireball.class);
+				fire.setShooter(p);
 				p.playSound(p.getLocation(), Sound.FIRE, 1.0F, (byte) 1);
 				p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.FIREBALL, 1) });
 			}
@@ -163,20 +161,9 @@ public class BGListener implements Listener {
 				if(!ghostList.contains(p)) {
 					ghostList.add(p);
 					BGCooldown.ghostCooldown(p);
-					
-					Player[] players = Bukkit.getServer().getOnlinePlayers();
-					
-					BGCooldown.showPlayerCooldown(p, players);
+										
 					p.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.APPLE, 1) });
-					for(Player player : players) {
-						if(player.getName().equals(p.getName())) {
-							continue;
-						}
-						if(BGKit.hasAbility(player, 21)) {
-							continue;
-						}
-						player.hidePlayer(p);
-					}
+					p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, BGFiles.abconf.getInt("AB.16.Duration") * 20, 1));
 					p.playSound(p.getLocation(), Sound.PORTAL_TRIGGER, 1.0F, (byte) 1);
 					BGChat.printPlayerChat(p, BGFiles.abconf.getString("AB.16.invisible"));
 				} else {

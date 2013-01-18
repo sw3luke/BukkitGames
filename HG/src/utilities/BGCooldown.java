@@ -60,26 +60,6 @@ public class BGCooldown {
 		timer.schedule(action, BGFiles.abconf.getInt("AB.16.Cooldown") * 1000);
 	}
 	
-	public static void showPlayerCooldown(final Player player, final Player[] players) {
-		
-		TimerTask action = new TimerTask() {
-			
-			public void run() {
-				
-				for (Player p : players) {
-					if (p.getName().equals(player)) {
-						continue;
-					}
-					p.showPlayer(player);
-				}
-				BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.16.visible"));
-			}
-		};
-		
-		Timer timer = new Timer();
-		timer.schedule(action, BGFiles.abconf.getInt("AB.16.Duration") * 1000);
-	}
-	
 	public static void viperCooldown(final Player player) {
 		
 		TimerTask action = new TimerTask() {
