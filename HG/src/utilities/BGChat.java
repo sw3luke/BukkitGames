@@ -528,8 +528,10 @@ public class BGChat {
 					+ " " + players + " online.");
 			p.sendMessage("§7 - There " + is + " " + timeleft + " " + minute
 					+ " left.");
-			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "")
+			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "") {
 				p.sendMessage("§7 - " + BGMain.HELP_MESSAGE);
+				line++;
+			}
 
 			if (PLAYER_MSG.containsKey(p))
 				line++;
@@ -552,7 +554,11 @@ public class BGChat {
 				if(name.equalsIgnoreCase("default"))
 					continue;
 				
-				if (p.hasPermission("bg.kit." + name) || (BGMain.SIMP_REW && BGMain.winner(p))
+				char[] stringArray = name.toCharArray();
+				stringArray[0] = Character.toUpperCase(stringArray[0]);
+				name = new String(stringArray);
+				
+				if (p.hasPermission("bg.kit." + name.toLowerCase()) || (BGMain.SIMP_REW && BGMain.winner(p))
 					|| (BGMain.REW && BGReward.BOUGHT_KITS.get(p.getName()) != null
 					&& BGReward.BOUGHT_KITS.get(p.getName()).equals(name.toLowerCase()))) {
 					if(yourkits == "")
@@ -613,9 +619,7 @@ public class BGChat {
 
 			p.sendMessage("§a" + kitinfoname + " kit includes:");
 			p.sendMessage("");
-			line++;
-			line++;
-			line++;
+			line = line + 3;
 			List<String> kititems = kit.getStringList("ITEMS");
 			for (String item : kititems) {
 				String[] oneitem = item.split(",");
@@ -655,13 +659,11 @@ public class BGChat {
 			}
 
 			List<Integer> abils = kit.getIntegerList("ABILITY");
-			
 			for(Integer abil : abils) {
 				String desc = getAbilityDesc(abil.intValue());
-
 				if (desc != null) {
 					p.sendMessage("§f - " + desc);
-
+					line++;
 				}
 			}
 			
@@ -679,15 +681,19 @@ public class BGChat {
 								name += " (Duration: "+potion[1]+" sec)";
 							}
 							p.sendMessage("§f - " + name);
+							line++;
 						}
 					}
 				}
 			}
 			
-			if(BGKit.getCoins(kitname.toLowerCase()) == 1)
+			if(BGKit.getCoins(kitname.toLowerCase()) == 1) {
 				p.sendMessage("§fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
-			else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
-				p.sendMessage("§fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");	
+				line++;
+			} else if(BGKit.getCoins(kitname.toLowerCase()) > 1) {
+				p.sendMessage("§fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");
+				line++;
+			}
 			
 			if (PLAYER_MSG.containsKey(p))
 				line++;
@@ -700,8 +706,6 @@ public class BGChat {
 				p.sendMessage("§7" + PLAYER_MSG.get(p));
 
 		} else {
-
-			// Print chat
 			p.sendMessage("§9" + INFO_MSG);
 			p.sendMessage("§c" + DEATH_MSG);
 			if (BGMain.DENY_DAMAGE_PLAYER)
