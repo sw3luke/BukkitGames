@@ -231,10 +231,10 @@ public class BGKit {
 		if(KIT.get(player) == kitname)
 			return;
 
-		if (player.hasPermission("bg.kit." + kitname)
+		if (player.hasPermission("bg.kit." + kitname.toLowerCase())
 				|| player.hasPermission("bg.kit.*") || (BGMain.SIMP_REW && BGMain.winner(player))
 				|| (BGMain.REW && BGReward.BOUGHT_KITS.get(player.getName()) != null
-					&& BGReward.BOUGHT_KITS.get(player.getName()).equals(kitname))) {
+					&& BGReward.BOUGHT_KITS.get(player.getName()).equals(kitname.toLowerCase()))) {
 			if (KIT.containsKey(player)) {
 				KIT.remove(player);
 			}
@@ -243,9 +243,8 @@ public class BGKit {
 			char[] stringArray = kitname.toCharArray();
 			stringArray[0] = Character.toUpperCase(stringArray[0]);
 			kitname = new String(stringArray);
-			BGChat.printPlayerChat(player, "You have chosen " + kitname
-					+ " as your kit.");
 			
+			BGChat.printPlayerChat(player, "You have chosen " + kitname + " as your kit.");
 			setKitDisplayName(player, kitname);
 
 		} else {

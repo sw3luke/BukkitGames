@@ -189,7 +189,12 @@ public class BGChat {
 			for (String name : kitname) {
 				if(name.equalsIgnoreCase("default"))
 					continue;
-				if (player.hasPermission("bg.kit." + name)
+				
+				char[] stringArray = name.toCharArray();
+				stringArray[0] = Character.toUpperCase(stringArray[0]);
+				name = new String(stringArray);
+				
+				if (player.hasPermission("bg.kit." + name.toLowerCase())
 						|| player.hasPermission("bg.kit.*") || (BGMain.SIMP_REW && BGMain.winner(player))
 						|| (BGMain.REW && BGReward.BOUGHT_KITS.get(player.getName()) != null &&
 							BGReward.BOUGHT_KITS.get(player.getName()).equals(name.toLowerCase()))) {
@@ -241,6 +246,10 @@ public class BGChat {
 					 if(kitname.equalsIgnoreCase("default"))
 						 continue;
 					 
+						char[] stringArray = kitname.toCharArray();
+						stringArray[0] = Character.toUpperCase(stringArray[0]);
+						kitname = new String(stringArray);
+					 
 						ArrayList<String> container = new ArrayList<String>();
 						ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname.toLowerCase());
 						List<String> kititems = kit.getStringList("ITEMS");
@@ -280,13 +289,6 @@ public class BGChat {
 
 							container.add("§f" + itemstring);
 						}
-
-						List<Integer> abils = kit.getIntegerList("ABILITY");
-						for(Integer abil : abils) {
-							String desc = getAbilityDesc(abil.intValue());
-							if (desc != null)
-								container.add("§7" + desc);
-						}
 						
 						List<String> pots = kit.getStringList("POTION");
 						for(String pot : pots) {	
@@ -301,16 +303,23 @@ public class BGChat {
 										} else {
 											name += " (Duration: "+potion[1]+" sec)";
 										}
-										container.add("§7" + name);
+										container.add("§f * " + name);
 									}
 								}
 							}
+						}
+						
+						List<Integer> abils = kit.getIntegerList("ABILITY");
+						for(Integer abil : abils) {
+							String desc = getAbilityDesc(abil.intValue());
+							if (desc != null)
+								container.add("§7 + " + desc);
 						}
 									
 						Integer itemid = kit.getInt("ITEMMENU");
 						Material kitem = Material.getMaterial(itemid);
 					    
-						if (player.hasPermission("bg.kit." + kitname)
+						if (player.hasPermission("bg.kit." + kitname.toLowerCase())
 								|| player.hasPermission("bg.kit.*") || (BGMain.SIMP_REW && BGMain.winner(player))
 								|| (BGMain.REW && BGReward.BOUGHT_KITS.get(player.getName()) != null &&
 									BGReward.BOUGHT_KITS.get(player.getName()).equals(kitname.toLowerCase()))) {
@@ -410,17 +419,6 @@ public class BGChat {
 				player.sendMessage("§f" + itemstring);
 			}
 
-			List<Integer> abils = kit.getIntegerList("ABILITY");
-			
-			for(Integer abil : abils) {
-				String desc = getAbilityDesc(abil.intValue());
-
-				if (desc != null) {
-					player.sendMessage("§f - " + desc);
-
-				}
-			}
-			
 			List<String> pots = kit.getStringList("POTION");
 			for(String pot : pots) {	
 				if (pot != null & pot != "") {
@@ -434,12 +432,22 @@ public class BGChat {
 							} else {
 								name += " (Duration: "+potion[1]+" sec)";
 							}
-							player.sendMessage("§f - " + name);
+							player.sendMessage("§f * " + name);
 						}
 					}
 				}
 			}
-	
+			
+			List<Integer> abils = kit.getIntegerList("ABILITY");
+			for(Integer abil : abils) {
+				String desc = getAbilityDesc(abil.intValue());
+
+				if (desc != null) {
+					player.sendMessage("§f + " + desc);
+
+				}
+			}
+				
 			if(BGKit.getCoins(kitname.toLowerCase()) == 1)
 				player.sendMessage("§fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
 			else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
