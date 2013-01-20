@@ -7,7 +7,7 @@
 ITEM_SPAWN: true
 
 # Whether to spawn the items in chests or not
-CHESTS: false
+CHESTS: true
 
 # If you want that players can not destroy blocks from cornucopia?
 PROTECTED: true
