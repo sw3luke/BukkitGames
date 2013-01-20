@@ -48,6 +48,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 
 import commands.BGConsole;
 import commands.BGPlayer;
@@ -620,14 +621,15 @@ public class BGMain extends JavaPlugin {
 
 		}
 
-		DENY_CHECK_WORLDBORDER = Boolean.valueOf(true);
+		DENY_CHECK_WORLDBORDER = true;
 		Bukkit.getServer().getWorlds().get(0).loadChunk(getSpawn().getChunk());
-
 		Bukkit.getWorlds().get(0).setDifficulty(Difficulty.HARD);
 		for (Player p : getPlayers()) {
 			if(isGameMaker(p) || isSpectator(p))
 				continue;
-			if (RANDOM_START == false) {
+			if(p.isInsideVehicle())
+				p.getVehicle().eject();
+			if (!RANDOM_START) {
 				Random r = new Random();
 				Location startFrom = getSpawn();
 				Location loc = startFrom.clone();
@@ -651,12 +653,19 @@ public class BGMain extends JavaPlugin {
 			}
 			p.setHealth(20);
 			p.setFoodLevel(20);
-			p.setExp(0);
+			p.setExhaustion(20);
+			p.setFlying(false);
+			p.getEnderChest().clear();
+			p.setGameMode(GameMode.SURVIVAL);
+			p.setFireTicks(0);
+			p.setAllowFlight(false);
+			for(PotionEffect e : p.getActivePotionEffects())
+				p.removePotionEffect(e.getType());
+			
 			if(p.getOpenInventory() != null)
 				p.getOpenInventory().close();
 			
 			BGKit.giveKit(p);
-
 			if (SQL_USE & !BGMain.isSpectator(p)) {
 				Integer PL_ID = getPlayerID(p.getName());
 				SQLquery("INSERT INTO `PLAYS` (`REF_PLAYER`, `REF_GAME`, `KIT`) VALUES ("
@@ -672,7 +681,7 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().getWorlds().get(0).setTime(0L);
 		Bukkit.getServer().getWorlds().get(0).setStorm(false);
 		Bukkit.getServer().getWorlds().get(0).setThundering(false);
-		DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
+		DENY_CHECK_WORLDBORDER = false;
 		if (ADV_CHAT_SYSTEM) {
 			BGChat.printInfoChat(" --- The games have begun! ---");
 			BGChat.printDeathChat("§e\"May the odds be ever in your favor!\"");
