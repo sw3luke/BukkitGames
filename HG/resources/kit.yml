@@ -7,22 +7,6 @@ default:
   POTION:
     - 0
 
-# For each kit below you have to add its name here. First letter has to be a capital letter.
-KITS:
-  - Barbarian
-  - Miner
-  - Fisherman
-  - Beastmaster
-  - Enderman
-  - Pyro
-  - Poseidon
-  - Scout
-  - Snowman
-  - Chemist
-  - Archer
-  - Engineer
-
-
 # Add a section for each kit. EXAMPLE:
 # kitname: [THE NAME - SAME AS ABOVE - HAS TO BE IN SMALL LETTERS]
 #  ITEMS:  [LIST OF ALL ITEMS]

@@ -3,6 +3,7 @@ package utilities;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import main.BGMain;
@@ -182,10 +183,12 @@ public class BGChat {
 						}
 					}, 100);
 		} else {
-			List<String> kitname = BGFiles.kitconf.getStringList("KITS");
+			Set<String> kitname = BGFiles.kitconf.getKeys(false);
 			String yourkits = "";
 			String otherkits = "";
 			for (String name : kitname) {
+				if(name.equalsIgnoreCase("default"))
+					continue;
 				if (player.hasPermission("bg.kit." + name)
 						|| player.hasPermission("bg.kit.*") || (BGMain.SIMP_REW && BGMain.winner(player))
 						|| (BGMain.REW && BGReward.BOUGHT_KITS.get(player.getName()) != null &&
@@ -206,7 +209,7 @@ public class BGChat {
 		}
 		
 		} else {
-			 List<String> kits = BGFiles.kitconf.getStringList("KITS");
+			 Set<String> kits = BGFiles.kitconf.getKeys(false);
 			 
 			 Integer invsize = 9;
 			 for(int i=0; i<=10; i++) {
@@ -235,6 +238,9 @@ public class BGChat {
 			 Integer othpos = 1;
 			 for(String kitname : kits) {	
 				 try {
+					 if(kitname.equalsIgnoreCase("default"))
+						 continue;
+					 
 						ArrayList<String> container = new ArrayList<String>();
 						ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname.toLowerCase());
 						List<String> kititems = kit.getStringList("ITEMS");
@@ -530,11 +536,14 @@ public class BGChat {
 
 		} else if (KIT_CHAT.containsKey(p)) {
 			Integer line = 5;
-			List<String> kitname = BGFiles.kitconf.getStringList("KITS");
+			Set<String> kitname = BGFiles.kitconf.getKeys(false);
 
 			String yourkits = "";
 			String otherkits = "";
 			for (String name : kitname) {
+				if(name.equalsIgnoreCase("default"))
+					continue;
+				
 				if (p.hasPermission("bg.kit." + name) || (BGMain.SIMP_REW && BGMain.winner(p))
 					|| (BGMain.REW && BGReward.BOUGHT_KITS.get(p.getName()) != null
 					&& BGReward.BOUGHT_KITS.get(p.getName()).equals(name.toLowerCase()))) {

@@ -3,6 +3,7 @@ package utilities;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import main.BGMain;
@@ -22,13 +23,12 @@ public class BGKit {
 	public static ArrayList<String> kits = new ArrayList<String>();
 
 	public BGKit() {
-		List<String> kitList = BGFiles.kitconf.getStringList("KITS");
+		Set<String> kitList = BGFiles.kitconf.getKeys(false);
 		for(String kit : kitList) {
-			kit = kit.toLowerCase();
-			if(kit == "default")
-				log.warning("There can not be a kit with the name 'default'!");
-			else
-				kits.add(kit);
+			if(kit.equalsIgnoreCase("default"))
+				continue;
+			
+			kits.add(kit.toLowerCase());
 		}
 	}
 
@@ -38,6 +38,8 @@ public class BGKit {
 		p.getInventory().setChestplate(null);
 		p.getInventory().setLeggings(null);
 		p.getInventory().setBoots(null);
+		p.setExp(0);
+		p.setLevel(0);
 		
 		if (!KIT.containsKey(p)) {
 			if (BGMain.COMPASS.booleanValue()) {
@@ -46,6 +48,7 @@ public class BGKit {
 			}
 			
 			if (BGMain.DEFAULT_KIT) {
+				try {
 				ConfigurationSection def = BGFiles.kitconf.getConfigurationSection("default");
 				setKitDisplayName(p, "Default");
 				
@@ -121,14 +124,18 @@ public class BGKit {
 						}
 					}
 				}
+			} catch(Exception ex) {
+				log.warning("[BukkitGames] Error while trying to give kit 'default' to player '" + p.getName() + "'!");
+				log.warning(ex.getMessage());
 			}
+		} 
 			
 			return;
 		}
 
 		String kitname = (String) KIT.get(p);
-		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname
-				.toLowerCase());
+		try {
+		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname.toLowerCase());
 
 		List<String> kititems = kit.getStringList("ITEMS");
 		for (String item : kititems) {
@@ -206,6 +213,10 @@ public class BGKit {
 		if (BGMain.COMPASS.booleanValue())
 			p.getInventory().addItem(
 					new ItemStack[] { new ItemStack(Material.COMPASS, 1) });
+		} catch(Exception ex) {
+			log.warning("[BukkitGames] Error while trying to give kit '" + kitname + "' to player '" + p.getName() + "'!");
+			log.warning(ex.getMessage());
+		}
 	}
 
 	public static void setKit(Player player, String kitname) {
@@ -267,9 +278,7 @@ public class BGKit {
 		
 		if (!KIT.containsKey(player)) {
 			if (BGMain.DEFAULT_KIT) {
-				
 				ConfigurationSection def = BGFiles.kitconf.getConfigurationSection("default");
-				
 				List<Integer> s = def.getIntegerList("ABILITY");
 				for(Integer i : s) {
 					if (i.equals(ability)) {
@@ -288,7 +297,7 @@ public class BGKit {
 		List<Integer> s = kit.getIntegerList("ABILITY");
 		for(Integer i : s) {
 			if (i.equals(ability)) {
-			return true;
+				return true;
 			}
 		}
 		return false;
@@ -300,14 +309,11 @@ public class BGKit {
 	}
 	
 	public static int getCoins(String kitName) {
-		
 		ConfigurationSection def = BGFiles.kitconf.getConfigurationSection(kitName);
-		
 		return def.getInt("COINS");
 	}
 	
 	public static boolean isKit(String kitName) {
-		
 		if(kits.contains(kitName))
 			return true;
 		return false;
