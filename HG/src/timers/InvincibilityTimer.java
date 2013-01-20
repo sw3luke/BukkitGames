@@ -50,6 +50,9 @@ private static Integer shed_id = null;
 					new GameTimer();
 					cancel();
 				}
+				
+				if(BGMain.FINAL_COUNTDOWN % 5 == 0)
+					BGChat.updateChat();
 			}
 			
 		}, 0, 20);

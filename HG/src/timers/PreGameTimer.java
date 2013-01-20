@@ -43,6 +43,8 @@ public class PreGameTimer {
 				} else {
 					BGMain.startgame();
 				}
+				if(BGMain.COUNTDOWN % 5 == 0)
+					BGChat.updateChat();
 				
 			}
 		}, 0, 20);
