@@ -447,6 +447,131 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().shutdown();
 	}
 
+	public static void startgame() {
+		log.info("Game phase: 2 - Starting");
+		PreGameTimer.cancel();
+		new InvincibilityTimer();
+
+		DENY_LOGIN = true;
+		DENY_BLOCKBREAK = false;
+		DENY_BLOCKPLACE = false;
+		DENY_ITEMDROP = false;
+		DENY_ITEMPICKUP = false;
+		DENY_DAMAGE_ENTITY = false;
+		DENY_SHOOT_BOW = false;
+		QUIT_MSG = true;
+
+		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
+			BGCornucopia.spawnItems();
+		
+		if (SQL_USE) {
+			PreparedStatement statement = null;
+			ResultSet generatedKeys = null;
+
+			try {
+				statement = con.prepareStatement(
+						"INSERT INTO `GAMES` (`STARTTIME`) VALUES (NOW()) ;",
+						Statement.RETURN_GENERATED_KEYS);
+
+				int affectedRows = statement.executeUpdate();
+				if (affectedRows == 0) {
+					log.warning("[BukkitGames] Couldn't get GameID!");
+				}
+
+				generatedKeys = statement.getGeneratedKeys();
+				if (generatedKeys.next()) {
+					SQL_GAMEID = (int) generatedKeys.getLong(1);
+				} else {
+					log.warning("[BukkitGames] Couldn't get GameID!");
+				}
+			} catch (Exception e) {
+				log.warning(e.getMessage());
+			} finally {
+				if (generatedKeys != null)
+					try {
+						generatedKeys.close();
+					} catch (Exception e) {}
+				
+				if (statement != null)
+					try {
+						statement.close();
+					} catch (SQLException logOrIgnore) {}
+			}
+
+		}
+
+		DENY_CHECK_WORLDBORDER = true;
+		Bukkit.getServer().getWorlds().get(0).loadChunk(getSpawn().getChunk());
+		Bukkit.getWorlds().get(0).setDifficulty(Difficulty.HARD);
+		for (Player p : getPlayers()) {
+			if(isGameMaker(p) || isSpectator(p))
+				continue;
+			if(p.isInsideVehicle())
+				p.getVehicle().eject();
+			if (!RANDOM_START) {
+				Random r = new Random();
+				Location startFrom = getSpawn();
+				Location loc = startFrom.clone();
+				int addx;
+				int addy;
+				do {
+					
+					addx = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
+					addy = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
+				}while((Math.abs(addx)+Math.abs(addy)) < 5);
+				loc.add(addx, 60, addy);
+				loc.setY(Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(loc) + 1.5);
+				p.teleport(loc);
+			} else {
+				Location tploc = getRandomLocation();
+				while(!inBorder(tploc,BorderType.WARN)) {
+					tploc = getRandomLocation();
+				}
+				tploc.setY(Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(tploc) + 1.5);
+				p.teleport(tploc);
+			}
+			p.setHealth(20);
+			p.setFoodLevel(20);
+			p.setExhaustion(20);
+			p.setFlying(false);
+			p.getEnderChest().clear();
+			p.setGameMode(GameMode.SURVIVAL);
+			p.setFireTicks(0);
+			p.setAllowFlight(false);
+			for(PotionEffect e : p.getActivePotionEffects())
+				p.removePotionEffect(e.getType());
+			
+			if(p.getOpenInventory() != null)
+				p.getOpenInventory().close();
+			
+			BGKit.giveKit(p);
+			if (SQL_USE & !BGMain.isSpectator(p)) {
+				Integer PL_ID = getPlayerID(p.getName());
+				SQLquery("INSERT INTO `PLAYS` (`REF_PLAYER`, `REF_GAME`, `KIT`) VALUES ("
+						+ PL_ID
+						+ ","
+						+ SQL_GAMEID
+						+ ",'"
+						+ BGKit.getKit(p)
+						+ "') ;");
+			}
+		}
+
+		Bukkit.getServer().getWorlds().get(0).setTime(0L);
+		Bukkit.getServer().getWorlds().get(0).setStorm(false);
+		Bukkit.getServer().getWorlds().get(0).setThundering(false);
+		DENY_CHECK_WORLDBORDER = false;
+		if (ADV_CHAT_SYSTEM) {
+			BGChat.printInfoChat(" --- The games have begun! ---");
+			BGChat.printDeathChat("§e\"May the odds be ever in your favor!\"");
+		} else {
+			BGChat.printTimeChat("");
+			BGChat.printTimeChat("The games have begun!");
+		}
+		BGChat.printTimeChat("Everyone is invincible for "
+				+ TIME(FINAL_COUNTDOWN_SECONDS) + ".");
+	}
+	
 	private void copyDirectory(File sourceLocation, File targetLocation)
 			throws IOException {
 
@@ -565,132 +690,6 @@ public class BGMain extends JavaPlugin {
 			players.add(onlineplayers[i]);
 		}
 		return (Player[]) players.toArray(new Player[0]);
-	}
-
-	public static void startgame() {
-		log.info("Game phase: 2 - Starting");
-		PreGameTimer.cancel();
-		new InvincibilityTimer();
-
-		DENY_LOGIN = true;
-		DENY_BLOCKBREAK = false;
-		DENY_BLOCKPLACE = false;
-		DENY_ITEMDROP = false;
-		DENY_ITEMPICKUP = false;
-		DENY_DAMAGE_ENTITY = false;
-		DENY_SHOOT_BOW = false;
-		QUIT_MSG = true;
-
-		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
-			BGCornucopia.spawnItems();
-		
-		if (SQL_USE) {
-			PreparedStatement statement = null;
-			ResultSet generatedKeys = null;
-
-			try {
-				statement = con.prepareStatement(
-						"INSERT INTO `GAMES` (`STARTTIME`) VALUES (NOW()) ;",
-						Statement.RETURN_GENERATED_KEYS);
-
-				int affectedRows = statement.executeUpdate();
-				if (affectedRows == 0) {
-					throw new SQLException("Error!");
-				}
-
-				generatedKeys = statement.getGeneratedKeys();
-				if (generatedKeys.next()) {
-					SQL_GAMEID = (int) generatedKeys.getLong(1);
-				} else {
-					throw new SQLException("Error!");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (generatedKeys != null)
-					try {
-						generatedKeys.close();
-					} catch (SQLException logOrIgnore) {
-					}
-				if (statement != null)
-					try {
-						statement.close();
-					} catch (SQLException logOrIgnore) {
-					}
-			}
-
-		}
-
-		DENY_CHECK_WORLDBORDER = true;
-		Bukkit.getServer().getWorlds().get(0).loadChunk(getSpawn().getChunk());
-		Bukkit.getWorlds().get(0).setDifficulty(Difficulty.HARD);
-		for (Player p : getPlayers()) {
-			if(isGameMaker(p) || isSpectator(p))
-				continue;
-			if(p.isInsideVehicle())
-				p.getVehicle().eject();
-			if (!RANDOM_START) {
-				Random r = new Random();
-				Location startFrom = getSpawn();
-				Location loc = startFrom.clone();
-				int addx;
-				int addy;
-				do {
-					
-					addx = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
-					addy = (r.nextBoolean() ? 1 : -1) * r.nextInt(7);
-				}while((Math.abs(addx)+Math.abs(addy)) < 5);
-				loc.add(addx, 60, addy);
-				loc.setY(Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(loc) + 1.5);
-				p.teleport(loc);
-			} else {
-				Location tploc = getRandomLocation();
-				while(!inBorder(tploc,BorderType.WARN)) {
-					tploc = getRandomLocation();
-				}
-				tploc.setY(Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(tploc) + 1.5);
-				p.teleport(tploc);
-			}
-			p.setHealth(20);
-			p.setFoodLevel(20);
-			p.setExhaustion(20);
-			p.setFlying(false);
-			p.getEnderChest().clear();
-			p.setGameMode(GameMode.SURVIVAL);
-			p.setFireTicks(0);
-			p.setAllowFlight(false);
-			for(PotionEffect e : p.getActivePotionEffects())
-				p.removePotionEffect(e.getType());
-			
-			if(p.getOpenInventory() != null)
-				p.getOpenInventory().close();
-			
-			BGKit.giveKit(p);
-			if (SQL_USE & !BGMain.isSpectator(p)) {
-				Integer PL_ID = getPlayerID(p.getName());
-				SQLquery("INSERT INTO `PLAYS` (`REF_PLAYER`, `REF_GAME`, `KIT`) VALUES ("
-						+ PL_ID
-						+ ","
-						+ SQL_GAMEID
-						+ ",'"
-						+ BGKit.getKit(p)
-						+ "') ;");
-			}
-		}
-
-		Bukkit.getServer().getWorlds().get(0).setTime(0L);
-		Bukkit.getServer().getWorlds().get(0).setStorm(false);
-		Bukkit.getServer().getWorlds().get(0).setThundering(false);
-		DENY_CHECK_WORLDBORDER = false;
-		if (ADV_CHAT_SYSTEM) {
-			BGChat.printInfoChat(" --- The games have begun! ---");
-			BGChat.printDeathChat("§e\"May the odds be ever in your favor!\"");
-		} else {
-			BGChat.printTimeChat("");
-			BGChat.printTimeChat("The games have begun!");
-		}
-		BGChat.printTimeChat("Everyone is invincible for "
-				+ TIME(FINAL_COUNTDOWN_SECONDS) + ".");
 	}
 
 	public static Location randomLocation(Chunk c) {
