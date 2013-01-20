@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +38,7 @@ import org.bukkit.plugin.Plugin;
  * If you are unsure about these rules, please read the plugin submission guidelines: http://goo.gl/8iU5l
  * 
  * @author H31IX
- * 
- * Customized by the BukkitGames.
+ * @author Customized by the BukkitGames.
  */
 
 public class Updater 
@@ -53,7 +54,6 @@ public class Updater
     private boolean announce; // Whether to announce file downloads
     private URL url; // Connecting to RSS
     private static final String DBOUrl = "http://dev.bukkit.org/server-mods/"; // Slugs will be appended to this to get to the project's RSS feed
-    private String [] noUpdateTag = {"DEV","PRE","PRE_DEV"}; // If the version number contains one of these, don't update.
     private static final int BYTE_SIZE = 1024; // Used for downloading files
     private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that downloads will be placed in
     private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS; // Used for determining the outcome of the update process
@@ -551,13 +551,35 @@ public class Updater
             String version = BGMain.instance.getDescription().getVersion();
             if(title.split("v").length == 2)
             {
-                String remoteVersion = title.split("v")[1].split(" ")[0]; // Get the newest file's version number
-              //TODO: Check if build is DEV and announce when there is a new DEV build out
-                if(hasTag(version) || version.equalsIgnoreCase(remoteVersion))
-                {
-                    // We already have the latest version, or this build is tagged for no-update
-                    result = Updater.UpdateResult.NO_UPDATE;
-                    return false;
+                String remoteVersion = title.split("v")[1].split(" ")[0].replace("DEV", ""); // Get the newest file's version number
+                String thisVersion = version.replace(" ", "").replace("DEV", "");
+                
+                ArrayList<String> rV = new ArrayList<String>();
+                ArrayList<String> tV = new ArrayList<String>();
+                Collections.addAll(rV,remoteVersion.split("\\."));
+                Collections.addAll(tV,thisVersion.split("\\."));	
+                
+                while(rV.size() > tV.size()) tV.add("0");
+                while(tV.size() > rV.size()) rV.add("0");
+                
+                for(int i=0; i<=20; i++) {
+                		Integer rVi = Integer.parseInt(rV.get(i));
+                		Integer tVi = Integer.parseInt(tV.get(i));
+                		if(rVi == tVi) {
+                			if(i == rV.size()-1 && i == tV.size()-1) {
+                                //End the loop, we already have the latest version
+                                result = Updater.UpdateResult.NO_UPDATE;
+                                return false;
+                			}
+                			continue;
+                		} else if(rVi > tVi) {
+                			//Update available!
+                			return true;
+                		} else if(rVi < tVi) {
+                			//We have a version, greater than the remote version; Probably a DEV-build
+                            result = Updater.UpdateResult.NO_UPDATE;
+                            return false;
+                		}
                 }
             }
             else
@@ -571,21 +593,6 @@ public class Updater
             }
         }
         return true;
-    }
-        
-    /**
-     * Evaluate whether the version number is marked showing that it should not be updated by this program
-     */  
-    private boolean hasTag(String version)
-    {
-        for(String string : noUpdateTag)
-        {
-            if(version.contains(string))
-            {
-                return true;
-            }
-        }
-        return false;
     }
     
     /**
