@@ -130,6 +130,7 @@ public class BGMain extends JavaPlugin {
 	public static Boolean SPECTATOR_SYSTEM = false;
 	public static Boolean SQL_DSC = false;
 	public static Location spawn;
+	public static Boolean AUTO_UPDATE = true;
 	public static String LAST_WINNER = "";
 	public static ArrayList<Player> spectators = new ArrayList<Player>();
 	public static ArrayList<Player> gamemakers = new ArrayList<Player>();
@@ -300,6 +301,7 @@ public class BGMain extends JavaPlugin {
 		FEAST_CHESTS = Boolean.valueOf(BGFiles.feastconf.getBoolean("CHESTS"));
 		FEAST_PROTECTED = Boolean.valueOf(BGFiles.feastconf.getBoolean("PROTECTED"));
 		SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
+		AUTO_UPDATE = Boolean.valueOf(getConfig().getBoolean("AUTO_UPDATE"));
 		TEAM = Boolean.valueOf(getConfig().getBoolean("TEAM"));
 		NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
 		GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
@@ -412,6 +414,10 @@ public class BGMain extends JavaPlugin {
 		new PreGameTimer();
 		new WorldBorderTimer();
 		
+		if(AUTO_UPDATE) {
+			new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.DEFAULT, true);
+		}
+			
 		PluginDescriptionFile pdfFile = getDescription();
 		log.info("Plugin enabled");
 		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());

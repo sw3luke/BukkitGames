@@ -104,3 +104,6 @@ PORT: ''
 USERNAME: ''
 PASSWORD: ''
 DATABASE: ''
+
+# We recommend you to leave this at it is to always have the latest version installed! However, if you don't want to use this, disable it.
+AUTO_UPDATE: true

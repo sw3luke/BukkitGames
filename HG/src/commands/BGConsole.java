@@ -96,6 +96,13 @@ public class BGConsole implements CommandExecutor {
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				
 				if(update) {
+					if(!BGMain.AUTO_UPDATE) {
+						if(p != null)
+							BGChat.printPlayerChat(p, "§7Sorry, you disabled auto-update! Enable it or download the update from BukkitDev manually.");
+						else
+							sender.sendMessage("§7Sorry, you disabled auto-update! Enable it or download the update from BukkitDev manually.");
+						return true;
+					}
 					if(p != null)
 						BGChat.printPlayerChat(p, "§7Downloading new version...");
 					else
@@ -113,8 +120,7 @@ public class BGConsole implements CommandExecutor {
 						else
 							sender.sendMessage("§cOops! Something went wrong. See console error log!");
 					}
-				}else {
-					
+				} else {
 					if(p != null)
 						BGChat.printPlayerChat(p, "§7There is no update available to download!");
 					else
