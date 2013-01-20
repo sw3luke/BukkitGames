@@ -104,9 +104,9 @@ public class BGConsole implements CommandExecutor {
 						return true;
 					}
 					if(p != null)
-						BGChat.printPlayerChat(p, "§7Downloading new version...");
+						BGChat.printPlayerChat(p, "§7Downloading new version... (" + updater.getLatestVersionString() + ")");
 					else
-						sender.sendMessage("§7Downloading new version...");
+						sender.sendMessage("§7Downloading new version... (" + updater.getLatestVersionString() + ")");
 					Updater download = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
 					
 					if(download.getResult() == Updater.UpdateResult.SUCCESS) {

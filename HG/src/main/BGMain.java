@@ -414,10 +414,19 @@ public class BGMain extends JavaPlugin {
 		new PreGameTimer();
 		new WorldBorderTimer();
 		
-		if(AUTO_UPDATE) {
-			new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.DEFAULT, true);
-		}
+		Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+		boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			
+		if(update) {
+			log.info("-------- NEW UPDATE --------");
+			log.info("New version available (" + updater.getLatestVersionString() + ")!");
+			if(AUTO_UPDATE)
+				log.info("Type /bgdownload to install this update.");
+			else
+				log.info("Go to BukkitDev and install it, or enable auto-update in config.yml!");
+			log.info("-------- NEW UPDATE --------");
+		}
+
 		PluginDescriptionFile pdfFile = getDescription();
 		log.info("Plugin enabled");
 		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());
