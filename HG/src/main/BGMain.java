@@ -722,6 +722,7 @@ public class BGMain extends JavaPlugin {
 				GameTimer.cancel();
 				String winnername = getGamers()[0].getName();
 				NEW_WINNER = winnername;
+				log.info("GAME ENDED! Winner: " + winnername);
 				try {
 					String contents = winnername;
 					BufferedWriter writer = new BufferedWriter(new FileWriter(
@@ -767,7 +768,7 @@ public class BGMain extends JavaPlugin {
 				} 
 				BGChat.printPlayerChat(pl, "§6§lYOU HAVE WON THIS GAME!" + text);
 				
-				final Integer s = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
+				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 					
 					public void run() {
 						Random r = new Random();
@@ -787,9 +788,8 @@ public class BGMain extends JavaPlugin {
 					
 					@Override
 					public void run() {
-						Bukkit.getServer().getScheduler().cancelTask(s);
-						//TODO: When doing this, the client will crash
-						//pl.kickPlayer("§6§lYOU HAVE WON THIS GAME!");
+						Bukkit.getServer().getScheduler().cancelAllTasks();
+						pl.kickPlayer("§6§lYOU HAVE WON THIS GAME! \n§6Thanks for playing the BukkitGames!");
 						Bukkit.getServer().shutdown();
 					}
 					
