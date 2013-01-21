@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import utilities.BGChat;
 import utilities.enums.BorderType;
+import utilities.enums.GameState;
 
 public class WorldBorderTimer {
 
@@ -22,17 +23,14 @@ public class WorldBorderTimer {
 		shed_id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 			
 			@Override
-			public void run() {
-				if (BGMain.DENY_CHECK_WORLDBORDER)
-					return;
-				
+			public void run() {				
 				Random r = new Random();
 				for(Player p : BGMain.getPlayers()) {						
 					if (!BGMain.inBorder(p.getLocation(), BorderType.STOP)) {
 						p.playSound(p.getLocation(), Sound.FIZZ, 1.0F, (byte) 1);
 						BGChat.printPlayerChat(p, "§c§l" + BGMain.instance.getConfig().getString("MESSAGE.WORLD_BORDER"));
 						
-						if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.DENY_DAMAGE_PLAYER) {
+						if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.GAMESTATE != GameState.GAME) {
 							if(p.isInsideVehicle())
 								p.getVehicle().eject();
 							p.teleport(locations.containsKey(p) ? locations.get(p) : BGMain.getSpawn());
@@ -44,12 +42,12 @@ public class WorldBorderTimer {
 						continue;
 					}
 					
-					if(!BGMain.inBorder(p.getLocation(), BorderType.WARN) && BGMain.DENY_LOGIN) {
+					if(!BGMain.inBorder(p.getLocation(), BorderType.WARN) && BGMain.GAMESTATE != GameState.PREGAME) {
 						p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, (byte) 1);
 						BGChat.printPlayerChat(p, "§c§o" + "You are coming close to the world-border!");
 					}
 					
-					if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.DENY_DAMAGE_PLAYER)
+					if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.GAMESTATE != GameState.GAME)
 						locations.put(p, p.getLocation());
 				}
 			}

@@ -70,12 +70,16 @@ import utilities.Border;
 import utilities.Metrics;
 import utilities.Updater;
 import utilities.enums.BorderType;
+import utilities.enums.GameState;
 
-import events.BGListener;
+import events.BGAbilitiesListener;
+import events.BGGameListener;
 
 public class BGMain extends JavaPlugin {		
 	public static  ReentrantLock lock = new ReentrantLock(true);
 
+	public static GameState GAMESTATE = GameState.PREGAME;
+	
 	public static String HELP_MESSAGE = null;
 	public static String SERVER_FULL_MSG = "";
 	public static String WORLD_BORDER_MSG = "";
@@ -97,15 +101,6 @@ public class BGMain extends JavaPlugin {
 	public static Boolean REGEN_WORLD = false;
 	public static Boolean RANDOM_START = false;
 	public static Boolean SHOW_TIPS = true;
-	public static Boolean DENY_CHECK_WORLDBORDER = Boolean.valueOf(false);
-	public static Boolean DENY_LOGIN = false;
-	public static Boolean DENY_BLOCKPLACE = false;
-	public static Boolean DENY_BLOCKBREAK = false;
-	public static Boolean DENY_ITEMPICKUP = false;
-	public static Boolean DENY_ITEMDROP = false;
-	public static Boolean DENY_DAMAGE_PLAYER = false;
-	public static Boolean DENY_DAMAGE_ENTITY = false;
-	public static Boolean DENY_SHOOT_BOW = false;
 	public static Boolean QUIT_MSG = false;
 	public static Boolean DEATH_MSG = false;
 	public static Boolean COMPASS = true;
@@ -198,9 +193,11 @@ public class BGMain extends JavaPlugin {
 	}
 
 	private void registerEvents() {
-		BGListener bl = new BGListener();
+		BGGameListener gl = new BGGameListener();
+		BGAbilitiesListener al = new BGAbilitiesListener();
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(bl, this);
+		pm.registerEvents(gl, this);
+		pm.registerEvents(al, this);
 	}
 		
 	public void registerCommands() {
@@ -393,13 +390,7 @@ public class BGMain extends JavaPlugin {
 		FINAL_COUNTDOWN = FINAL_COUNTDOWN_SECONDS;
 		GAME_RUNNING_TIME = Integer.valueOf(0);
 
-		DENY_BLOCKBREAK = Boolean.valueOf(true);
-		DENY_BLOCKPLACE = Boolean.valueOf(true);
-		DENY_ITEMDROP = Boolean.valueOf(true);
-		DENY_ITEMPICKUP = Boolean.valueOf(true);
-		DENY_DAMAGE_PLAYER = Boolean.valueOf(true);
-		DENY_DAMAGE_ENTITY = Boolean.valueOf(true);
-		DENY_SHOOT_BOW = Boolean.valueOf(true);
+		BGMain.GAMESTATE = GameState.PREGAME;
 
 		if (SQL_USE) {
 			SQLconnect();
@@ -467,13 +458,7 @@ public class BGMain extends JavaPlugin {
 		PreGameTimer.cancel();
 		new InvincibilityTimer();
 
-		DENY_LOGIN = true;
-		DENY_BLOCKBREAK = false;
-		DENY_BLOCKPLACE = false;
-		DENY_ITEMDROP = false;
-		DENY_ITEMPICKUP = false;
-		DENY_DAMAGE_ENTITY = false;
-		DENY_SHOOT_BOW = false;
+		BGMain.GAMESTATE = GameState.INVINCIBILITY;
 		QUIT_MSG = true;
 
 		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
@@ -515,7 +500,6 @@ public class BGMain extends JavaPlugin {
 
 		}
 
-		DENY_CHECK_WORLDBORDER = true;
 		Bukkit.getServer().getWorlds().get(0).loadChunk(getSpawn().getChunk());
 		Bukkit.getWorlds().get(0).setDifficulty(Difficulty.HARD);
 		for (Player p : getPlayers()) {
@@ -575,7 +559,6 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().getWorlds().get(0).setTime(0L);
 		Bukkit.getServer().getWorlds().get(0).setStorm(false);
 		Bukkit.getServer().getWorlds().get(0).setThundering(false);
-		DENY_CHECK_WORLDBORDER = false;
 		if (ADV_CHAT_SYSTEM) {
 			BGChat.printInfoChat(" --- The games have begun! ---");
 			BGChat.printDeathChat("§e\"May the odds be ever in your favor!\"");
@@ -757,7 +740,7 @@ public class BGMain extends JavaPlugin {
 				
 				final Player pl = getGamers()[0];
 				pl.playSound(pl.getLocation(), Sound.LEVEL_UP, 1.0F, (byte) 1);
-				DENY_DAMAGE_PLAYER = true;
+				pl.setGameMode(GameMode.CREATIVE);
 				
 				if(SQL_USE) {
 					Integer PL_ID = getPlayerID(winnername);
@@ -1051,5 +1034,15 @@ public class BGMain extends JavaPlugin {
 			else
 				sender.sendMessage("§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
 		}
+	}
+	
+	public static ArrayList<Player> getOnlineOps() {
+		ArrayList<Player> ops = new ArrayList<Player>();
+		for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+			if(p.isOp())
+				ops.add(p);
+		}
+				
+		return ops;
 	}
 }

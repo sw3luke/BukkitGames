@@ -17,6 +17,7 @@ import utilities.BGFBattle;
 import utilities.BGKit;
 import utilities.BGReward;
 import utilities.Updater;
+import utilities.enums.GameState;
 
 public class BGConsole implements CommandExecutor {
 	Logger log = BGMain.getPluginLogger();
@@ -31,7 +32,7 @@ public class BGConsole implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("start")) {
 			if (sender.hasPermission("bg.admin.start")
 					|| sender.hasPermission("bg.admin.*")) {
-				if (BGMain.DENY_LOGIN.booleanValue())			
+				if (BGMain.GAMESTATE != GameState.PREGAME)			
 					if (p != null) 
 						BGChat.printPlayerChat(p, "The game has already begun!");
 					else
@@ -48,7 +49,7 @@ public class BGConsole implements CommandExecutor {
 			
 			if(sender.hasPermission("bg.admin.fbattle")) {
 				
-				if(BGMain.DENY_LOGIN) {
+				if(BGMain.GAMESTATE == GameState.GAME) {
 					if(BGMain.END_GAME) {
 						BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
 						BGMain.END_GAME = false;

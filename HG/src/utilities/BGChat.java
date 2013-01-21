@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
+import utilities.enums.GameState;
+
 public class BGChat {
 	static Integer TIP_COUNT = 0;
 	static ArrayList<String> TIPS = new ArrayList<String>();
@@ -708,7 +710,7 @@ public class BGChat {
 		} else {
 			p.sendMessage("§9" + INFO_MSG);
 			p.sendMessage("§c" + DEATH_MSG);
-			if (BGMain.DENY_DAMAGE_PLAYER)
+			if (BGMain.GAMESTATE != GameState.GAME)
 				p.sendMessage("§a" + TIMER_MSG);
 			else {
 				Integer timeleft = BGMain.MAX_GAME_RUNNING_TIME

@@ -15,6 +15,7 @@ import utilities.BGChat;
 import utilities.BGKit;
 import utilities.BGTeam;
 import utilities.enums.BorderType;
+import utilities.enums.GameState;
 
 public class BGPlayer implements CommandExecutor{
 
@@ -64,7 +65,7 @@ public class BGPlayer implements CommandExecutor{
 		}
 
 		if (cmd.getName().equalsIgnoreCase("kit")) {
-			if (BGMain.DENY_LOGIN.booleanValue()) {
+			if (BGMain.GAMESTATE != GameState.PREGAME) {
 				BGChat.printPlayerChat(p, "§eThe game has already began!");
 				return true;
 			}
@@ -77,9 +78,7 @@ public class BGPlayer implements CommandExecutor{
 		}
 
 		if (cmd.getName().equalsIgnoreCase("spawn")) {
-			if (BGMain.DENY_LOGIN.booleanValue()
-					& !p.hasPermission("bg.admin.spawn")
-					& !(BGMain.isGameMaker(p) || BGMain.isSpectator(p))) {
+			if (BGMain.GAMESTATE != GameState.PREGAME && !p.hasPermission("bg.admin.spawn") && !(BGMain.isGameMaker(p) || BGMain.isSpectator(p))) {
 				BGChat.printPlayerChat(p, "§eThe game has already began!");
 				return true;
 			} else {

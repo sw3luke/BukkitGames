@@ -9,7 +9,7 @@ import main.BGMain;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import events.BGListener;
+import events.BGAbilitiesListener;
 
 public class BGCooldown {
 
@@ -24,7 +24,7 @@ public class BGCooldown {
 			
 			public void run() {
 				
-				BGListener.monkList.remove(player);
+				BGAbilitiesListener.monkList.remove(player);
 			}
 		};
 		
@@ -38,7 +38,7 @@ public class BGCooldown {
 			
 			public void run() {
 				
-				BGListener.thiefList.remove(player);
+				BGAbilitiesListener.thiefList.remove(player);
 			}
 		};
 		
@@ -52,7 +52,7 @@ public class BGCooldown {
 			
 			public void run() {
 				
-				BGListener.ghostList.remove(player);
+				BGAbilitiesListener.ghostList.remove(player);
 			}
 		};
 		
@@ -66,7 +66,7 @@ public class BGCooldown {
 			
 			public void run() {
 				
-				BGListener.viperList.remove(player);
+				BGAbilitiesListener.viperList.remove(player);
 			}
 		};
 		
@@ -80,7 +80,7 @@ public class BGCooldown {
 			
 			public void run(){
 				
-				BGListener.thorList.remove(player);
+				BGAbilitiesListener.thorList.remove(player);
 			}
 		};
 		
@@ -94,7 +94,7 @@ public class BGCooldown {
 			
 			public void run() {
 				
-				BGListener.timeList.remove(player);
+				BGAbilitiesListener.timeList.remove(player);
 			}
 		};
 		
@@ -108,7 +108,7 @@ public class BGCooldown {
 			
 			public void run() {
 				
-				BGListener.freezeList.remove(player);
+				BGAbilitiesListener.freezeList.remove(player);
 				BGChat.printPlayerChat(player, BGFiles.abconf.getString("AB.22.unfrozen"));
 			}
 		};

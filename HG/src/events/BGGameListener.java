@@ -1,0 +1,722 @@
+package events;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import main.BGMain;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+import utilities.BGChat;
+import utilities.BGCornucopia;
+import utilities.BGFBattle;
+import utilities.BGFeast;
+import utilities.BGFiles;
+import utilities.BGKit;
+import utilities.BGReward;
+import utilities.BGSign;
+import utilities.BGTeam;
+import utilities.BGVanish;
+import utilities.enums.GameState;
+
+public class BGGameListener implements Listener {
+	Logger log = BGMain.getPluginLogger();
+	public static String last_quit;
+	public static String last_headshot;
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onInventoryClick(InventoryClickEvent event) {
+		Player p = (Player) event.getWhoClicked();
+		if(BGMain.isSpectator(p))
+			event.setCancelled(true);
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Player p = event.getPlayer();
+		if(BGMain.isSpectator(p)) {
+			event.setCancelled(true);
+			return;
+		}
+		
+		if (BGMain.GAMESTATE == GameState.PREGAME && (!p.hasPermission("bg.admin.editblocks") || !p.hasPermission("bg.admin.*"))) {
+			event.setCancelled(true);
+			return;
+		}
+
+
+		if ((p.getItemInHand().getType() == Material.COMPASS & BGMain.COMPASS)) {
+			Boolean found = Boolean.valueOf(false);
+			for (int i = 0; i < 300; i++) {
+				List<Entity> entities = p.getNearbyEntities(i, 64.0D, i);
+				for (Entity e : entities) {
+					if ((!e.getType().equals(EntityType.PLAYER))|| BGMain.isSpectator((Player) e) || BGMain.isGameMaker((Player) e))
+						continue;
+					if(BGMain.TEAM) {
+						if(BGTeam.isInTeam(p, ((Player) e).getName()))
+								continue;
+					}
+					p.setCompassTarget(e.getLocation());
+					Double distance = p.getLocation().distance(
+							e.getLocation());
+					DecimalFormat df = new DecimalFormat("##.#");
+					BGChat.printPlayerChat(p, "Tracking player \""
+							+ ((Player) e).getName() + "\" | Distance: "
+							+ df.format(distance));
+					found = Boolean.valueOf(true);
+					break;
+				}
+
+				if (found.booleanValue()) {
+					break;
+				}
+			}
+			if (!found.booleanValue()) {
+				BGChat.printPlayerChat(p,
+						"No players in range. Compass points to spawn.");
+				p.setCompassTarget(BGMain.spawn);
+			}
+		}		
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onServerPing(ServerListPingEvent event) {
+		if (BGMain.GAMESTATE != GameState.PREGAME)
+			event.setMotd(BGMain.MOTD_PROGRESS_MSG.replace("&", "§"));
+		else
+			event.setMotd(BGMain.MOTD_COUNTDOWN_MSG.replace("&", "§").replace("<time>", BGMain.TIME(BGMain.COUNTDOWN)));
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBucketFill(PlayerBucketFillEvent event) {
+		if(BGMain.isSpectator(event.getPlayer())) {
+			event.setCancelled(true);
+			return;
+		}
+		if (BGMain.GAMESTATE == GameState.PREGAME)
+			event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+		if(BGMain.isSpectator(event.getPlayer())) {
+			event.setCancelled(true);
+			return;
+		}
+		if (BGMain.GAMESTATE == GameState.PREGAME)
+			event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityShootArrow(EntityShootBowEvent event) {
+		if(event.getEntity() instanceof Player)
+			if(BGMain.isSpectator((Player) event.getEntity())) {
+				event.setCancelled(true);
+				return;
+			}
+		if (event.getEntity() instanceof Player && BGMain.GAMESTATE == GameState.PREGAME) {
+			event.getBow().setDurability((short) 0);
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerDropItem(PlayerDropItemEvent event) {
+		if(BGMain.isSpectator(event.getPlayer())) {
+			event.setCancelled(true);
+			event.getPlayer().getInventory().clear();
+			for(int i=0;i<=8;i++) {
+				event.getPlayer().getInventory().setItem(i, new ItemStack(Material.CROPS, 1));
+			}
+			return;
+		}
+		if (BGMain.GAMESTATE == GameState.PREGAME)
+			event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityExplode(EntityExplodeEvent event) {
+		if (BGMain.GAMESTATE != GameState.GAME) {
+			event.setCancelled(true);
+			return;
+		}
+		
+		ArrayList<Block> remove = new ArrayList<Block>();
+		for(Block b : event.blockList()) {
+			if(BGCornucopia.isCornucopiaBlock(b)) {
+				remove.add(b);
+				continue;
+			}
+			if(BGFeast.isFeastBlock(b)) {
+				remove.add(b);
+				continue;
+			}
+			if(BGFBattle.isBattleBlock(b)) {
+				remove.add(b);
+				continue;
+			}
+		}
+		event.blockList().removeAll(remove);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+		if(BGMain.isSpectator(event.getPlayer()) || BGMain.isGameMaker(event.getPlayer())) {
+			event.setCancelled(true);
+			return;
+		}
+		if (BGMain.GAMESTATE == GameState.PREGAME)
+			event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerKick(PlayerKickEvent event) {
+		Player p = event.getPlayer();
+		
+		if(BGMain.isGameMaker(p))
+			BGMain.remGameMaker(p);
+		if(BGMain.isSpectator(p))
+			BGMain.remSpectator(p);
+		
+		if (BGMain.GAMESTATE != GameState.PREGAME || BGMain.ADV_CHAT_SYSTEM)
+			event.setLeaveMessage(null);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerLogin(PlayerLoginEvent event) {
+		Player p = event.getPlayer();
+
+		if (BGMain.GAMESTATE != GameState.PREGAME &&
+				!(BGMain.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) &&
+				!(p.hasPermission("bg.admin.logingame") || p.hasPermission("bg.admin.*"))) {
+			event.setKickMessage(ChatColor.RED + BGMain.GAME_IN_PROGRESS_MSG);
+			event.disallow(PlayerLoginEvent.Result.KICK_OTHER, event.getKickMessage());
+		} else if (event.getResult() == Result.KICK_FULL) {
+			if (p.hasPermission("bg.vip.full") || p.hasPermission("bg.admin.full") 
+					|| Bukkit.getServer().getMaxPlayers() > BGMain.getGamers().length) {
+				event.allow();
+			} else {
+				event.setKickMessage(ChatColor.RED + BGMain.SERVER_FULL_MSG.replace("<players>", Integer.toString(Bukkit.getOnlinePlayers().length)));
+			}
+		}
+
+		BGVanish.updateVanished();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player p = event.getPlayer();
+		
+		if (!BGMain.COMPASS.booleanValue() || !BGMain.AUTO_COMPASS.booleanValue())
+			return;
+		Boolean found = Boolean.valueOf(false);
+		for (int i = 0; i < 300; i++) {
+			List<Entity> entities = p.getNearbyEntities(i, 64.0D, i);
+			for (Entity e : entities) {
+				if ((e.getType().equals(EntityType.PLAYER)) && !BGMain.isSpectator((Player) e)) {
+					p.setCompassTarget(e.getLocation());
+					found = Boolean.valueOf(true);
+					break;
+				}
+			}
+			if (found)
+				break;
+		}
+		if (!found.booleanValue()) {
+			p.setCompassTarget(BGMain.spawn);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		if(event.getCause() == TeleportCause.NETHER_PORTAL || event.getCause() == TeleportCause.END_PORTAL)
+			event.setCancelled(true);
+		
+		BGVanish.updateVanished();
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM) {
+			BGChat.printDeathChat("§e" + event.getJoinMessage());
+		}
+
+		if (BGMain.GAMESTATE != GameState.PREGAME || BGMain.ADV_CHAT_SYSTEM) {
+			event.setJoinMessage(null);
+		}
+
+		Player p = event.getPlayer();
+		
+		p.getInventory().clear();
+		p.getInventory().setHelmet(null);
+		p.getInventory().setChestplate(null);
+		p.getInventory().setLeggings(null);
+		p.getInventory().setBoots(null);
+		p.setGameMode(GameMode.SURVIVAL);
+		p.setHealth(20);
+		p.setFoodLevel(20);
+		p.setExp(0);
+		
+		if (BGMain.GAMESTATE != GameState.PREGAME) {
+			if (p.hasPermission("bg.admin.gamemaker") || p.hasPermission("bg.admin.*")) {
+				BGMain.addGameMaker(p);
+			} else if(BGMain.SPECTATOR_SYSTEM && p.hasPermission("bg.spectator")) {
+				BGMain.addSpectator(p);
+			}
+		} else {
+			if (!BGMain.ADV_CHAT_SYSTEM && !BGMain.ITEM_MENU)
+				BGChat.printKitChat(p);
+		}
+
+		if(BGMain.isSpectator(p) || BGMain.isGameMaker(p)) {
+			p.setPlayerListName(ChatColor.GRAY + getShortStr(p.getName()) + ChatColor.RESET);
+			p.setDisplayName(ChatColor.GRAY + p.getName() + ChatColor.RESET);
+		} else if (BGMain.winner(p)) {
+			p.setPlayerListName(ChatColor.GOLD + getShortStr(p.getName())
+					+ ChatColor.RESET);
+			p.setDisplayName(ChatColor.GOLD + p.getName() + ChatColor.RESET);
+		} else if (p.hasPermission("bg.admin.color")
+				|| p.hasPermission("bg.admin.*")) {
+			p.setPlayerListName(ChatColor.RED + getShortStr(p.getName())
+					+ ChatColor.RESET);
+			p.setDisplayName(ChatColor.RED + p.getName() + ChatColor.RESET);
+		} else if (p.hasPermission("bg.vip.color")
+				|| p.hasPermission("bg.vip.*")) {
+			p.setPlayerListName(ChatColor.BLUE + getShortStr(p.getName())
+					+ ChatColor.RESET);
+			p.setDisplayName(ChatColor.BLUE + p.getName() + ChatColor.RESET);
+		} else {
+			p.setPlayerListName(p.getName());
+			p.setDisplayName(p.getName());
+		}
+		
+		if(BGMain.GAMESTATE == GameState.PREGAME) {
+		List<String> pages = BGFiles.bookconf.getStringList("content");
+		List<String> content = new ArrayList<String>();
+		List<String> page = new ArrayList<String>();
+		for(String line : pages)  {
+			line = line.replace("<server_title>", BGMain.SERVER_TITLE);
+			line = line.replace("<space>", "§r\n");
+			line = line.replace("&", "§");
+			if(!line.contains("<newpage>")) {
+				page.add(line + "\n");
+			} else {
+				String pagestr = "";
+				for(String l : page)
+					pagestr = pagestr + l;
+				content.add(pagestr);
+				page.clear();
+			}
+		}
+		String pagestr = "";
+		for(String l : page)
+			pagestr = pagestr + l;
+		content.add(pagestr);	
+		page.clear();
+		
+		ItemStack item = new ItemStack(387,1);
+		
+		BookMeta im = (BookMeta) item.getItemMeta();
+			im.setPages(content);
+			im.setAuthor(BGFiles.bookconf.getString("author"));
+			im.setTitle(BGFiles.bookconf.getString("title"));
+		item.setItemMeta(im);
+		p.getInventory().addItem(item);
+		}
+		
+		String playerName = p.getName();
+		
+		if (BGMain.SQL_USE) {
+			Integer PL_ID = BGMain.getPlayerID(playerName);
+			if (PL_ID == null) {
+				BGMain.SQLquery("INSERT INTO `PLAYERS` (`NAME`) VALUES ('"
+						+ playerName + "') ;");
+			}
+		}
+		
+		if (BGMain.REW) {
+			BGReward.createUser(playerName);
+		}
+		
+		if(p.hasPermission("bg.admin.check")) {
+			BGMain.checkVersion(null, p);
+		}
+	}
+
+	private String getShortStr(String s) {
+		if (s.length() == 16) {
+			String shorts = s.substring(0, s.length() - 4);
+			return shorts;
+		}
+		if (s.length() == 15) {
+			String shorts = s.substring(0, s.length() - 3);
+			return shorts;
+		}
+		if (s.length() == 14) {
+			String shorts = s.substring(0, s.length() - 2);
+			return shorts;
+		}
+		if (s.length() == 13) {
+			String shorts = s.substring(0, s.length() - 1);
+			return shorts;
+		}
+		return s;
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockBreak(BlockBreakEvent event) {
+		Player p = event.getPlayer();
+		if(BGMain.isSpectator(p)) {
+			event.setCancelled(true);
+			return;
+		}
+		
+		if ((BGMain.GAMESTATE == GameState.PREGAME && (!p.hasPermission("bg.admin.editblocks") || !p.hasPermission("bg.admin.*")))) {
+			event.setCancelled(true);
+			return;
+		}
+
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
+			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
+			event.setCancelled(true);
+			return;
+		}
+		
+		Block b = event.getBlock();
+		
+		if(BGMain.DEATH_SG_PROTECTED && BGSign.signs.contains(b.getLocation())) {
+				event.setCancelled(true);
+				return;
+		}		
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+		for(Block b : event.getBlocks()) {
+			if(BGCornucopia.isCornucopiaBlock(b)) {
+				event.setCancelled(true);
+				break;
+			}
+			if(BGFeast.isFeastBlock(b)) {
+				event.setCancelled(true);
+				break;
+			}
+			if(BGFBattle.isBattleBlock(b)) {
+				event.setCancelled(true);
+				break;
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+		Block b = event.getBlock();
+		if(BGCornucopia.isCornucopiaBlock(b)) {
+			event.setCancelled(true);
+			return;
+		}
+		if(BGFeast.isFeastBlock(b)) {
+			event.setCancelled(true);
+			return;
+		}
+		if(BGFBattle.isBattleBlock(b)) {
+			event.setCancelled(true);
+			return;
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockBurn(BlockBurnEvent event) {
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || 
+			(BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || 
+			BGFBattle.isBattleBlock(event.getBlock())) {
+			
+			event.setCancelled(true);
+			return;
+		}
+	}
+		
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockPlace(BlockPlaceEvent event) {
+		Player p = event.getPlayer();
+		if(BGMain.isSpectator(p)) {
+			event.setCancelled(true);
+			return;
+		}
+		if ((BGMain.GAMESTATE == GameState.PREGAME && (!p.hasPermission("bg.admin.editblocks") || !p.hasPermission("bg.admin.*")))) {
+			event.setCancelled(true);
+			return;
+		}
+		
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
+			BGChat.printPlayerChat(p, "§cYou can't place this block!");
+			event.setCancelled(true);
+			return;
+		}
+	}
+		
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+		if(BGMain.isSpectator(event.getPlayer())) {
+			if(BGMain.ADV_CHAT_SYSTEM) {
+				BGChat.printPlayerChat(event.getPlayer(), "§cSpectators can't chat.");
+				event.setCancelled(true);			
+				return;
+			} else {
+				event.getRecipients().clear();
+				event.getRecipients().addAll(BGMain.getSpectators());
+				event.getRecipients().addAll(BGMain.getOnlineOps());
+				event.setFormat("§o[SPECTATORS] §r" + event.getFormat());
+			}
+		}
+			
+		if (BGMain.ADV_CHAT_SYSTEM) {
+			String m = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
+			String s = ChatColor.stripColor(m);
+			if(s.length() <= 53) {
+				BGChat.playerChatMsg(m);
+				log.info("[CHAT] " + m);
+			} else {
+				BGChat.printPlayerChat(event.getPlayer(), "§cYour message is too long!");
+			}
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		Player p = event.getPlayer();
+		
+		if(BGMain.isGameMaker(p)) {
+			event.setQuitMessage(null);
+			BGMain.remGameMaker(p);
+			return;
+		}
+		
+		if (BGMain.isSpectator(p)) {
+			event.setQuitMessage(null);
+			BGMain.remSpectator(p);
+			return;
+		}
+		
+		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM) {
+			BGChat.printDeathChat("§e" + event.getQuitMessage());
+		}
+
+		if (BGMain.GAMESTATE != GameState.PREGAME || BGMain.ADV_CHAT_SYSTEM) {
+			event.setQuitMessage(null);
+		}
+
+		if (BGMain.QUIT_MSG.booleanValue() & !p.isDead()) {
+			BGChat.printDeathChat(p.getName() + " left the game.");
+			if (!BGMain.ADV_CHAT_SYSTEM) {
+				BGChat.printDeathChat(BGMain.getGamers().length - 1
+						+ " players remaining.");
+				BGChat.printDeathChat("");
+			}
+			Location light = p.getLocation();
+			last_quit = p.getName();
+			p.setHealth(0);
+			Bukkit.getServer().getWorlds().get(0)
+					.strikeLightningEffect(light.add(0.0D, 100.0D, 0.0D));
+		}
+
+		if (BGMain.NEW_WINNER != p.getName() && BGMain.GAMESTATE != GameState.PREGAME) {
+			Bukkit.getServer().getScheduler()
+					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
+						public void run() {
+							BGMain.checkwinner();
+
+							if (BGMain.SQL_USE) {
+								Integer PL_ID = BGMain.getPlayerID(last_quit);
+								if (last_quit == BGMain.NEW_WINNER) {
+									
+								} else {
+									BGMain.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `DEATH_REASON` = 'QUIT' WHERE `REF_PLAYER` = "
+											+ PL_ID
+											+ " AND `REF_GAME` = "
+											+ BGMain.SQL_GAMEID + " ;");
+								}
+							}
+						}
+					}, 60L);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		Entity damager = event.getDamager();		
+		if(damager instanceof Player) {
+			if(BGMain.isSpectator((Player) damager)) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityDamage(EntityDamageEvent event) {
+		if(event.getEntity() instanceof Player) {
+			if(BGMain.isSpectator((Player) event.getEntity())) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
+		if (BGMain.GAMESTATE != GameState.GAME && event.getEntity() instanceof Player) {
+			event.setCancelled(true);
+			return;
+		}
+
+		if (BGMain.GAMESTATE == GameState.PREGAME && !(event.getEntity() instanceof Player)) {
+			event.setCancelled(true);
+			return;
+		}
+	}
+
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		Player dp = event.getEntity();
+		
+		if (BGMain.isSpectator(dp) || BGMain.isGameMaker(dp)) {
+			event.setDeathMessage(null);
+			event.getDrops().clear();
+			event.setDroppedExp(0);
+			return;
+		}
+				
+		if (BGMain.DEATH_SIGNS) {
+			Location loc = dp.getLocation();
+			String fl = BGFiles.dsign.getString("FIRST_LINE");
+			String sl = BGFiles.dsign.getString("SECOND_LINE");
+			String tl = BGFiles.dsign.getString("THIRD_LINE");
+			String fol = BGFiles.dsign.getString("FOURTH_LINE");
+			
+			if(fl != null)	
+				fl = fl.replace("[name]", dp.getName());
+			if(sl != null)
+				sl = sl.replace("[name]", dp.getName());
+			if(tl != null)
+				tl = tl.replace("[name]", dp.getName());
+			
+			if(fol != null)
+				fol = fol.replace("[name]", dp.getName());
+			
+			BGSign.createSign(loc, fl, sl, tl, fol);
+		}
+		
+		
+		if(dp.getKiller() != null && dp.getKiller() instanceof Player) {
+			Player killer = dp.getKiller();
+			if(BGKit.hasAbility(killer, 14)) {
+				if(killer.getFoodLevel() <= 14) {
+					killer.setFoodLevel(killer.getFoodLevel()+ 6);
+				}else {
+					killer.setFoodLevel(20);
+				}
+			}
+			if(BGMain.REW && last_headshot != dp.getName() && BGMain.COINS_FOR_KILL != 0){
+				BGReward.giveCoins(killer.getName(), BGMain.COINS_FOR_KILL);
+				if(BGMain.COINS_FOR_KILL == 1)
+					BGChat.printPlayerChat(killer, "You got 1 Coin for killing "+dp.getName());
+				else
+					BGChat.printPlayerChat(killer, "You got "+BGMain.COINS_FOR_KILL+" Coins for killing "+dp.getName());
+			}
+		}
+
+		if (last_quit == event.getEntity().getName() || last_headshot == event.getEntity().getName()) {
+			event.setDeathMessage(null);
+			return;
+		}
+
+		if (BGMain.DEATH_MSG) {
+			Player p = event.getEntity();
+
+			if (BGMain.SQL_USE) {
+				Integer PL_ID = BGMain.getPlayerID(p.getName());
+
+				Integer KL_ID = null;
+				if (p.getKiller() != null) {
+					KL_ID = BGMain.getPlayerID(p.getKiller().getName());
+				} else {
+					KL_ID = null;
+				}
+				
+				String cause = null;
+				try{
+					cause = p.getLastDamageCause().getCause().name().toString();
+				}catch (NullPointerException e) {
+					
+				}
+
+				BGMain.SQLquery("UPDATE `PLAYS` SET deathtime = NOW(), `REF_KILLER` = "
+						+ KL_ID
+						+ ", `DEATH_REASON` = '"
+						+ cause
+						+ "' WHERE `REF_PLAYER` = "
+						+ PL_ID
+						+ " AND `REF_GAME` = " + BGMain.SQL_GAMEID + " ;");
+			}
+			
+			Location light = p.getLocation();
+			p.kickPlayer(ChatColor.RED + event.getDeathMessage() + ".");
+			
+			BGChat.printDeathChat(event.getDeathMessage() + ".");
+			if (!BGMain.ADV_CHAT_SYSTEM) {
+				BGChat.printDeathChat(BGMain.getGamers().length + " players remaining.");
+				BGChat.printDeathChat("");
+			}
+			Bukkit.getServer().getWorlds().get(0).strikeLightningEffect(light.add(0, 100, 0));
+		}
+
+		event.setDeathMessage(null);
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		if(event.getMessage().contains("/me"))
+			event.setCancelled(true);
+	}
+}

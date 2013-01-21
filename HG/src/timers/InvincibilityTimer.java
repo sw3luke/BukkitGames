@@ -7,6 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import utilities.BGChat;
+import utilities.enums.GameState;
 
 public class InvincibilityTimer {
 
@@ -45,7 +46,7 @@ private static Integer shed_id = null;
 					if(BGMain.ADV_CHAT_SYSTEM && !BGMain.SHOW_TIPS) {
 						BGChat.updateChat();
 					}
-					BGMain.DENY_DAMAGE_PLAYER = false;
+					BGMain.GAMESTATE = GameState.GAME;
 					BGMain.DEATH_MSG = true;
 					new GameTimer();
 					cancel();
