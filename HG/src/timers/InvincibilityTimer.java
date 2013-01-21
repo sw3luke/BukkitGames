@@ -47,7 +47,6 @@ private static Integer shed_id = null;
 						BGChat.updateChat();
 					}
 					BGMain.GAMESTATE = GameState.GAME;
-					BGMain.DEATH_MSG = true;
 					new GameTimer();
 					cancel();
 				}

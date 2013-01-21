@@ -101,8 +101,6 @@ public class BGMain extends JavaPlugin {
 	public static Boolean REGEN_WORLD = false;
 	public static Boolean RANDOM_START = false;
 	public static Boolean SHOW_TIPS = true;
-	public static Boolean QUIT_MSG = false;
-	public static Boolean DEATH_MSG = false;
 	public static Boolean COMPASS = true;
 	public static Boolean AUTO_COMPASS = false;
 	public static Boolean ADV_ABI = false;
@@ -459,8 +457,6 @@ public class BGMain extends JavaPlugin {
 		new InvincibilityTimer();
 
 		BGMain.GAMESTATE = GameState.INVINCIBILITY;
-		QUIT_MSG = true;
-
 		if(CORNUCOPIA_ITEMS && CORNUCOPIA)
 			BGCornucopia.spawnItems();
 		

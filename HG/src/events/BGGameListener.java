@@ -548,7 +548,7 @@ public class BGGameListener implements Listener {
 			event.setQuitMessage(null);
 		}
 
-		if (BGMain.QUIT_MSG.booleanValue() & !p.isDead()) {
+		if (BGMain.GAMESTATE == GameState.GAME & !p.isDead()) {
 			BGChat.printDeathChat(p.getName() + " left the game.");
 			if (!BGMain.ADV_CHAT_SYSTEM) {
 				BGChat.printDeathChat(BGMain.getGamers().length - 1
@@ -671,7 +671,7 @@ public class BGGameListener implements Listener {
 			return;
 		}
 
-		if (BGMain.DEATH_MSG) {
+		if (BGMain.GAMESTATE != GameState.PREGAME) {
 			Player p = event.getEntity();
 
 			if (BGMain.SQL_USE) {
