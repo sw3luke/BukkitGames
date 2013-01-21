@@ -18,6 +18,7 @@ import utilities.BGKit;
 import utilities.BGReward;
 import utilities.Updater;
 import utilities.enums.GameState;
+import utilities.enums.Translation;
 
 public class BGConsole implements CommandExecutor {
 	Logger log = BGMain.getPluginLogger();
@@ -34,13 +35,13 @@ public class BGConsole implements CommandExecutor {
 					|| sender.hasPermission("bg.admin.*")) {
 				if (BGMain.GAMESTATE != GameState.PREGAME)			
 					if (p != null) 
-						BGChat.printPlayerChat(p, "The game has already begun!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.GAME_BEGUN.t());
 					else
-						sender.sendMessage("The game has already begun!");
+						sender.sendMessage(Translation.GAME_BEGUN.t());
 				else
 					BGMain.startgame();
 			} else {
-				BGChat.printPlayerChat(p, "§cYou are not allowed to do ");
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 			}
 			return true;
 		}
@@ -74,10 +75,8 @@ public class BGConsole implements CommandExecutor {
 					return true;
 				}
 				
-			}else {
-				
-				BGChat.printPlayerChat(p, "§cYou don't have enough Permissions!");
-				
+			} else {
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 		}
@@ -86,7 +85,7 @@ public class BGConsole implements CommandExecutor {
 			if(sender.hasPermission("bg.admin.check")) {
 				BGMain.checkVersion(sender, p);
 			} else {
-				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 		}
@@ -131,7 +130,7 @@ public class BGConsole implements CommandExecutor {
 				return true;
 			}else {
 				
-				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 				
 				return true;
 			}
@@ -328,7 +327,7 @@ public class BGConsole implements CommandExecutor {
 						
 					}else {
 						
-						BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 						return true;
 					}
 			}else if(args[0].equalsIgnoreCase("take")) {
@@ -392,7 +391,7 @@ public class BGConsole implements CommandExecutor {
 							return true;
 					}else {
 						
-						BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 						return true;
 					}
 				}else if(args[0].equalsIgnoreCase("stats")) {
@@ -416,7 +415,7 @@ public class BGConsole implements CommandExecutor {
 						"\n§eCOINS: " + coins1);
 					}else {
 						
-						BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 						return true;
 					}
 				}

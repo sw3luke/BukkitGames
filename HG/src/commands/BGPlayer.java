@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import main.BGMain;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,6 +17,7 @@ import utilities.BGKit;
 import utilities.BGTeam;
 import utilities.enums.BorderType;
 import utilities.enums.GameState;
+import utilities.enums.Translation;
 
 public class BGPlayer implements CommandExecutor{
 
@@ -49,7 +51,7 @@ public class BGPlayer implements CommandExecutor{
 				}
 			}else {
 				
-				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 		}
@@ -98,7 +100,7 @@ public class BGPlayer implements CommandExecutor{
 			
 			if(!p.hasPermission("bg.team")) {
 				
-				BGChat.printPlayerChat(p, "§cYou don't have enough permissions!");
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 			
