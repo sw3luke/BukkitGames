@@ -186,7 +186,6 @@ public class BGAbilitiesListener implements Listener {
 			if (shooter.getType() == EntityType.PLAYER) {
 				Player player = (Player) shooter;
 				if(BGMain.isSpectator(player)) {
-					arrow.remove();
 					return;
 				}
 				if (BGKit.hasAbility(player, Integer.valueOf(1))) {

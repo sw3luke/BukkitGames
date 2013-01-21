@@ -13,6 +13,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -29,16 +30,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -46,6 +50,10 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import utilities.BGChat;
@@ -160,7 +168,7 @@ public class BGGameListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		if(BGMain.isSpectator(event.getPlayer())) {
@@ -592,6 +600,30 @@ public class BGGameListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
+			if(damager instanceof Arrow && BGMain.isSpectator((Player) event.getEntity())) {
+				event.getEntity().teleport(BGMain.getSpawn());
+				BGChat.printPlayerChat((Player) event.getEntity(), "§cSorry, you were in the way!");
+				/* TODO: WORK IN PROGRESS - When an arrow hits and spectator, spawn a new arrow after the spectator was getting teleported away
+				Arrow arrow = (Arrow) damager;
+				Bukkit.getServer().getWorlds().get(0).spawnArrow(arrow.getLocation(), arg1, arg2, arg3);
+				*/
+				event.setCancelled(true);
+				return;
+			}
+			
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+		if(event.getRightClicked() instanceof Player && BGMain.isSpectator((Player) event.getRightClicked())) {
+			if(!BGMain.isSpectator(event.getPlayer()) && !BGMain.isGameMaker(event.getPlayer())) {
+				//A player wanted to place a block, but a spectator stood on it
+				event.getRightClicked().teleport(BGMain.getSpawn());
+				BGChat.printPlayerChat((Player) event.getRightClicked(), "§cSorry, you were in the way!");
+				event.setCancelled(true);
+				return;
+			}
 		}
 	}
 
@@ -719,4 +751,52 @@ public class BGGameListener implements Listener {
 		if(event.getMessage().contains("/me"))
 			event.setCancelled(true);
 	}
+	
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
+        if ((event.getEntity() instanceof Player) && BGMain.isSpectator((Player) event.getEntity())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onVehicleDestroy(VehicleDestroyEvent event) {
+        Entity entity = event.getAttacker();
+        if (entity instanceof Player && BGMain.isSpectator((Player) entity)) {
+        	event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onVehicleEnter(VehicleEnterEvent event) {
+        Entity entity = event.getEntered();
+        if (entity instanceof Player && BGMain.isSpectator((Player) entity)) {
+        	event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onVehicleDamage(VehicleDamageEvent event) {
+        Entity entity = event.getAttacker();
+        if (entity instanceof Player && BGMain.isSpectator((Player) entity)) {
+        	event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerEntityShear(PlayerShearEntityEvent event) {
+        if (BGMain.isSpectator(event.getPlayer())) {
+            event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onProjectileHit(ProjectileHitEvent event) {
+    	if(event.getEntity() instanceof Arrow && event.getEntity().getShooter() instanceof Player) {
+    		if(BGMain.isSpectator((Player) event.getEntity().getShooter())) {
+    			event.getEntity().remove();
+    			return;
+    		}
+    	}
+    }
 }
