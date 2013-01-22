@@ -51,7 +51,7 @@ private static Integer shed_id = null;
 					cancel();
 				}
 				
-				if(BGMain.FINAL_COUNTDOWN % 5 == 0)
+				if(BGMain.FINAL_COUNTDOWN % 5 == 0 && BGMain.ADV_CHAT_SYSTEM)
 					BGChat.updateChat();
 			}
 			
