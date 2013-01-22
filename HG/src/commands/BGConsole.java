@@ -173,11 +173,16 @@ public class BGConsole implements CommandExecutor {
 				return true;
 			}else if (args[0].equalsIgnoreCase("buy")) {
 				
-				if(BGMain.isSpectator(p)) {
-					
+				if(BGMain.isSpectator(p) || BGMain.isGameMaker(p)) {
 					BGChat.printPlayerChat(p, "§eYou can not buy a kit because you are a spectator!");
 					return true;
 				}
+				
+				if(BGMain.GAMESTATE != GameState.PREGAME) {
+					BGChat.printPlayerChat(p, "§eYou can't buy kits at the moment, the game already started!");
+					return true;
+				}
+					
 				
 				if(args.length < 2) {
 					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /coin");
@@ -204,10 +209,8 @@ public class BGConsole implements CommandExecutor {
 				}else if(coins >= BGKit.getCoins(kitName.toLowerCase())) {
 					BGReward.coinUse(p.getName(), kitName.toLowerCase());
 					BGReward.takeCoins(p.getName(), BGKit.getCoins(kitName.toLowerCase()));
-					BGChat.printPlayerChat(p, "§eYou bought the "+kitName+" Kit!");
-					if(BGMain.ADV_CHAT_SYSTEM) {
-						BGChat.updateChat(p);
-					}
+					BGKit.setKit(p, kitName.toLowerCase());
+					BGChat.printPlayerChat(p, "§eYou bought the "+kitName+" kit!");
 					return true;
 				}else {
 					
