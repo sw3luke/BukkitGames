@@ -473,12 +473,17 @@ public class BGChat {
 	}
 
 	public static void updateChat() {
+		if(!BGMain.ADV_CHAT_SYSTEM)
+			return;
+		
 		for (Player pl : BGMain.getPlayers()) {
 			updateChat(pl);
 		}
 	}
 
 	public static void updateChat(Player p) {
+		if(!BGMain.ADV_CHAT_SYSTEM)
+			return;
 
 		// Clear chat
 		p.sendMessage("");
