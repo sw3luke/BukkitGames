@@ -753,13 +753,10 @@ public class BGChat {
 			return null;
 	}
 
-	public static void setAbilityDesc(Integer ability, String description)
-			throws Error {
+	public static void setAbilityDesc(Integer ability, String description) throws Error {
 		if (ABILITY_DESC.containsKey(ability))
-			throw new Error(
-					"Cannot overwrite existing descriptions of abilties.");
+			throw new Error("Cannot overwrite existing descriptions of abilties.");
 		else
 			ABILITY_DESC.put(ability, description);
 	}
-
 }

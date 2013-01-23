@@ -303,8 +303,10 @@ public class BGKit {
 	}
 
 	public static String getKit(Player player) {
-		String kitname = KIT.get(player);
-		return kitname;
+		if(!KIT.containsKey(player))
+			return null;
+		
+		return KIT.get(player);
 	}
 	
 	public static int getCoins(String kitName) {
