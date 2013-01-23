@@ -92,6 +92,13 @@ public class BGConsole implements CommandExecutor {
 		
 		if(cmd.getName().equalsIgnoreCase("bgdownload")) {
 			if(sender.hasPermission("bg.admin.download")) {
+				if(!BGMain.UPDATE_CHECK) {
+					if(p != null)
+						BGChat.printPlayerChat(p, "§7Sorry, you disabled update-checking! Enable it or search for updates on BukkitDev manually.");
+					else
+						sender.sendMessage("§7Sorry, you disabled update-checking! Enable it or search for updates on BukkitDev manually.");
+					return true;
+				}
 				Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 				boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				

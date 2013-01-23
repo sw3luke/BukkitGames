@@ -107,3 +107,6 @@ DATABASE: ''
 
 # We recommend you to leave this at it is, it makes updating the plugin a lot easier...
 AUTO_UPDATE: true
+
+# We also recommend you to leave this at it is, or you will have to check every day if there is an update for BukkitGames
+UPDATE_CHECK: true

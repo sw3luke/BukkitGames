@@ -124,6 +124,7 @@ public class BGMain extends JavaPlugin {
 	public static Boolean SQL_DSC = false;
 	public static Location spawn;
 	public static Boolean AUTO_UPDATE = true;
+	public static Boolean UPDATE_CHECK = true;
 	public static String LAST_WINNER = "";
 	public static ArrayList<Player> spectators = new ArrayList<Player>();
 	public static ArrayList<Player> gamemakers = new ArrayList<Player>();
@@ -136,7 +137,7 @@ public class BGMain extends JavaPlugin {
 	public static Integer FEAST_SPAWN_TIME = 30;
 	public static Integer COINS_FOR_KILL = 1;
 	public static Integer COINS_FOR_WIN = 5;
-
+	
 	public static Integer SQL_GAMEID = null;
 	public static String SQL_HOST = null;
 	public static String SQL_PORT = null;
@@ -297,6 +298,7 @@ public class BGMain extends JavaPlugin {
 		FEAST_PROTECTED = Boolean.valueOf(BGFiles.feastconf.getBoolean("PROTECTED"));
 		SPECTATOR_SYSTEM = Boolean.valueOf(getConfig().getBoolean("SPECTATOR_SYSTEM"));
 		AUTO_UPDATE = Boolean.valueOf(getConfig().getBoolean("AUTO_UPDATE"));
+		UPDATE_CHECK = getConfig().getBoolean("UPDATE_CHECK");
 		TEAM = Boolean.valueOf(getConfig().getBoolean("TEAM"));
 		NO_KIT_MSG = getConfig().getString("MESSAGE.NO_KIT_PERMISSION");
 		GAME_IN_PROGRESS_MSG = getConfig().getString("MESSAGE.GAME_PROGRESS");
@@ -403,17 +405,21 @@ public class BGMain extends JavaPlugin {
 		new PreGameTimer();
 		new WorldBorderTimer();
 		
-		Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
-		boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+		if(UPDATE_CHECK) {
+			Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+			boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 			
-		if(update) {
-			log.info("-------- NEW UPDATE --------");
-			log.info("New version available (" + updater.getLatestVersionString() + ")!");
-			if(AUTO_UPDATE)
-				log.info("Type /bgdownload to install this update.");
-			else
-				log.info("Go to BukkitDev and install it, or enable auto-update in config.yml!");
-			log.info("-------- NEW UPDATE --------");
+			if(update) {
+				log.info("-------- NEW UPDATE --------");
+				log.info("New version available (" + updater.getLatestVersionString() + ")!");
+				if(AUTO_UPDATE)
+					log.info("Type /bgdownload to install this update.");
+				else
+					log.info("Go to BukkitDev and install it, or enable auto-update in config.yml!");
+				log.info("-------- NEW UPDATE --------");
+			}
+		} else {
+			log.warning("You disabled update checking... :(");
 		}
 
 		PluginDescriptionFile pdfFile = getDescription();
@@ -1016,6 +1022,13 @@ public class BGMain extends JavaPlugin {
 	}
 	
 	public static void checkVersion(CommandSender sender, Player p) {
+		if(!UPDATE_CHECK) {
+			if(p != null)
+				BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
+			else
+				sender.sendMessage("§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
+			return;
+		}
 		Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 		boolean update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 		if (update) {
