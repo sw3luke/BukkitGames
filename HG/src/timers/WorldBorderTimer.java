@@ -33,7 +33,12 @@ public class WorldBorderTimer {
 						if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.GAMESTATE != GameState.GAME) {
 							if(p.isInsideVehicle())
 								p.getVehicle().eject();
-							p.teleport(locations.containsKey(p) && BGMain.inBorder(locations.get(p), BorderType.STOP) ? locations.get(p) : BGMain.getSpawn());
+							
+							if(locations.containsKey(p) && BGMain.inBorder(locations.get(p), BorderType.STOP))
+								p.teleport(locations.get(p));
+							else
+								p.teleport(BGMain.getSpawn());
+							
 							locations.put(p, p.getLocation());
 							continue;
 						}

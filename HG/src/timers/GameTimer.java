@@ -49,7 +49,7 @@ public class GameTimer {
 								shrink_size = BGMain.WORLDRADIUS - 40;
 							
 							BGMain.WORLDRADIUS = BGMain.WORLDRADIUS - shrink_size;
-							BGMain.BORDERS.put(BorderType.SHRINK, new Border(BGMain.spawn.getX(), BGMain.spawn.getZ(), BGMain.WORLDRADIUS));
+							BGMain.BORDERS.put(BorderType.SHRINK, new Border(BGMain.spawn.getX(), BGMain.spawn.getZ(), BGMain.WORLDRADIUS - 5));
 							BGChat.printInfoChat("World-border will shrink " + shrink_size + " blocks in one minute!");
 						}
 					} else {
