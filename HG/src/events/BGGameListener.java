@@ -733,14 +733,16 @@ public class BGGameListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if(event.getMessage().toLowerCase().startsWith("/me")) {
+		if(event.getMessage().toLowerCase().startsWith("/me ")) {
 			event.setCancelled(true);
 			return;
 		}
 			
-		if(event.getMessage().toLowerCase().startsWith("/say")) {
-			String say = event.getMessage().substring(4);
-			BGChat.printInfoChat(say);
+		if(event.getMessage().toLowerCase().startsWith("/say ")) {
+			if(event.getPlayer().hasPermission("bg.admin.*")) {
+				String say = event.getMessage().substring(5);
+				BGChat.printInfoChat(say);
+			}
 			event.setCancelled(true);
 			return;
 		}

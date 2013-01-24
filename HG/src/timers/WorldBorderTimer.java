@@ -42,18 +42,19 @@ public class WorldBorderTimer {
 						continue;
 					}
 					
+					if(BGMain.GAMESTATE != GameState.PREGAME && !BGMain.inBorder(p.getLocation(), BorderType.SHRINK)) {
+						p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, (byte) 1);
+						BGChat.printPlayerChat(p, "§c§o" + "You will be outside the shrinked world-border!");
+						continue;
+					}
+					
 					if(BGMain.GAMESTATE != GameState.PREGAME && !BGMain.inBorder(p.getLocation(), BorderType.WARN)) {
 						p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, (byte) 1);
 						BGChat.printPlayerChat(p, "§c§o" + "You are coming close to the world-border!");
 					}
 					
-					if(BGMain.GAMESTATE != GameState.PREGAME && !BGMain.inBorder(p.getLocation(), BorderType.SHRINK)) {
-						p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, (byte) 1);
-						BGChat.printPlayerChat(p, "§c§o" + "You will be outside the shrinked world-border!");
-					}
-					
 					if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.GAMESTATE != GameState.GAME)
-						locations.put(p, p.getLocation());
+						locations.put(p, p.getLocation());				
 				}
 			}
 			
