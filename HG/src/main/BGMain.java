@@ -97,7 +97,6 @@ public class BGMain extends JavaPlugin {
 	public static Integer MAX_GAME_RUNNING_TIME = Integer.valueOf(30);
 	public static Integer MINIMUM_PLAYERS = Integer.valueOf(1);
 	public static final Integer WINNER_PLAYERS = Integer.valueOf(1);
-	public static Integer END_GAME_TIME = Integer.valueOf(25);
 	public static Boolean REGEN_WORLD = false;
 	public static Boolean RANDOM_START = false;
 	public static Boolean SHOW_TIPS = true;
@@ -108,7 +107,6 @@ public class BGMain extends JavaPlugin {
 	public static Boolean REW = false;
 	public static Boolean DEATH_SIGNS = true;
 	public static Boolean DEATH_SG_PROTECTED = true;
-	public static Boolean END_GAME = true;
 	public static Boolean DEFAULT_KIT = false;
 	public static Boolean CORNUCOPIA = true;
 	public static Boolean CORNUCOPIA_CHESTS = false;
@@ -322,7 +320,6 @@ public class BGMain extends JavaPlugin {
 		MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
 		COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.COUNTDOWN-SEC"));
 		FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.FINAL_COUNTDOWN-SEC"));
-		END_GAME_TIME = Integer.valueOf(getConfig().getInt("TIME.INCREASE_DIFFICULTY-MIN"));
 		COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		ITEM_MENU = getConfig().getBoolean("ITEM_MENU");

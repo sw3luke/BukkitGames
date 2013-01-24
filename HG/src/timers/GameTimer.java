@@ -5,7 +5,6 @@ import main.BGMain;
 import org.bukkit.Bukkit;
 
 import utilities.BGChat;
-import utilities.BGFBattle;
 import utilities.BGFeast;
 import utilities.BGVanish;
 
@@ -44,18 +43,6 @@ public class GameTimer {
 					if (BGMain.GAME_RUNNING_TIME == BGMain.FEAST_SPAWN_TIME)
 						BGFeast.spawnFeast();
 				}
-
-				if (BGMain.GAME_RUNNING_TIME == (BGMain.END_GAME_TIME - 1)) {
-					if(BGMain.END_GAME) {
-						BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-						
-						BGMain.END_GAME = false;
-						
-						BGFBattle.createBattle();
-						new EndGameTimer();
-					}			
-				}
-
 
 				if (BGMain.GAME_RUNNING_TIME.intValue() == BGMain.MAX_GAME_RUNNING_TIME
 						.intValue() - 1) {

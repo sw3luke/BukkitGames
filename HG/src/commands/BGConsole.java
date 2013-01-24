@@ -11,9 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import timers.EndGameTimer;
 import utilities.BGChat;
-import utilities.BGFBattle;
 import utilities.BGKit;
 import utilities.BGReward;
 import utilities.Updater;
@@ -45,42 +43,7 @@ public class BGConsole implements CommandExecutor {
 			}
 			return true;
 		}
-		
-		if (cmd.getName().equalsIgnoreCase("fbattle")) {
-			
-			if(sender.hasPermission("bg.admin.fbattle")) {
 				
-				if(BGMain.GAMESTATE == GameState.GAME) {
-					if(BGMain.END_GAME) {
-						BGChat.printInfoChat("Final battle ahead. Teleporting everybody to spawn in 1 minute!");
-						BGMain.END_GAME = false;
-						BGFBattle.createBattle();
-						new EndGameTimer();
-						
-						return true;
-					}else {
-						if(p != null)
-							BGChat.printPlayerChat(p, ChatColor.RED+"You can not start the final battle because it will start soon!");
-						else
-							sender.sendMessage(ChatColor.RED+"You can not start the final battle because it will start soon!");
-						return true;
-					}
-				}else{
-					
-					if(p != null)
-						BGChat.printPlayerChat(p, "The game has not started yet!");
-					else
-						sender.sendMessage("The game has not started yet!");
-					
-					return true;
-				}
-				
-			} else {
-				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
-				return true;
-			}
-		}
-		
 		if(cmd.getName().equalsIgnoreCase("bgversion")) {
 			if(sender.hasPermission("bg.admin.check")) {
 				BGMain.checkVersion(sender, p);

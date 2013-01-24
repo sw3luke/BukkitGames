@@ -58,7 +58,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import utilities.BGChat;
 import utilities.BGCornucopia;
-import utilities.BGFBattle;
 import utilities.BGFeast;
 import utilities.BGFiles;
 import utilities.BGKit;
@@ -197,10 +196,6 @@ public class BGGameListener implements Listener {
 				continue;
 			}
 			if(BGFeast.isFeastBlock(b)) {
-				remove.add(b);
-				continue;
-			}
-			if(BGFBattle.isBattleBlock(b)) {
 				remove.add(b);
 				continue;
 			}
@@ -425,7 +420,7 @@ public class BGGameListener implements Listener {
 			return;
 		}
 
-		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
 			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
 			event.setCancelled(true);
 			return;
@@ -450,10 +445,6 @@ public class BGGameListener implements Listener {
 				event.setCancelled(true);
 				break;
 			}
-			if(BGFBattle.isBattleBlock(b)) {
-				event.setCancelled(true);
-				break;
-			}
 		}
 	}
 	
@@ -468,18 +459,12 @@ public class BGGameListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if(BGFBattle.isBattleBlock(b)) {
-			event.setCancelled(true);
-			return;
-		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBurn(BlockBurnEvent event) {
 		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || 
-			(BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || 
-			BGFBattle.isBattleBlock(event.getBlock())) {
-			
+			(BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
 			event.setCancelled(true);
 			return;
 		}
@@ -497,7 +482,7 @@ public class BGGameListener implements Listener {
 			return;
 		}
 		
-		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock())) || BGFBattle.isBattleBlock(event.getBlock())) {
+		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
 			BGChat.printPlayerChat(p, "§cYou can't place this block!");
 			event.setCancelled(true);
 			return;

@@ -1,10 +1,7 @@
 TIME:
 # Max game length in minutes
   MAX_GAME-MIN: 90
-  
-# Final battle takes place after ... minutes
-  INCREASE_DIFFICULTY-MIN: 50
-  
+    
 # Countdown to the start of the game
   COUNTDOWN-SEC: 300
   

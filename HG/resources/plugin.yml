@@ -27,9 +27,6 @@ commands:
   coin:
     description: Coin.
     usage: /<command>
-  fbattle:
-    description: Final battle.
-    usage: /<command>
   bgversion:
     description: Displays the current version and checks for updates.
     usage: /<command>
