@@ -756,6 +756,10 @@ public class BGMain extends JavaPlugin {
 					
 					public void run() {
 						Random r = new Random();
+						if(!pl.isOnline()) {
+							Bukkit.getServer().getScheduler().cancelAllTasks();
+							Bukkit.getServer().shutdown();
+						}
 						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(0, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
 						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, 0).add(0, 5, 0)).getLocation());
 						spawnRandomFirework(Bukkit.getServer().getWorlds().get(0).getHighestBlockAt(pl.getLocation().add(r.nextInt(5) + 5, 0, r.nextInt(5) + 5).add(0, 5, 0)).getLocation());
@@ -772,8 +776,10 @@ public class BGMain extends JavaPlugin {
 					
 					@Override
 					public void run() {
+						if(pl.isOnline())
+							pl.kickPlayer("§6§lYOU HAVE WON THIS GAME! \n§6Thanks for playing the BukkitGames!");
+						
 						Bukkit.getServer().getScheduler().cancelAllTasks();
-						pl.kickPlayer("§6§lYOU HAVE WON THIS GAME! \n§6Thanks for playing the BukkitGames!");
 						Bukkit.getServer().shutdown();
 					}
 					
