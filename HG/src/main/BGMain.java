@@ -36,7 +36,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -129,7 +128,7 @@ public class BGMain extends JavaPlugin {
 	public static Integer COUNTDOWN = Integer.valueOf(0);
 	public static Integer FINAL_COUNTDOWN = Integer.valueOf(0);
 	public static Integer GAME_RUNNING_TIME = Integer.valueOf(0);
-	static HashMap<World, ArrayList<Border>> BORDERS = new HashMap<World, ArrayList<Border>>();
+	public static HashMap<BorderType, Border> BORDERS = new HashMap<BorderType, Border>();
 	public static Integer WORLDRADIUS = Integer.valueOf(250);
 	public static Boolean SQL_USE = false;
 	public static Integer FEAST_SPAWN_TIME = 30;
@@ -371,17 +370,11 @@ public class BGMain extends JavaPlugin {
 
 		LAST_WINNER = merke;
 
-		World thisWorld = getServer().getWorlds().get(0);
-		spawn = thisWorld.getSpawnLocation();
 
-		Border newBorder1 = new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS, BorderType.STOP);
-		Border newBorder2 = new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS - 10, BorderType.WARN);
-		if (!BORDERS.containsKey(thisWorld)) {
-			ArrayList<Border> newArray = new ArrayList<Border>();
-			BORDERS.put(thisWorld, newArray);
-		}
-		((ArrayList<Border>) BORDERS.get(thisWorld)).add(newBorder1);
-		((ArrayList<Border>) BORDERS.get(thisWorld)).add(newBorder2);
+		spawn = Bukkit.getServer().getWorlds().get(0).getSpawnLocation();
+
+		BORDERS.put(BorderType.STOP, new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS));
+		BORDERS.put(BorderType.WARN, new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS - 10));
 
 		COUNTDOWN = COUNTDOWN_SECONDS;
 		FINAL_COUNTDOWN = FINAL_COUNTDOWN_SECONDS;
@@ -610,56 +603,42 @@ public class BGMain extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
-
-	public static boolean inStopBorder(Location checkHere) {
-		if (!BORDERS.containsKey(checkHere.getWorld()))
-			return true;
-		
-		for (Border amIHere : BORDERS.get(checkHere.getWorld())) {
-			if(amIHere.type != BorderType.STOP)
-				continue;
-			int X = (int) Math.abs(amIHere.centerX - checkHere.getBlockX());
-			int Z = (int) Math.abs(amIHere.centerZ - checkHere.getBlockZ());
-			if ((X < amIHere.definiteSq) && (Z < amIHere.definiteSq))
-				return true;
-			if ((X > amIHere.radius) || (Z > amIHere.radius))
-				continue;
-			if (X * X + Z * Z < amIHere.radiusSq)
-				return true;
-		}
-		return false;
-	}
 	
 	public static boolean inBorder(Location c, BorderType t) {
 		if(t == BorderType.STOP) {
-			return inStopBorder(c);
+			return inBorderCheck(c, BorderType.STOP);
 		}
 		
 		if(t == BorderType.WARN) {
-			if(!inWarnBorder(c) && inStopBorder(c))
+			if(!inBorderCheck(c, BorderType.WARN) && inBorderCheck(c, BorderType.STOP))
 				return false;
+			else
+				return true;
+		}
+		
+		if(t == BorderType.SHRINK) {
+			if(BORDERS.containsKey(BorderType.SHRINK))
+				return inBorderCheck(c, BorderType.SHRINK);
 			else
 				return true;
 		}
 		return true;
 	}
 	
-	public static boolean inWarnBorder(Location checkHere) {
-		if (!BORDERS.containsKey(checkHere.getWorld()))
+	private static boolean inBorderCheck(Location checkHere, BorderType t) {
+		if(!BORDERS.containsKey(t))
 			return true;
+		Border border = BORDERS.get(t);
 		
-		for (Border amIHere : BORDERS.get(checkHere.getWorld())) {
-			if(amIHere.type != BorderType.WARN)
-				continue;
-			int X = (int) Math.abs(amIHere.centerX - checkHere.getBlockX());
-			int Z = (int) Math.abs(amIHere.centerZ - checkHere.getBlockZ());
-			if ((X < amIHere.definiteSq) && (Z < amIHere.definiteSq))
-				return true;
-			if ((X > amIHere.radius) || (Z > amIHere.radius))
-				continue;
-			if (X * X + Z * Z < amIHere.radiusSq)
-				return true;
-		}
+		int X = (int) Math.abs(border.centerX - checkHere.getBlockX());
+		int Z = (int) Math.abs(border.centerZ - checkHere.getBlockZ());
+		if ((X < border.definiteSq) && (Z < border.definiteSq))
+			return true;
+		if ((X > border.radius) || (Z > border.radius))
+			return true;;
+		if (X * X + Z * Z < border.radiusSq)
+			return true;
+
 		return false;
 	}
 		

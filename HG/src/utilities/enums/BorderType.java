@@ -2,6 +2,6 @@ package utilities.enums;
 
 public enum BorderType {
 
-	WARN, STOP;
+	WARN, STOP, SHRINK;
 	
 }

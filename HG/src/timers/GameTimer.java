@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import utilities.BGChat;
 import utilities.BGFeast;
 import utilities.BGVanish;
+import utilities.Border;
+import utilities.enums.BorderType;
 
 public class GameTimer {
 	
@@ -22,8 +24,7 @@ public class GameTimer {
 				BGMain.checkwinner();
 				BGVanish.updateVanished();
 
-				if ((BGMain.GAME_RUNNING_TIME % 5 != 0)
-						& (BGMain.GAME_RUNNING_TIME % 10 != 0)) {
+				if ((BGMain.GAME_RUNNING_TIME % 5 != 0) && (BGMain.GAME_RUNNING_TIME % 10 != 0)) {
 					if(BGMain.SHOW_TIPS) {	
 						BGChat.printTipChat();
 					}
@@ -32,6 +33,35 @@ public class GameTimer {
 					}
 				}
 
+				if((BGMain.MAX_GAME_RUNNING_TIME/5)*4 <= BGMain.GAME_RUNNING_TIME) {
+					if(!BGMain.BORDERS.containsKey(BorderType.SHRINK)) {
+						if(BGMain.WORLDRADIUS > 40) {
+							Integer shrink_size = 20;
+							if(BGMain.WORLDRADIUS > 300)
+								shrink_size = 60;
+							else if(BGMain.WORLDRADIUS > 200)
+								shrink_size = 40;
+							else if(BGMain.WORLDRADIUS > 100)
+								shrink_size = 20;
+							else if(BGMain.WORLDRADIUS < 70)
+								shrink_size = 10;
+							else
+								shrink_size = BGMain.WORLDRADIUS - 40;
+							
+							BGMain.WORLDRADIUS = BGMain.WORLDRADIUS - shrink_size;
+							BGMain.BORDERS.put(BorderType.SHRINK, new Border(BGMain.spawn.getX(), BGMain.spawn.getZ(), BGMain.WORLDRADIUS));
+							BGChat.printInfoChat("World-border will shrink " + shrink_size + " blocks in one minute!");
+						}
+					} else {
+						BGMain.BORDERS.remove(BorderType.STOP);
+						BGMain.BORDERS.remove(BorderType.WARN);
+						BGMain.BORDERS.put(BorderType.STOP, BGMain.BORDERS.get(BorderType.SHRINK));
+						BGMain.BORDERS.put(BorderType.WARN, new Border(BGMain.spawn.getX(), BGMain.spawn.getZ(), BGMain.WORLDRADIUS - 10));
+						BGMain.BORDERS.remove(BorderType.SHRINK);
+					}
+					
+				}
+				
 				if(BGMain.FEAST) {
 					if (BGMain.GAME_RUNNING_TIME == BGMain.FEAST_SPAWN_TIME - 3)
 						BGFeast.announceFeast(3);
@@ -44,14 +74,9 @@ public class GameTimer {
 						BGFeast.spawnFeast();
 				}
 
-				if (BGMain.GAME_RUNNING_TIME.intValue() == BGMain.MAX_GAME_RUNNING_TIME
-						.intValue() - 1) {
-					BGChat.printInfoChat("Final battle! 1 minute left.");
-				}
-
-				if (BGMain.GAME_RUNNING_TIME.intValue() >= BGMain.MAX_GAME_RUNNING_TIME
-						.intValue())
+				if (BGMain.GAME_RUNNING_TIME >= BGMain.MAX_GAME_RUNNING_TIME)
 					Bukkit.getServer().shutdown();
+				
 				}
 			
 		}, 0, 20*60);
