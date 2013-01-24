@@ -258,20 +258,20 @@ public class BGAbilitiesListener implements Listener {
 					if (event.getDamage() > 4) {
 						event.setCancelled(true);
 						p.damage(4);
-						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 					}
-					List<Entity> nearbyEntities = event.getEntity()
-							.getNearbyEntities(5, 5, 5);
+					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
+					List<Entity> nearbyEntities = event.getEntity().getNearbyEntities(5, 5, 5);
 					for (Entity target : nearbyEntities) {
 						if (target instanceof Player) {
-							if(BGMain.isSpectator((Player) target) || BGMain.isGameMaker((Player) target))
-								continue;
 							Player t = (Player) target;
+							if(BGMain.isSpectator(t) || BGMain.isGameMaker(t))
+								continue;
 							if(BGMain.TEAM) {
-								
 								if(BGTeam.isInTeam(p, t.getName()))
 									continue;
 							}
+							if(t.getName() == p.getName())
+								continue;
 							if (t.isSneaking())
 								t.damage(event.getDamage() / 2, event.getEntity());
 							else
