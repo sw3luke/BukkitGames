@@ -33,7 +33,7 @@ public class GameTimer {
 					}
 				}
 
-				if((BGMain.MAX_GAME_RUNNING_TIME/5)*4 <= BGMain.GAME_RUNNING_TIME) {
+				if(BGMain.GAME_ENDING_TIME <= BGMain.GAME_RUNNING_TIME) {
 					if(!BGMain.BORDERS.containsKey(BorderType.SHRINK)) {
 						if(BGMain.WORLDRADIUS > 40) {
 							Integer shrink_size = 20;

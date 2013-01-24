@@ -3,7 +3,7 @@
 #
 
 # When the feast should spawn, 3 minutes before it will announce the coords and will set the ground to soulsand
-SPAWN_TIME: 30
+SPAWN_TIME: 35
 
 # Whether to spawn the items in chests or not
 CHESTS: false
@@ -17,7 +17,7 @@ PROTECTED: true
 # Example for one a line:
 # Bread, which will be spawned:
 # - '297,5,10,true'
-# Sword (with knockback enchantment), which maybe will be spawned:
+# Sword (with knockback enchantment), which will maybe be spawned:
 # - '268,1,1,false,19,1'
 
 ITEMS:

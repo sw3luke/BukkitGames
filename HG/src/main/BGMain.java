@@ -91,11 +91,12 @@ public class BGMain extends JavaPlugin {
 	public static String SERVER_TITLE = null;
 	public static Boolean ADV_CHAT_SYSTEM = true;
 	public static Boolean KIT_PREFIX = true;
-	public static Integer COUNTDOWN_SECONDS = Integer.valueOf(30);
-	public static Integer FINAL_COUNTDOWN_SECONDS = Integer.valueOf(20);
-	public static Integer MAX_GAME_RUNNING_TIME = Integer.valueOf(30);
-	public static Integer MINIMUM_PLAYERS = Integer.valueOf(1);
-	public static final Integer WINNER_PLAYERS = Integer.valueOf(1);
+	public static Integer COUNTDOWN_SECONDS = 300;
+	public static Integer FINAL_COUNTDOWN_SECONDS = 60;
+	public static Integer MAX_GAME_RUNNING_TIME = 60;
+	public static Integer MINIMUM_PLAYERS = 4;
+	public static Integer GAME_ENDING_TIME = 50;
+	public static final Integer WINNER_PLAYERS = 1;
 	public static Boolean REGEN_WORLD = false;
 	public static Boolean RANDOM_START = false;
 	public static Boolean SHOW_TIPS = true;
@@ -318,6 +319,7 @@ public class BGMain extends JavaPlugin {
 		MINIMUM_PLAYERS = Integer.valueOf(getConfig().getInt("MINIMUM_PLAYERS_START"));	
 		MAX_GAME_RUNNING_TIME = Integer.valueOf(getConfig().getInt("TIME.MAX_GAME-MIN"));
 		COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.COUNTDOWN-SEC"));
+		GAME_ENDING_TIME = getConfig().getInt("TIME.GAME_ENDING-MIN");
 		FINAL_COUNTDOWN_SECONDS = Integer.valueOf(getConfig().getInt("TIME.FINAL_COUNTDOWN-SEC"));
 		COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));

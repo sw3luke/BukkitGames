@@ -1,6 +1,9 @@
 TIME:
 # Max game length in minutes
-  MAX_GAME-MIN: 90
+  MAX_GAME-MIN: 60
+    
+# When the worldborders should start to shrink in minutes
+  GAME_ENDING-MIN: 50
     
 # Countdown to the start of the game
   COUNTDOWN-SEC: 300
@@ -46,7 +49,7 @@ CORNUCOPIA: true
 # Spawn feast (see feast.yml)
 FEAST: true
 
-# Radius of the world...
+# Radius of the world
 WORLD_BORDER_RADIUS: 300
 
 # Minimum of players to start with.
