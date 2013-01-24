@@ -281,7 +281,7 @@ public class BGGameListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM) {
+		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM && event.getJoinMessage() != null) {
 			BGChat.printDeathChat("§e" + event.getJoinMessage());
 		}
 
@@ -533,7 +533,7 @@ public class BGGameListener implements Listener {
 			return;
 		}
 		
-		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM) {
+		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM && event.getQuitMessage() != null) {
 			BGChat.printDeathChat("§e" + event.getQuitMessage());
 		}
 
@@ -733,8 +733,17 @@ public class BGGameListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if(event.getMessage().contains("/me"))
+		if(event.getMessage().toLowerCase().startsWith("/me")) {
 			event.setCancelled(true);
+			return;
+		}
+			
+		if(event.getMessage().toLowerCase().startsWith("/say")) {
+			String say = event.getMessage().substring(4);
+			BGChat.printInfoChat(say);
+			event.setCancelled(true);
+			return;
+		}
 	}
 	
     @EventHandler(priority = EventPriority.HIGHEST)

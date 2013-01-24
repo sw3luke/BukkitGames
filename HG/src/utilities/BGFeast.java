@@ -32,7 +32,7 @@ public class BGFeast {
 		if(mainBlock == null) {
 			do {
 				mainBlock = BGMain.getRandomLocation().subtract(0, 1, 0).getBlock();
-			} while (!BGMain.inBorder(mainBlock.getLocation(), BorderType.WARN));
+			} while (!BGMain.inBorder(mainBlock.getLocation(), BorderType.WARN) || mainBlock.getType() == Material.LOG || mainBlock.getType() == Material.LEAVES);
 			mainBlock.setType(Material.NETHERRACK);
 			fblocks.add(mainBlock.getLocation());
 			removeAbove(mainBlock);

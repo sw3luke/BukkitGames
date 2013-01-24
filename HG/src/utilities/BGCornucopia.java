@@ -36,9 +36,14 @@ public class BGCornucopia {
 	}
 	
 	private static Block getCornSpawnBlock() {
-		Location loc = BGMain.getSpawn();
-		loc.subtract(0, 2.5, 0);
-		Block b = Bukkit.getServer().getWorlds().get(0).getBlockAt(loc);
+		Location loc = BGMain.getSpawn().subtract(0, 2.5, 0);
+		Block b = loc.getWorld().getBlockAt(loc);
+		Integer sub = 0;
+		while(b.getType() == Material.LOG || b.getType() == Material.LEAVES) {
+			sub++;
+			loc = BGMain.getSpawn().subtract(0, 2.5 + sub, 0);
+			b = loc.getWorld().getBlockAt(loc);
+		}
 		return b;
 	}
 	
