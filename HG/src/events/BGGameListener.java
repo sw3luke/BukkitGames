@@ -65,6 +65,7 @@ import utilities.BGReward;
 import utilities.BGSign;
 import utilities.BGTeam;
 import utilities.BGVanish;
+import utilities.enums.BorderType;
 import utilities.enums.GameState;
 
 public class BGGameListener implements Listener {
@@ -275,6 +276,11 @@ public class BGGameListener implements Listener {
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		if(event.getCause() == TeleportCause.NETHER_PORTAL || event.getCause() == TeleportCause.END_PORTAL)
 			event.setCancelled(true);
+		
+		if(!BGMain.inBorder(event.getTo(), BorderType.STOP)) {
+			event.getPlayer().teleport(event.getFrom());
+			event.setCancelled(true);
+		}
 		
 		BGVanish.updateVanished();
 	}

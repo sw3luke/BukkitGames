@@ -23,8 +23,8 @@ public class BGChat {
 	static Integer TIP_COUNT = 0;
 	static ArrayList<String> TIPS = new ArrayList<String>();
 	private static Logger log = BGMain.getPluginLogger();
-	static String TIMER_MSG = ""; 
-	static String DEATH_MSG = ""; 
+	static String TIMER_MSG = "TIMER_MSG"; 
+	static String DEATH_MSG = "This server is running the BukkitGames plugin."; 
 	static String INFO_MSG = "Welcome to the HungerGames! | Get your kit now: §f/kit"; 
 	static HashMap<Player, String> PLAYER_MSG = new HashMap<Player, String>();
 	static HashMap<Player, Boolean> KIT_CHAT = new HashMap<Player, Boolean>();
