@@ -26,6 +26,13 @@
             <artifactId>craftbukkit</artifactId>
             <version>1.4.7-R0.1</version>
         </dependency>
+        <dependency>
+            <groupId>pgDev.bukkit.DisguiseCraft</groupId>
+            <artifactId>DisguiseCraft</artifactId>
+            <version>4.3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

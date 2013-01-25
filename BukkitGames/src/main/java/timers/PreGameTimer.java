@@ -15,7 +15,6 @@ public class PreGameTimer {
 	public PreGameTimer() {
 		shed_id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 			
-			@Override
 			public void run() {
 				if (BGMain.COUNTDOWN.intValue() > 0) {
 					if (BGMain.COUNTDOWN >= 10 & BGMain.COUNTDOWN % 10 == 0) {

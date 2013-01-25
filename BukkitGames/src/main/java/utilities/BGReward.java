@@ -24,7 +24,6 @@ public class BGReward {
 				TRYS.put(playerName, 1);
 			}
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
-				@Override
 				public void run() {
 					createUser(playerName);
 				}

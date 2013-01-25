@@ -16,7 +16,6 @@ private static Integer shed_id = null;
 	public InvincibilityTimer() {
 		shed_id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 			
-			@Override
 			public void run() {
 				if (BGMain.FINAL_COUNTDOWN > 0) {
 					if (BGMain.FINAL_COUNTDOWN >= 10

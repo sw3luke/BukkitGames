@@ -17,7 +17,6 @@ public class GameTimer {
 	public GameTimer() {
 		shed_id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 			
-			@Override
 			public void run() {
 				BGMain.GAME_RUNNING_TIME++;
 				BGChat.printTimeChat("");

@@ -555,7 +555,7 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().getWorlds().get(0).setThundering(false);
 		if (ADV_CHAT_SYSTEM) {
 			BGChat.printInfoChat(" --- The games have begun! ---");
-			BGChat.printDeathChat("§e\"May the odds be ever in your favor!\"");
+			BGChat.printDeathChat("ï¿½e\"May the odds be ever in your favor!\"");
 		} else {
 			BGChat.printTimeChat("");
 			BGChat.printTimeChat("The games have begun!");
@@ -750,7 +750,7 @@ public class BGMain extends JavaPlugin {
 					else
 						text += CFW+" coins for winning the game!";
 				} 
-				BGChat.printPlayerChat(pl, "§6§lYOU HAVE WON THIS GAME!" + text);
+				BGChat.printPlayerChat(pl, "ï¿½6ï¿½lYOU HAVE WON THIS GAME!" + text);
 				
 				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 					
@@ -774,10 +774,9 @@ public class BGMain extends JavaPlugin {
 				
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
 					
-					@Override
 					public void run() {
 						if(pl.isOnline())
-							pl.kickPlayer("§6§lYOU HAVE WON THIS GAME! \n§6Thanks for playing the BukkitGames!");
+							pl.kickPlayer("ï¿½6ï¿½lYOU HAVE WON THIS GAME! \nï¿½6Thanks for playing the BukkitGames!");
 						
 						Bukkit.getServer().getScheduler().cancelAllTasks();
 						Bukkit.getServer().shutdown();
@@ -949,7 +948,7 @@ public class BGMain extends JavaPlugin {
 		
 		p.setGameMode(GameMode.CREATIVE);
 		BGVanish.makeVanished(p);
-		BGChat.printPlayerChat(p, "§eYou are now a gamemaker!");
+		BGChat.printPlayerChat(p, "ï¿½eYou are now a gamemaker!");
 	}
 	
 	public static void remGameMaker(Player p) {
@@ -989,7 +988,7 @@ public class BGMain extends JavaPlugin {
 		for(int i=0;i<=8;i++) {
 			p.getInventory().setItem(i, new ItemStack(Material.CROPS, 1));
 		}
-		BGChat.printPlayerChat(p, "§eYou are now a spectator!");
+		BGChat.printPlayerChat(p, "ï¿½eYou are now a spectator!");
 	}
 	
 	public static void remSpectator(Player p) {
@@ -1010,9 +1009,9 @@ public class BGMain extends JavaPlugin {
 	public static void checkVersion(CommandSender sender, Player p) {
 		if(!UPDATE_CHECK) {
 			if(p != null)
-				BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
+				BGChat.printPlayerChat(p, "ï¿½7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
 			else
-				sender.sendMessage("§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
+				sender.sendMessage("ï¿½7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
 			return;
 		}
 		Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
@@ -1020,14 +1019,14 @@ public class BGMain extends JavaPlugin {
 		if (update) {
 			String newversion = updater.getLatestVersionString();
 			if(p != null)
-				BGChat.printPlayerChat(p, "§6Update available: " + newversion + " §r/bgdownload");
+				BGChat.printPlayerChat(p, "ï¿½6Update available: " + newversion + " ï¿½r/bgdownload");
 			else
-				sender.sendMessage("§6Update available: " + newversion + " §r/bgdownload");
+				sender.sendMessage("ï¿½6Update available: " + newversion + " ï¿½r/bgdownload");
 		} else {
 			if(p != null)
-				BGChat.printPlayerChat(p, "§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
+				BGChat.printPlayerChat(p, "ï¿½7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
 			else
-				sender.sendMessage("§7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
+				sender.sendMessage("ï¿½7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
 		}
 	}
 	
