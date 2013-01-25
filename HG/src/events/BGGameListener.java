@@ -506,7 +506,7 @@ public class BGGameListener implements Listener {
 				event.getRecipients().clear();
 				event.getRecipients().addAll(BGMain.getSpectators());
 				event.getRecipients().addAll(BGMain.getOnlineOps());
-				event.setFormat("§o[SPECTATORS] §r" + event.getFormat());
+				event.setFormat("§o[SPECTATOR] §r" + event.getFormat());
 			}
 		}
 			

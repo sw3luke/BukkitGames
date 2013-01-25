@@ -982,7 +982,9 @@ public class BGMain extends JavaPlugin {
 			return;
 			
 		spectators.add(p);
-		p.setGameMode(GameMode.CREATIVE);
+		p.setGameMode(GameMode.ADVENTURE);
+		p.setAllowFlight(true);
+		p.setFlying(true);
 		BGVanish.makeVanished(p);
 		for(int i=0;i<=8;i++) {
 			p.getInventory().setItem(i, new ItemStack(Material.CROPS, 1));
