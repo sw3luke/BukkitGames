@@ -20,7 +20,7 @@
         </repository>
         <repository>
             <id>disguisecraft-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
+            <url>https://git.gitorious.org/disguisecraft/disguisecraft.git</url>
         </repository>
     </repositories>
 
