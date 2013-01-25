@@ -32,7 +32,7 @@
         <resources>
             <resource>
                 <targetPath>.</targetPath>
-                <directory>${basedir}/</directory>
+                <directory>${basedir}/HG/resources/</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>config.yml</include>
