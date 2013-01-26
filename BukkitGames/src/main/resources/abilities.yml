@@ -4,7 +4,7 @@ AB:
   '1':
     Desc: Arrows fired at the ground at explode.
   '2':
-    Desc: When breaking a log, all other logs above will break, too
+    Desc: When breaking a log, all other logs above will break, too.
   '3':
     Desc: Throwing snowballs causes confusion to players.
   '4':
@@ -52,9 +52,7 @@ AB:
     invisible: You are now invisible!
     visible: You are no longer invisible!
   '17':
-    Desc: When you hit a mob, you turn in this mob until you take damage.
-    disguise: You are now disguised!
-    undisguise: You are no longer disguised!
+    Desc: Disabled Ability!
   '18':
     Desc: With the fist you make damage like a stonesword, incoming damage is lower.
   '19':

@@ -11,7 +11,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <my.lib>http://dev.bukkit.org/media/files/658/966/DisguiseCraft.jar</my.lib>
     </properties>
   
     <repositories>
@@ -27,11 +26,6 @@
             <artifactId>craftbukkit</artifactId>
             <version>1.4.7-R0.1</version>
         </dependency>
-        <dependency>
-			<groupId>pgDev.bukkit.DisguiseCraft</groupId>
-			<artifactId>DisguiseCraft</artifactId>
-			 <version>4.3</version>
-		</dependency>
     </dependencies>
 
     <build>

@@ -42,11 +42,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import pgDev.bukkit.DisguiseCraft.disguise.DisguiseType;
-
 import utilities.BGChat;
 import utilities.BGCooldown;
-import utilities.BGDisguise;
 import utilities.BGFiles;
 import utilities.BGKit;
 import utilities.BGReward;
@@ -291,10 +288,6 @@ public class BGAbilitiesListener implements Listener {
 					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 				}
 			}
-			
-				if(BGKit.hasAbility(p, 17) && BGMain.ADV_ABI) {
-					BGDisguise.unDisguise(p);
-				}
 				if(BGKit.hasAbility(p, 18)) {
 					event.setDamage(event.getDamage() - 1);
 				}
@@ -518,17 +511,8 @@ public class BGAbilitiesListener implements Listener {
 					}
 				}
 			}
-			
-			EntityType mob = defender.getType();
-			
-			if (BGMain.ADV_ABI && BGKit.hasAbility(dam, 17) && BGDisguise.getDisguiseType(mob) != null) {
-				
-				DisguiseType mt = BGDisguise.getDisguiseType(mob);
-				BGDisguise.disguise(dam, mt);
-			}
-			
+								
 			if (BGKit.hasAbility(dam, 18) && dam.getItemInHand().getType() == Material.AIR) {
-
 				event.setDamage(event.getDamage()+ 4);
 			}
 		}

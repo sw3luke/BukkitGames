@@ -60,7 +60,6 @@ import timers.PreGameTimer;
 import timers.WorldBorderTimer;
 import utilities.BGChat;
 import utilities.BGCornucopia;
-import utilities.BGDisguise;
 import utilities.BGFiles;
 import utilities.BGKit;
 import utilities.BGReward;
@@ -324,12 +323,7 @@ public class BGMain extends JavaPlugin {
 		COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
-		
-		if (ADV_ABI) {
-			log.info("Enableing the advanced abilities.");
-			new BGDisguise();
-		}
-		
+				
 		if(REW && !SQL_USE) {
 			log.warning("MySQL has to be enabled for advanced reward, turning it off.");
 			REW = false;

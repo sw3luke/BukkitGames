@@ -37,9 +37,6 @@ TIPS:
   - 'Get help by typing in /help.'
   - 'Get information about a kit with /kitinfo [KitName].'
   
-# Advcanced Abilities (DisguiseCraft needed!)
-ADVANCED_ABILITIES: false
-
 # Should the kitname displayed as prefix in the chat?
 KIT_PREFIX: true
 
