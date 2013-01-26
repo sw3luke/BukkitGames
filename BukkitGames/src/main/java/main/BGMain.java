@@ -374,7 +374,6 @@ public class BGMain extends JavaPlugin {
 
 
 		spawn = Bukkit.getServer().getWorlds().get(0).getSpawnLocation();
-
 		BORDERS.put(BorderType.STOP, new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS));
 		BORDERS.put(BorderType.WARN, new Border(spawn.getX(), spawn.getZ(), BGMain.WORLDRADIUS - 10));
 
