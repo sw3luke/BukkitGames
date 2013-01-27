@@ -231,11 +231,6 @@ public class BGMain extends JavaPlugin {
 		else
 			console.sendMessage(ChatColor.RED+"getCommand coin returns null");
 		
-		if (getCommand("fbattle") != null)
-			getCommand("fbattle").setExecutor(new BGConsole());
-		else
-			console.sendMessage(ChatColor.RED+"getCommand fbattle returns null");
-		
 		if (getCommand("bgversion") != null)
 			getCommand("bgversion").setExecutor(new BGConsole());
 		else
@@ -248,10 +243,6 @@ public class BGMain extends JavaPlugin {
 			getCommand("team").setExecutor(new BGPlayer());
 		else
 			console.sendMessage(ChatColor.RED+"getCommand team returns null");
-		if(getCommand("gamemaker") != null)
-			getCommand("gamemaker").setExecutor(new BGPlayer());
-		else
-			console.sendMessage(ChatColor.RED+"getCommand gamemaker returns null");
 		if(getCommand("teleport") != null)
 			getCommand("teleport").setExecutor(new BGPlayer());
 		else
