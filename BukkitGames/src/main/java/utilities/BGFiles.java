@@ -16,7 +16,6 @@ public class BGFiles {
 	public static FileConfiguration config;
 	public static FileConfiguration dsign;
 	public static FileConfiguration kitconf;
-	public static FileConfiguration messageconf;
 	public static FileConfiguration cornconf;
 	public static FileConfiguration feastconf;
 	public static FileConfiguration worldconf;
@@ -38,7 +37,6 @@ public class BGFiles {
 		File deathSignFile = new File(BGMain.instance.getDataFolder(), "deathsign.yml");
 		File abilitiesFile = new File(BGMain.instance.getDataFolder(), "abilities.yml");
 		File bookFile = new File(BGMain.instance.getDataFolder(), "book.yml");
-		File messagesFile = new File(BGMain.instance.getDataFolder(), "messages.yml");
 		File cornFile = new File(BGMain.instance.getDataFolder(), "cornucopia.yml");
 		File feastFile = new File(BGMain.instance.getDataFolder(), "feast.yml");
 		File worldFile = new File(BGMain.instance.getDataFolder(), "world.yml");
@@ -75,11 +73,6 @@ public class BGFiles {
 			BGMain.copy(BGMain.instance.getResource("book.yml"), bookFile);
 			creation++;
 		}
-		if (!messagesFile.exists()) {
-			messagesFile.getParentFile().mkdirs();
-			BGMain.copy(BGMain.instance.getResource("messages.yml"), messagesFile);
-			creation++;
-		}
 		if(!cornFile.exists()) {
 			cornFile.getParentFile().mkdirs();
 			BGMain.copy(BGMain.instance.getResource("cornucopia.yml"), cornFile);
@@ -111,8 +104,6 @@ public class BGFiles {
 				new File(BGMain.instance.getDataFolder(), "deathsign.yml"));
 		kitconf = YamlConfiguration.loadConfiguration(
 				new File(BGMain.instance.getDataFolder(), "kit.yml"));
-		messageconf = YamlConfiguration.loadConfiguration(
-				new File(BGMain.instance.getDataFolder(), "messages.yml"));
 		cornconf = YamlConfiguration.loadConfiguration(
 				new File(BGMain.instance.getDataFolder(), "cornucopia.yml"));
 		feastconf = YamlConfiguration.loadConfiguration(

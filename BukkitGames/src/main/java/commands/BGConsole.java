@@ -29,17 +29,13 @@ public class BGConsole implements CommandExecutor {
 			p = null;
 		}
 		if (cmd.getName().equalsIgnoreCase("start")) {
-			if (sender.hasPermission("bg.admin.start")
-					|| sender.hasPermission("bg.admin.*")) {
+			if (sender.hasPermission("bg.admin.start") || sender.hasPermission("bg.admin.*")) {
 				if (BGMain.GAMESTATE != GameState.PREGAME)			
-					if (p != null) 
-						BGChat.printPlayerChat(p, ChatColor.RED + Translation.GAME_BEGUN.t());
-					else
-						sender.sendMessage(Translation.GAME_BEGUN.t());
+					msg(p, sender, ChatColor.RED + Translation.GAME_BEGUN.t());
 				else
 					BGMain.startgame();
 			} else {
-				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
+				msg(p, sender, ChatColor.RED + Translation.NO_PERMISSION.t());
 			}
 			return true;
 		}
@@ -48,7 +44,7 @@ public class BGConsole implements CommandExecutor {
 			if(sender.hasPermission("bg.admin.check")) {
 				BGMain.checkVersion(sender, p);
 			} else {
-				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
+				msg(p, sender, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 		}
@@ -56,10 +52,7 @@ public class BGConsole implements CommandExecutor {
 		if(cmd.getName().equalsIgnoreCase("bgdownload")) {
 			if(sender.hasPermission("bg.admin.download")) {
 				if(!BGMain.UPDATE_CHECK) {
-					if(p != null)
-						BGChat.printPlayerChat(p, "§7Sorry, you disabled update-checking! Enable it or search for updates on BukkitDev manually.");
-					else
-						sender.sendMessage("§7Sorry, you disabled update-checking! Enable it or search for updates on BukkitDev manually.");
+					msg(p, sender, ChatColor.RED + Translation.UPDATE_CHECK_DISABLED.t());
 					return true;
 				}
 				Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
@@ -67,41 +60,24 @@ public class BGConsole implements CommandExecutor {
 				
 				if(update) {
 					if(!BGMain.AUTO_UPDATE) {
-						if(p != null)
-							BGChat.printPlayerChat(p, "§7Sorry, you disabled auto-update! Enable it or download the update from BukkitDev manually.");
-						else
-							sender.sendMessage("§7Sorry, you disabled auto-update! Enable it or download the update from BukkitDev manually.");
+						msg(p, sender, ChatColor.RED + Translation.UPDATE_DOWNLOAD_DISABLED.t());
 						return true;
 					}
-					if(p != null)
-						BGChat.printPlayerChat(p, "§7Downloading new version... (" + updater.getLatestVersionString() + ")");
-					else
-						sender.sendMessage("§7Downloading new version... (" + updater.getLatestVersionString() + ")");
+					msg(p, sender, ChatColor.GREEN + Translation.UPDATE_DOWNLOAD_VERSION.t().replace("<version>", updater.getLatestVersionString()));
 					Updater download = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
 					
 					if(download.getResult() == Updater.UpdateResult.SUCCESS) {
-						if(p != null)
-							BGChat.printPlayerChat(p, "§6Download complete! §7Regenerate all config files!");
-						else
-							sender.sendMessage("§6Download complete! §7Regenerate all config files!");
+						msg(p, sender, ChatColor.GREEN + Translation.UPDATE_DOWNLOAD_COMPLETE.t());
 					} else {
-						if(p != null)
-							BGChat.printPlayerChat(p, "§cOops! Something went wrong. See console error log!");
-						else
-							sender.sendMessage("§cOops! Something went wrong. See console error log!");
+						msg(p, sender, ChatColor.RED + Translation.UPDATE_DOWNLOAD_ERROR.t());
 					}
 				} else {
-					if(p != null)
-						BGChat.printPlayerChat(p, "§7There is no update available to download!");
-					else
-						sender.sendMessage("§7There is no update available to download!");
+					msg(p, sender,  ChatColor.RED + Translation.UPDATE_NO_UPDATE.t());
 				}
 				
 				return true;
-			}else {
-				
-				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
-				
+			} else {
+				msg(p, sender, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 		}
@@ -109,291 +85,159 @@ public class BGConsole implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("coin")) {
 			
 			if (!BGMain.REW) {
-				if(p == null) {
-					sender.sendMessage("§eReward System disabled!");
-				}else {
-					BGChat.printPlayerChat(p, "§eReward System disabled!");
-				}
+				msg(p, sender, ChatColor.RED + Translation.REWARD_FUNC_DISABLED.t());
 				return true;
 			}
 			
 			int coins = 0;
 			
-			if( p == null && ((args.length < 1) || (args.length > 0 && (!args[0].equalsIgnoreCase("give") && !args[0].equalsIgnoreCase("take"))))) {
-				
-				sender.sendMessage("§cThis command can only be accessed by players!");
+			if(p == null && ((args.length < 1) || (args.length > 0 && (!args[0].equalsIgnoreCase("give") && !args[0].equalsIgnoreCase("take"))))) {
+				sender.sendMessage(ChatColor.RED + Translation.CMD_ONLY_PLAYER_ACCESS.t());
 				return true;
-			}else if( p != null){
-			
+			} else if(p != null) {
 				coins = BGMain.getCoins(BGMain.getPlayerID(p.getName()));
-			
 			}
 			
 			if (args.length == 0) {
-				BGChat.printPlayerChat(p,
-										"§eYou get "+BGMain.COINS_FOR_WIN+" Coins for each time you win a game"+
-										'\n'+"§eYou get "+BGMain.COINS_FOR_KILL+" Coin for killing a player (only close combat)"+		
-										'\n'+"§eCOINS: "+ coins +
-										'\n'+"§eType /coin buy [kitName] when you want to buy a Kit!"+
-										'\n'+"§eType /coin send <player> <amount> to send other players coins");
+				BGChat.printPlayerChat(p, ChatColor.YELLOW + Translation.REWARD_FUNC_CMDS.t());
 				return true;
-			}else if (args.length > 3) {
-				
-				BGChat.printPlayerChat(p, "§eToo much arrguments! Try /coin");
-				return true;
-			}else if (args[0].equalsIgnoreCase("buy")) {
-				
+			} else if (args.length > 3) {
+				return false;
+			} else if (args[0].equalsIgnoreCase("buy")) {
 				if(BGMain.isSpectator(p) || BGMain.isGameMaker(p)) {
-					BGChat.printPlayerChat(p, "§eYou can not buy a kit because you are a spectator!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_NOT_ALLOWED.t());
 					return true;
 				}
 				
 				if(BGMain.GAMESTATE != GameState.PREGAME) {
-					BGChat.printPlayerChat(p, "§eYou can't buy kits at the moment, the game already started!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_NOT_ALLOWED.t());
 					return true;
 				}
 					
-				
 				if(args.length < 2) {
-					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /coin");
-					return true;
+					return false;
 				}
 				
 				String kitName = args[1];
-				
 				if (p.hasPermission("bg.kit.*")) {
-					
-					BGChat.printPlayerChat(p, "§eYou don't need to use Coins you can use all Kits!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_ALL_KITS.t());
 				}else if (BGMain.REW && BGReward.BOUGHT_KITS.containsKey(p.getName())) {
 					
-					BGChat.printPlayerChat(p, "§eYou have already bought a kit this round!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_ALREADY_BOUGHT.t());
 					return true;					
-				}else if (BGKit.isKit(kitName.toLowerCase()) == false) {
+				} else if (BGKit.isKit(kitName.toLowerCase()) == false) {
 					
-					BGChat.printPlayerChat(p, "§eThis Kit does not exits!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.KIT_NOT_EXIST.t());
 					return true;
-				}else if(BGKit.getCoins(kitName.toLowerCase()) == 0) {
-					
-					BGChat.printPlayerChat(p, "§eThis Kit can not be bought!");
+				} else if(BGKit.getCoins(kitName.toLowerCase()) == 0) {
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_KIT_NO_BUY.t());
 					return true;
-				}else if(coins >= BGKit.getCoins(kitName.toLowerCase())) {
+				} else if(coins >= BGKit.getCoins(kitName.toLowerCase())) {
 					BGReward.coinUse(p.getName(), kitName.toLowerCase());
 					BGReward.takeCoins(p.getName(), BGKit.getCoins(kitName.toLowerCase()));
 					BGKit.setKit(p, kitName.toLowerCase());
-					BGChat.printPlayerChat(p, "§eYou bought the "+kitName+" kit!");
+					BGChat.printPlayerChat(p, ChatColor.GREEN + Translation.REWARD_FUNC_BOUGHT_KIT.t().replace("<kit>", kitName));
 					return true;
-				}else {
+				} else {
 					
-					BGChat.printPlayerChat(p, "§eToo few Coins! try /coin for infos!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_NOT_ENOUGH_COINS.t());
 					return true;
 				}
 			}else if (args[0].equalsIgnoreCase("send")) {
 				
 				if (args.length < 3) {
-					
-					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /coin");
-					return true;
+					return false;
 				}
 				if (BGMain.getPlayerID(args[1]) == null) {
-						
-					BGChat.printPlayerChat(p, "§ePlayer was never on this server!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.PLAYER_NOT_ONLINE.t());
 					return true;
 				}else {
 					
 					int zahl;
 					try{
-						
 						zahl = Integer.parseInt(args[2]);
 					}catch (Exception e) {
-						
-							BGChat.printPlayerChat(p, "§eOnly Integers are possible!");
-							return true;
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_INVALID_INT.t());
+						return true;
 					}
 					
 					if(zahl < 0) {
-							
-						BGChat.printPlayerChat(p, "§eOnly positive Integers are possible!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_INVALID_INT.t());
 						return true;
 					}
 						
 					if (zahl > coins) {
-						
-						BGChat.printPlayerChat(p, "§eYou don't have enough Coins!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.REWARD_FUNC_NOT_ENOUGH_COINS.t());
 						return true;
 					} else {
-							
 						BGReward.sendCoins(p.getName(), args[1], zahl);
-							
-							if (Bukkit.getServer().getPlayer(args[1]) == null) {
-								
-								BGChat.printPlayerChat(p, "§eYou have send " + zahl + " Coins to " + args[1] + "!");
+							if (Bukkit.getServer().getPlayer(args[1]) == null) {	
+								BGChat.printPlayerChat(p, ChatColor.GREEN + Translation.REWARD_FUNC_SUCCESS_COIN_SENT.t());
 								return true;
-							}else {
-								
-								BGChat.printPlayerChat(p, "§eYou have send " + zahl + " Coins to " + args[1] + "!");
-								BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), "§3You have received " + zahl +" Coins from " + p.getName()+ "!");
+							} else {
+								BGChat.printPlayerChat(p, ChatColor.GREEN +Translation.REWARD_FUNC_SUCCESS_COIN_SENT.t());
+								BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), ChatColor.GREEN + Translation.REWARD_FUNC_SUCCESS_COIN_RECEIVED.t());
 								return true;
 							}
 						
 						}
 					}
 				
-			}else if(args[0].equalsIgnoreCase("give")) {
-					
-					if (sender.hasPermission("bg.admin.give")) {	
+			} else if(args[0].equalsIgnoreCase("give")) {
+					if (sender.hasPermission("bg.admin.transaction")) {	
 						if (args.length < 3) {
-							if(p == null) {
-								sender.sendMessage("§eToo few arrguments!");
-							}else {
-								BGChat.printPlayerChat(p, "§eToo few arrguments!");
-							}
-							return true;
+							return false;
 						}
 						if (BGMain.getPlayerID(args[1]) == null) {
-						
-							if(p == null) {
-								sender.sendMessage("§ePlayer was never on this server!");
-							}else {
-								BGChat.printPlayerChat(p, "§ePlayer was never on this server!");
-							}
+							msg(p, sender, ChatColor.RED + Translation.PLAYER_NOT_ONLINE.t());
 							return true;
 						}
 						
-							
 						int zahl;
-							
-						try {
-								
+						try {	
 							zahl = Integer.parseInt(args[2]);
 						}catch (Exception e) {
-							
-							if(p == null) {
-								sender.sendMessage("§eOnly Integers are possible!");
-							}else {
-								BGChat.printPlayerChat(p, "§eOnly Integers are possible!");
-							}
+							msg(p, sender, ChatColor.RED + Translation.REWARD_FUNC_INVALID_INT.t());
 							return true;
 						}
-							
-						if (zahl < 0) {
-							
-							if(p == null) {
-								sender.sendMessage("§eOnly positive Integers are possible!");
-							}else {
-								BGChat.printPlayerChat(p, "§eOnly positive Integers are possible!");
-							}
-						}
-							
 							BGReward.giveCoins(args[1], zahl);
-							if(p == null) {
-								sender.sendMessage("§eYou gave " + zahl + " Coins to " + args[1] + "!");
-							}else {
-								BGChat.printPlayerChat(p, "§eYou gave " + zahl + " Coins to " + args[1] + "!");
-							}
-							
+							msg(p, sender, ChatColor.RED + Translation.REWARD_FUNC_SUCCESS_TRANSACTION.t());
 							if(Bukkit.getServer().getPlayer(args[2]) == null)
 								return true;
 							
-							BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), "§eYou have received " + zahl + " Coins!");
-							
+							BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), ChatColor.GREEN + Translation.REWARD_FUNC_SUCCESS_COIN_RECEIVED.t());
 							return true;
 						
-					}else {
-						
+					} else {
 						BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 						return true;
 					}
-			}else if(args[0].equalsIgnoreCase("take")) {
-					
-					if (sender.hasPermission("bg.admin.take")) {	
-						if (args.length < 3) {
-						
-							if(p == null) {
-								sender.sendMessage("§eToo few arrguments!");
-							}else {
-								BGChat.printPlayerChat(p, "§eToo few arrguments!");
-							}
-							return true;
-						}
-						if (BGMain.getPlayerID(args[1]) == null) {
-						
-							if(p == null) {
-								sender.sendMessage("§ePlayer was never on this server!");
-							}else {
-								BGChat.printPlayerChat(p, "§ePlayer was never on this server!");
-							}
-							return true;
-						}
-							
-							int zahl;
-							
-							try {
-								
-								zahl = Integer.parseInt(args[2]);
-							}catch (Exception e) {
-								
-								if(p == null) {
-									sender.sendMessage("§eOnly Integers are possible!");
-								}else {
-									BGChat.printPlayerChat(p, "§eOnly Integers are possible!");
-								}
-								return true;
-							}
-							
-							if (zahl < 0) {
-								
-								if(p == null) {
-									sender.sendMessage("§eOnly positive Integers are possible!");
-								}else {
-									BGChat.printPlayerChat(p, "§eOnly positive Integers are possible!");
-								}
-							}
-							
-							BGReward.takeCoins(args[1], zahl);
-							if(p == null) {
-								sender.sendMessage("§eYou took " + zahl + " Coins from " + args[1] + "!");
-							}else {
-								BGChat.printPlayerChat(p, "§eYou took " + zahl + " Coins from " + args[1] + "!");
-							}
-							
-							if(Bukkit.getServer().getPlayer(args[1]) == null)
-								return true;
-							
-							BGChat.printPlayerChat(Bukkit.getServer().getPlayer(args[1]), "§eYou lost " + zahl + " Coins!");
-							
-							return true;
-					}else {
-						
-						BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
-						return true;
-					}
-				}else if(args[0].equalsIgnoreCase("stats")) {
-					
-					if(p.hasPermission("bg.admin.stats")) {
-						
+			} else if(args[0].equalsIgnoreCase("stats")) {
+					if(sender.hasPermission("bg.admin.stats")) {
 						if (args.length < 2) {
-							
-							BGChat.printPlayerChat(p, "§eTo less arrguments!");
+							return false;
 						}
 						
 						if (BGMain.getPlayerID(args[1]) == null) {
-							
-							BGChat.printPlayerChat(p, "§ePlayer was never on this server!");
+							msg(p, sender, ChatColor.RED + Translation.PLAYER_NOT_ONLINE.t());
 							return true;
 						}
 						
 						int coins1 = BGMain.getCoins(BGMain.getPlayerID(args[1]));
-						
-						BGChat.printPlayerChat(p, "§eThis are the stats of " + args[1] + ":"+
-						"\n§eCOINS: " + coins1);
-					}else {
-						
+						msg(p, sender, ChatColor.YELLOW + Translation.REWARD_FUNC_STATS.t().replace("<player>", args[1]).replace("<coins>", coins1 + ""));
+					} else {
 						BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 						return true;
 					}
 				}
-		}
-		
+			}
 			return true;
+	}
+	
+	private static void msg(Player p, CommandSender s, String msg) {
+		if(p == null)
+			s.sendMessage(msg);
+		else
+			BGChat.printPlayerChat(p, msg);
 	}
 }

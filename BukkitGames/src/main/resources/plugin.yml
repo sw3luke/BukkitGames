@@ -36,9 +36,6 @@ commands:
   team:
     description: Team.
     usage: /<command>
-  gamemaker:
-    description: Gamemaker.
-    usage: /<command>
   teleport:
     description: Teleport.
     usage: /<command>

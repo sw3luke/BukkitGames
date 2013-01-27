@@ -67,6 +67,7 @@ import utilities.BGTeam;
 import utilities.BGVanish;
 import utilities.enums.BorderType;
 import utilities.enums.GameState;
+import utilities.enums.Translation;
 
 public class BGGameListener implements Listener {
 	Logger log = BGMain.getPluginLogger();
@@ -109,9 +110,7 @@ public class BGGameListener implements Listener {
 					Double distance = p.getLocation().distance(
 							e.getLocation());
 					DecimalFormat df = new DecimalFormat("##.#");
-					BGChat.printPlayerChat(p, "Tracking player \""
-							+ ((Player) e).getName() + "\" | Distance: "
-							+ df.format(distance));
+					BGChat.printPlayerChat(p, Translation.COMPASS_TRACK.t().replace("<player>", ((Player) e).getName()).replace("<distance>", df.format(distance)));
 					found = Boolean.valueOf(true);
 					break;
 				}
@@ -121,8 +120,7 @@ public class BGGameListener implements Listener {
 				}
 			}
 			if (!found.booleanValue()) {
-				BGChat.printPlayerChat(p,
-						"No players in range. Compass points to spawn.");
+				BGChat.printPlayerChat(p, Translation.COMPASS_NOT_TRACK.t());
 				p.setCompassTarget(BGMain.spawn);
 			}
 		}		
@@ -131,9 +129,9 @@ public class BGGameListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onServerPing(ServerListPingEvent event) {
 		if (BGMain.GAMESTATE != GameState.PREGAME)
-			event.setMotd(BGMain.MOTD_PROGRESS_MSG.replace("&", "§"));
+			event.setMotd(ChatColor.translateAlternateColorCodes('&', BGMain.MOTD_PROGRESS_MSG));
 		else
-			event.setMotd(BGMain.MOTD_COUNTDOWN_MSG.replace("&", "§").replace("<time>", BGMain.TIME(BGMain.COUNTDOWN)));
+			event.setMotd(ChatColor.translateAlternateColorCodes('&', BGMain.MOTD_COUNTDOWN_MSG).replace("<time>", BGMain.TIME(BGMain.COUNTDOWN)));
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -288,7 +286,7 @@ public class BGGameListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM && event.getJoinMessage() != null) {
-			BGChat.printDeathChat("§e" + event.getJoinMessage());
+			BGChat.printDeathChat(ChatColor.YELLOW + event.getJoinMessage());
 		}
 
 		if (BGMain.GAMESTATE != GameState.PREGAME || BGMain.ADV_CHAT_SYSTEM) {
@@ -346,8 +344,8 @@ public class BGGameListener implements Listener {
 		List<String> page = new ArrayList<String>();
 		for(String line : pages)  {
 			line = line.replace("<server_title>", BGMain.SERVER_TITLE);
-			line = line.replace("<space>", "§r\n");
-			line = line.replace("&", "§");
+			line = line.replace("<space>", ChatColor.RESET + "\n");
+			line = ChatColor.translateAlternateColorCodes('&', line);
 			if(!line.contains("<newpage>")) {
 				page.add(line + "\n");
 			} else {
@@ -427,7 +425,7 @@ public class BGGameListener implements Listener {
 		}
 
 		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
-			BGChat.printPlayerChat(p, "§cYou can't destroy this block!");
+			BGChat.printPlayerChat(p, ChatColor.RED + Translation.BLOCK_DESTROY_NOT_ALLOWS.t());
 			event.setCancelled(true);
 			return;
 		}
@@ -489,7 +487,7 @@ public class BGGameListener implements Listener {
 		}
 		
 		if((BGMain.CORNUCOPIA_PROTECTED && BGCornucopia.isCornucopiaBlock(event.getBlock())) || (BGMain.FEAST_PROTECTED && BGFeast.isFeastBlock(event.getBlock()))) {
-			BGChat.printPlayerChat(p, "§cYou can't place this block!");
+			BGChat.printPlayerChat(p, ChatColor.RED + Translation.BLOCK_DESTROY_NOT_ALLOWS.t());
 			event.setCancelled(true);
 			return;
 		}
@@ -499,14 +497,14 @@ public class BGGameListener implements Listener {
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		if(BGMain.isSpectator(event.getPlayer())) {
 			if(BGMain.ADV_CHAT_SYSTEM) {
-				BGChat.printPlayerChat(event.getPlayer(), "§cSpectators can't chat.");
+				BGChat.printPlayerChat(event.getPlayer(), ChatColor.RED + Translation.SPECTATORS_CHAT_NOT_ALLOWS.t());
 				event.setCancelled(true);			
 				return;
 			} else {
 				event.getRecipients().clear();
 				event.getRecipients().addAll(BGMain.getSpectators());
 				event.getRecipients().addAll(BGMain.getOnlineOps());
-				event.setFormat("§o[SPECTATOR] §r" + event.getFormat());
+				event.setFormat(ChatColor.ITALIC + "[SPECTATOR] " + ChatColor.RESET + event.getFormat());
 			}
 		}
 			
@@ -517,7 +515,7 @@ public class BGGameListener implements Listener {
 				BGChat.playerChatMsg(m);
 				log.info("[CHAT] " + m);
 			} else {
-				BGChat.printPlayerChat(event.getPlayer(), "§cYour message is too long!");
+				BGChat.printPlayerChat(event.getPlayer(), ChatColor.RED + Translation.MESSAGE_TOO_LONG.t());
 			}
 			event.setCancelled(true);
 		}
@@ -540,7 +538,7 @@ public class BGGameListener implements Listener {
 		}
 		
 		if (BGMain.GAMESTATE == GameState.PREGAME && BGMain.ADV_CHAT_SYSTEM && event.getQuitMessage() != null) {
-			BGChat.printDeathChat("§e" + event.getQuitMessage());
+			BGChat.printDeathChat(ChatColor.YELLOW + event.getQuitMessage());
 		}
 
 		if (BGMain.GAMESTATE != GameState.PREGAME || BGMain.ADV_CHAT_SYSTEM) {
@@ -550,8 +548,7 @@ public class BGGameListener implements Listener {
 		if (BGMain.GAMESTATE == GameState.GAME & !p.isDead()) {
 			BGChat.printDeathChat(p.getName() + " left the game.");
 			if (!BGMain.ADV_CHAT_SYSTEM) {
-				BGChat.printDeathChat(BGMain.getGamers().length - 1
-						+ " players remaining.");
+				BGChat.printDeathChat(BGMain.getGamers().length - 1 + " players remaining.");
 				BGChat.printDeathChat("");
 			}
 			Location light = p.getLocation();
@@ -593,7 +590,7 @@ public class BGGameListener implements Listener {
 			}
 			if(damager instanceof Arrow && BGMain.isSpectator((Player) event.getEntity())) {
 				event.getEntity().teleport(BGMain.getSpawn());
-				BGChat.printPlayerChat((Player) event.getEntity(), "§cSorry, you were in the way!");
+				BGChat.printPlayerChat((Player) event.getEntity(), ChatColor.RED + Translation.SPECTATOR_IN_THE_WAY.t());
 				/* TODO: WORK IN PROGRESS - When an arrow hits and spectator, spawn a new arrow after the spectator was getting teleported away
 				Arrow arrow = (Arrow) damager;
 				Bukkit.getServer().getWorlds().get(0).spawnArrow(arrow.getLocation(), arg1, arg2, arg3);
@@ -611,7 +608,7 @@ public class BGGameListener implements Listener {
 			if(!BGMain.isSpectator(event.getPlayer()) && !BGMain.isGameMaker(event.getPlayer())) {
 				//A player wanted to place a block, but a spectator stood on it
 				event.getRightClicked().teleport(BGMain.getSpawn());
-				BGChat.printPlayerChat((Player) event.getRightClicked(), "§cSorry, you were in the way!");
+				BGChat.printPlayerChat((Player) event.getRightClicked(), ChatColor.RED + Translation.SPECTATOR_IN_THE_WAY.t());
 				event.setCancelled(true);
 				return;
 			}

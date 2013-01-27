@@ -20,6 +20,7 @@ import javax.xml.stream.events.XMLEvent;
 import main.BGMain;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -283,7 +284,7 @@ public class Updater
                     log.info("Downloading update: " + percent + "% of " + fileLength + " bytes.");
                     for(Player p : Bukkit.getServer().getOnlinePlayers()) {
                     	if(p.hasPermission("bg.admin.download"))
-                    		BGChat.printPlayerChat(p, "§aDownloading update: " + percent + "% of " + fileLength + " bytes.");
+                    		BGChat.printPlayerChat(p, ChatColor.GREEN + "Downloading update: " + percent + "% of " + fileLength + " bytes.");
                     }
                 }
             }

@@ -6,6 +6,7 @@ import java.util.Random;
 import main.BGMain;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ public class WorldBorderTimer {
 				for(Player p : BGMain.getPlayers()) {						
 					if (!BGMain.inBorder(p.getLocation(), BorderType.STOP)) {
 						p.playSound(p.getLocation(), Sound.FIZZ, 1.0F, (byte) 1);
-						BGChat.printPlayerChat(p, "�c�l" + BGMain.instance.getConfig().getString("MESSAGE.WORLD_BORDER"));
+						BGChat.printPlayerChat(p, ChatColor.RED + "" +  ChatColor.BOLD + BGMain.instance.getConfig().getString("MESSAGE.WORLD_BORDER"));
 						
 						if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.GAMESTATE != GameState.GAME) {
 							if(p.isInsideVehicle())
@@ -48,13 +49,13 @@ public class WorldBorderTimer {
 					
 					if(BGMain.GAMESTATE != GameState.PREGAME && !BGMain.inBorder(p.getLocation(), BorderType.SHRINK)) {
 						p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, (byte) 1);
-						BGChat.printPlayerChat(p, "�c�o" + "You will be outside the shrinked world-border!");
+						BGChat.printPlayerChat(p, ChatColor.RED + "" + ChatColor.ITALIC + "You will be outside the shrinked world-border!");
 						continue;
 					}
 					
 					if(BGMain.GAMESTATE != GameState.PREGAME && !BGMain.inBorder(p.getLocation(), BorderType.WARN)) {
 						p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, (byte) 1);
-						BGChat.printPlayerChat(p, "�c�o" + "You are coming close to the world-border!");
+						BGChat.printPlayerChat(p, ChatColor.RED + "" + ChatColor.ITALIC + "You are coming close to the world-border!");
 					}
 					
 					if(BGMain.isGameMaker(p) || BGMain.isSpectator(p) || BGMain.GAMESTATE != GameState.GAME)

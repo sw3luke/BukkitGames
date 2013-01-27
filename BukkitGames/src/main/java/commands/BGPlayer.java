@@ -26,7 +26,7 @@ public class BGPlayer implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		if (!(sender instanceof Player)) {
-			log.info("§cThis command can only be accessed by players!");
+			log.info(ChatColor.RED + Translation.CMD_ONLY_PLAYER_ACCESS.t());
 			return true;
 		}
 		Player p = (Player) sender;
@@ -35,32 +35,9 @@ public class BGPlayer implements CommandExecutor{
 			return true;
 		}
 		
-		if(cmd.getName().equalsIgnoreCase("gamemaker")) {
-			
-			if(p.hasPermission("bg.admin.gamemaker")) {
-				
-				if(BGMain.isGameMaker(p)) {
-					
-					BGMain.remGameMaker(p);
-					BGChat.printPlayerChat(p, "§eYou are no longer a gamemaker!");
-					return true;
-				}else {
-					
-					BGMain.addGameMaker(p);
-					return true;
-				}
-			}else {
-				
-				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
-				return true;
-			}
-		}
-
 		if (cmd.getName().equalsIgnoreCase("kitinfo")) {
 			if (args.length != 1) {
-				BGChat.printPlayerChat(p,
-						"§eMust include a kit name! (/kitinfo [kitName])");
-				return true;
+				return false;
 			}
 			BGChat.printKitInfo(p, args[0]);
 			return true;
@@ -68,7 +45,7 @@ public class BGPlayer implements CommandExecutor{
 
 		if (cmd.getName().equalsIgnoreCase("kit")) {
 			if (BGMain.GAMESTATE != GameState.PREGAME) {
-				BGChat.printPlayerChat(p, "§eThe game has already began!");
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.GAME_BEGUN.t());
 				return true;
 			}
 			if (args.length != 1) {
@@ -81,185 +58,141 @@ public class BGPlayer implements CommandExecutor{
 
 		if (cmd.getName().equalsIgnoreCase("spawn")) {
 			if (BGMain.GAMESTATE != GameState.PREGAME && !p.hasPermission("bg.admin.spawn") && !(BGMain.isGameMaker(p) || BGMain.isSpectator(p))) {
-				BGChat.printPlayerChat(p, "§eThe game has already began!");
+				BGChat.printPlayerChat(p, Translation.GAME_BEGUN.t());
 				return true;
 			} else {
 				p.teleport(BGMain.getSpawn());
-				BGChat.printPlayerChat(p, "§eTeleported to the spawn location.");
+				BGChat.printPlayerChat(p, ChatColor.GREEN + Translation.TELEPORTED_SPAWN.t());
 				return true;
 			}
 		}
 		
 		if(cmd.getName().equalsIgnoreCase("team")) {
-			
 			if(!BGMain.TEAM) {
-				
-				BGChat.printPlayerChat(p, "§eTeam function is disabled!");
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.TEAM_FUNC_DISABLED.t());
 				return true;
 			}
 			
 			if(!p.hasPermission("bg.team")) {
-				
 				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 			
 			if(args.length > 2) {
-				BGChat.printPlayerChat(p, "§eToo much arrguments! Try /team");
-				return true;
+				return false;
 			}
 			
 			if (args.length == 0) {
-				
-				BGChat.printPlayerChat(p, "§eType /team add <player> to add a player to your team!" + '\n'+
-											"§eType /team remove <player> to remove a player from your team!" + '\n'+
-											"§eType /team list to get a list of all players in your team");
+				BGChat.printPlayerChat(p, ChatColor.YELLOW + Translation.TEAM_FUNC_CMDS.t());
 				return true;
 			}
 			
 			if (args[0].equalsIgnoreCase("add")) {
-				
 				if(args.length < 2) {
-					
-					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /team");
-					return true;
+					return false;
 				}
 				
-				
-				
 				if(Bukkit.getServer().getPlayer(args[1]) == null) {
-					
-					BGChat.printPlayerChat(p, "§eThis player is not online!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.PLAYER_NOT_ONLINE.t());
 					return true;
 				}
 				
 				Player player = Bukkit.getServer().getPlayer(args[1]);
 				
 				if(BGTeam.isInTeam(p, player.getName())){
-					
-					BGChat.printPlayerChat(p, "§eThis player is already in your team!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.TEAM_FUNC_PLAYER_ALREADY_TEAM.t());
 					return true;
 				}
 					
 				BGTeam.addMember(p, player.getName());
-				BGChat.printPlayerChat(p, "§eYou added "+player.getName()+" to your team!");
+				BGChat.printPlayerChat(p, ChatColor.GREEN + Translation.TEAM_FUNC_ADDED_PLAYER.t());
 				
 				return true;
 			}
 			
 			if (args[0].equalsIgnoreCase("remove")) {
-				
 				if(args.length < 2) {
-					
-					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /team");
-					return true;
+					return false;
 				}
 				
 				if(!BGTeam.isInTeam(p, args[1])) {
-					
-					BGChat.printPlayerChat(p, "§eThis player is not in your team!");
+					BGChat.printPlayerChat(p, ChatColor.RED + Translation.TEAM_FUNC_PLAYER_ALREADY_TEAM.t());
 					return true;
 				}
 				
 				BGTeam.removeMember(p, args[1]);
-				BGChat.printPlayerChat(p, "§eYou removed "+args[1]+" from your team!" );
-				
+				BGChat.printPlayerChat(p, ChatColor.GREEN + Translation.TEAM_FUNC_REMOVED_PLAYER.t());
 				return true;
 			}
 			
 			if (args[0].equalsIgnoreCase("list")) {
-				
-				if(args.length < 1) {
-					
-					BGChat.printPlayerChat(p, "§eToo few arrguments! Try /team");
-					return true;
+				if(args.length < 1 || args.length > 1) {
+					return false;
 				}
+								
+				String text = ChatColor.YELLOW + Translation.TEAM_FUNC_YOUR_TEAM.t();
 				
-				if(args.length > 1) {
-					
-					BGChat.printPlayerChat(p, "§eToo much arrguments! Try /team");
-					return true;
-				}
-				
-				String text = "§eYour Team:";
-				
-				if(BGTeam.getTeamList(p) == null) {
-					
-					text += '\n' + "§e- No Player in your Team!";
+				if(BGTeam.getTeamList(p).size() == 0) {
+					text += " Nobody";
 					BGChat.printPlayerChat(p, text);
 					return true;
 				}
 				
 				for(String t : BGTeam.getTeamList(p)) {
-					
-					text += '\n' + "§e- " + t;
+					text += " " + t;
 				}
-				
 				BGChat.printPlayerChat(p, text);
 				return true;
 			}
 		}
 		
 		if(cmd.getName().equalsIgnoreCase("teleport")) {
-			
 			if(BGMain.isGameMaker(p) || BGMain.isSpectator(p)) {
-				
 				if(args.length > 2) {
-					
-					BGChat.printPlayerChat(p, "§eToo much arrguments! Try /teleport");
-					return true;
+					return false;
 				}
 				
 				if(args.length == 0) {
-					
-					BGChat.printPlayerChat(p, "§eTeleport Menu:"+
-											'\n' + "§eType /teleport <player> to teleport to an other player"+
-											'\n' + "§eType /teleport <x> <z> to teleport to this cords");
+					BGChat.printPlayerChat(p, ChatColor.YELLOW + Translation.TELEPORT_FUNC_CMDS.t());
 					return true;
 				}
 				
 				if(args.length == 1) {
 					
 					if(Bukkit.getServer().getPlayer(args[0]) == null) {
-						
-						BGChat.printPlayerChat(p, "§eThis player is not online!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.PLAYER_NOT_ONLINE.t());
 						return true;
 					}
 					
 					Player target = Bukkit.getServer().getPlayer(args[0]);
-					BGChat.printPlayerChat(p, "§eTeleport to "+ target.getName());
+					BGChat.printPlayerChat(p, ChatColor.GREEN + Translation.TELEPORT_FUNC_TELEPORTED_PLAYER.t().replace("<player>", target.getName()));
 					p.teleport(target);
 					return true;
 				}
 				
 				if(args.length == 2) {
-					
 					int x = 0;
 					int z = 0;
 					
-					try{
-						
+					try {
 						x = Integer.parseInt(args[0]);
 						z = Integer.parseInt(args[1]);
-					}catch(NumberFormatException e) {
-						
-						BGChat.printPlayerChat(p, "§eOnly integers are possible!");
+					} catch(NumberFormatException e) {
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.TELEPORT_FUNC_COORDS_NOT_VALID.t());
 						return true;
 					}
 					
 					Location loc = new Location(Bukkit.getServer().getWorlds().get(0), x, Bukkit.getServer().getWorlds().get(0).getHighestBlockYAt(x, z)+1.5, z);
-					
 					if(!BGMain.inBorder(loc, BorderType.WARN)) {
-						BGChat.printPlayerChat(p, "§eThis coords are not in the worldborder!");
+						BGChat.printPlayerChat(p, ChatColor.RED + Translation.TELEPORT_FUNC_COORDS_NOT_VALID.t());
 						return true;
 					}
-					BGChat.printPlayerChat(p, "§eTeleport to X: "+x+" Z: "+z);
+					BGChat.printPlayerChat(p, ChatColor.GREEN + Translation.TELEPORT_FUNC_TELEPORTED_COORDS.t().replace("<x>", x + "").replace("<z>", z + ""));
 					p.teleport(loc);
 					return true;
 				}
-			}else {
-				
-				BGChat.printPlayerChat(p, "§eOnly Spectators and Gamemakers can use this!");
+			} else {
+				BGChat.printPlayerChat(p, ChatColor.RED + Translation.NO_PERMISSION.t());
 				return true;
 			}
 		}

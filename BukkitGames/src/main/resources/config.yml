@@ -10,6 +10,9 @@ TIME:
   
 # Duration of invincibility.
   FINAL_COUNTDOWN-SEC: 60
+
+# Language (available: en)
+LANGUAGE: en
   
 # Define the messages. (You can use color codes in the MOTD, like '&e')
 MESSAGE:

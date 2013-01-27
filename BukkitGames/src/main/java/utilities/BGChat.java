@@ -25,7 +25,7 @@ public class BGChat {
 	private static Logger log = BGMain.getPluginLogger();
 	static String TIMER_MSG = "TIMER_MSG"; 
 	static String DEATH_MSG = "This server is running the BukkitGames plugin."; 
-	static String INFO_MSG = "Welcome to the HungerGames! | Get your kit now: �f/kit"; 
+	static String INFO_MSG = "Welcome to the HungerGames! | Get your kit now: /kit"; 
 	static HashMap<Player, String> PLAYER_MSG = new HashMap<Player, String>();
 	static HashMap<Player, Boolean> KIT_CHAT = new HashMap<Player, Boolean>();
 	static HashMap<Player, Boolean> HELP_CHAT = new HashMap<Player, Boolean>();
@@ -96,7 +96,7 @@ public class BGChat {
 			INFO_MSG = text;
 			updateChat();
 		} else {
-			Bukkit.getServer().broadcastMessage("�2" + text);
+			Bukkit.getServer().broadcastMessage(ChatColor.DARK_GREEN + text);
 		}
 	}
 
@@ -105,7 +105,7 @@ public class BGChat {
 			DEATH_MSG = text;
 			updateChat();
 		} else {
-			Bukkit.getServer().broadcastMessage("�c" + text);
+			Bukkit.getServer().broadcastMessage(ChatColor.RED + text);
 		}
 	}
 
@@ -114,13 +114,13 @@ public class BGChat {
 			TIMER_MSG = text;
 			updateChat();
 		} else {
-			Bukkit.getServer().broadcastMessage("�a" + text);
+			Bukkit.getServer().broadcastMessage(ChatColor.GREEN + text);
 		}
 	}
 
 	public static void printPlayerChat(Player player, String text) {
 		if (BGMain.ADV_CHAT_SYSTEM) {
-			PLAYER_MSG.put(player, "�7" + text);
+			PLAYER_MSG.put(player, ChatColor.GRAY + text);
 			updateChat(player);
 			final Player pl = player;
 			Bukkit.getServer().getScheduler()
@@ -130,7 +130,7 @@ public class BGChat {
 						}
 					}, 100);
 		} else {
-			player.sendMessage("�a" + text);
+			player.sendMessage(ChatColor.GRAY + text);
 		}
 	}
 
@@ -162,12 +162,12 @@ public class BGChat {
 				is = "minute";
 				minute = "minute";
 			}
-			player.sendMessage("�7 - There " + are + " "
+			player.sendMessage(ChatColor.GRAY + " - There " + are + " "
 					+ BGMain.getGamers().length + " " + players + " online.");
-			player.sendMessage("�7 - There " + is + " " + timeleft + " "
+			player.sendMessage(ChatColor.GRAY + " - There " + is + " " + timeleft + " "
 					+ minute + " left.");
 			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "")
-				player.sendMessage("�7 - " + BGMain.HELP_MESSAGE);
+				player.sendMessage(ChatColor.GRAY + " - " + BGMain.HELP_MESSAGE);
 		}
 	}
 
@@ -206,11 +206,11 @@ public class BGChat {
 				}
 			}
 			player.sendMessage("");
-			player.sendMessage("�bAvailable kits: �7(/kit [KitName])");
+			player.sendMessage(ChatColor.AQUA + "Available kits: " + ChatColor.GRAY + "(/kit [KitName])");
 			player.sendMessage("");
-			player.sendMessage("�aYour kits: �f" + yourkits);
-			player.sendMessage("�aOther kits: �f" + otherkits);
-			player.sendMessage("�bMore kits available at: "
+			player.sendMessage(ChatColor.GREEN + "Your kits: " + ChatColor.WHITE + yourkits);
+			player.sendMessage(ChatColor.GREEN + "Other kits: " + ChatColor.WHITE + otherkits);
+			player.sendMessage(ChatColor.AQUA + "More kits available at: "
 					+ BGMain.KIT_BUY_WEB);
 			player.sendMessage("");
 		}
@@ -288,7 +288,7 @@ public class BGChat {
 										+ ench_numb;
 							}
 
-							container.add("�f" + itemstring);
+							container.add(ChatColor.WHITE + itemstring);
 						}
 						
 						List<String> pots = kit.getStringList("POTION");
@@ -304,7 +304,7 @@ public class BGChat {
 										} else {
 											name += " (Duration: "+potion[1]+" sec)";
 										}
-										container.add("�f * " + name);
+										container.add(ChatColor.WHITE + " * " + name);
 									}
 								}
 							}
@@ -314,7 +314,7 @@ public class BGChat {
 						for(Integer abil : abils) {
 							String desc = getAbilityDesc(abil.intValue());
 							if (desc != null)
-								container.add("�7 + " + desc);
+								container.add(ChatColor.WHITE + " + " + desc);
 						}
 									
 						Integer itemid = kit.getInt("ITEMMENU");
@@ -328,20 +328,20 @@ public class BGChat {
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(mypos, new ItemStack(kitem, 1), "�a" + kitname, info);
+							menu.setOption(mypos, new ItemStack(kitem, 1), ChatColor.GREEN + kitname, info);
 							mypos++;
 						} else {
 							if(BGMain.REW) {
 								if(BGKit.getCoins(kitname.toLowerCase()) == 1)
-									container.add("�6PRICE: " + BGKit.getCoins(kitname.toLowerCase()) + " Coin");
+									container.add(ChatColor.GOLD + "PRICE: " + BGKit.getCoins(kitname.toLowerCase()) + " Coin");
 								else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
-									container.add("�6PRICE: " + BGKit.getCoins(kitname.toLowerCase()) + " Coins");
+									container.add(ChatColor.GOLD + "PRICE: " + BGKit.getCoins(kitname.toLowerCase()) + " Coins");
 							}
 							
 							String[] info = new String[container.size()];
 						    info = container.toArray(info);
 							
-							menu.setOption(invsize - othpos, new ItemStack(kitem, 1), "�c" + kitname, info);
+							menu.setOption(invsize - othpos, new ItemStack(kitem, 1), ChatColor.RED + kitname, info);
 							othpos++;
 						}
 					container.clear();
@@ -380,7 +380,7 @@ public class BGChat {
 			stringArray[0] = Character.toUpperCase(stringArray[0]);
 			kitinfoname = new String(stringArray);
 
-			player.sendMessage("�a" + kitinfoname + " kit includes:");
+			player.sendMessage(ChatColor.GREEN  + kitinfoname + " kit includes:");
 
 			List<String> kititems = kit.getStringList("ITEMS");
 			for (String item : kititems) {
@@ -417,7 +417,7 @@ public class BGChat {
 							+ ench_numb;
 				}
 
-				player.sendMessage("�f" + itemstring);
+				player.sendMessage(ChatColor.WHITE + itemstring);
 			}
 
 			List<String> pots = kit.getStringList("POTION");
@@ -433,7 +433,7 @@ public class BGChat {
 							} else {
 								name += " (Duration: "+potion[1]+" sec)";
 							}
-							player.sendMessage("�f * " + name);
+							player.sendMessage(ChatColor.WHITE + " * " + name);
 						}
 					}
 				}
@@ -444,15 +444,15 @@ public class BGChat {
 				String desc = getAbilityDesc(abil.intValue());
 
 				if (desc != null) {
-					player.sendMessage("�f + " + desc);
+					player.sendMessage(ChatColor.WHITE + " + " + desc);
 
 				}
 			}
 				
 			if(BGKit.getCoins(kitname.toLowerCase()) == 1)
-				player.sendMessage("�fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
+				player.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
 			else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
-				player.sendMessage("�fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");	
+				player.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");	
 		}
 	}
 
@@ -467,7 +467,7 @@ public class BGChat {
 			updateChat();
 		} else {
 			if (tip != "" || tip != null)
-				Bukkit.getServer().broadcastMessage("�7[TIP] " + tip);
+				Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "[TIP] " + tip);
 		}
 	}
 
@@ -528,14 +528,14 @@ public class BGChat {
 				help_length = help_length - 50;
 			}
 
-			p.sendMessage("�b" + BGMain.SERVER_TITLE);
+			p.sendMessage(ChatColor.AQUA + BGMain.SERVER_TITLE);
 			p.sendMessage("");
-			p.sendMessage("�7 - There " + are + " " + BGMain.getGamers().length
+			p.sendMessage(ChatColor.GRAY + " - There " + are + " " + BGMain.getGamers().length
 					+ " " + players + " online.");
-			p.sendMessage("�7 - There " + is + " " + timeleft + " " + minute
+			p.sendMessage(ChatColor.GRAY + " - There " + is + " " + timeleft + " " + minute
 					+ " left.");
 			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "") {
-				p.sendMessage("�7 - " + BGMain.HELP_MESSAGE);
+				p.sendMessage(ChatColor.GRAY + " - " + BGMain.HELP_MESSAGE);
 				line++;
 			}
 
@@ -593,12 +593,12 @@ public class BGChat {
 				line++;
 				yourline = yourline - 50;
 			}
-			p.sendMessage("�bAvailable kits: �7(/kit [KitName])");
+			p.sendMessage(ChatColor.AQUA + "Available kits: " + ChatColor.GRAY + "(/kit [KitName])");
 			p.sendMessage("");
-			p.sendMessage("�aYour kits: �f" + yourkits);
-			p.sendMessage("�aOther kits: �f" + otherkits);
-			p.sendMessage("");
-			p.sendMessage("�bMore kits available at: " + BGMain.KIT_BUY_WEB);
+			p.sendMessage(ChatColor.GREEN + "Your kits: " + ChatColor.WHITE + yourkits);
+			p.sendMessage(ChatColor.GREEN + "Other kits: " + ChatColor.WHITE + otherkits);
+			p.sendMessage(ChatColor.AQUA + "More kits available at: "
+					+ BGMain.KIT_BUY_WEB);
 
 			if (PLAYER_MSG.containsKey(p))
 				line++;
@@ -623,7 +623,7 @@ public class BGChat {
 			stringArray[0] = Character.toUpperCase(stringArray[0]);
 			kitinfoname = new String(stringArray);
 
-			p.sendMessage("�a" + kitinfoname + " kit includes:");
+			p.sendMessage(ChatColor.GREEN + kitinfoname + " kit includes:");
 			p.sendMessage("");
 			line = line + 3;
 			List<String> kititems = kit.getStringList("ITEMS");
@@ -661,14 +661,14 @@ public class BGChat {
 							+ ench_numb;
 				}
 				line++;
-				p.sendMessage("�f" + itemstring);
+				p.sendMessage(ChatColor.WHITE + itemstring);
 			}
 
 			List<Integer> abils = kit.getIntegerList("ABILITY");
 			for(Integer abil : abils) {
 				String desc = getAbilityDesc(abil.intValue());
 				if (desc != null) {
-					p.sendMessage("�f - " + desc);
+					p.sendMessage(ChatColor.WHITE + " - " + desc);
 					line++;
 				}
 			}
@@ -686,7 +686,7 @@ public class BGChat {
 							} else {
 								name += " (Duration: "+potion[1]+" sec)";
 							}
-							p.sendMessage("�f - " + name);
+							p.sendMessage(ChatColor.WHITE + " - " + name);
 							line++;
 						}
 					}
@@ -694,10 +694,10 @@ public class BGChat {
 			}
 			
 			if(BGKit.getCoins(kitname.toLowerCase()) == 1) {
-				p.sendMessage("�fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
+				p.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
 				line++;
 			} else if(BGKit.getCoins(kitname.toLowerCase()) > 1) {
-				p.sendMessage("�fPRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");
+				p.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");
 				line++;
 			}
 			
@@ -709,13 +709,13 @@ public class BGChat {
 				line++;
 			}
 			if (PLAYER_MSG.containsKey(p))
-				p.sendMessage("�7" + PLAYER_MSG.get(p));
+				p.sendMessage(ChatColor.GRAY + PLAYER_MSG.get(p));
 
 		} else {
-			p.sendMessage("�9" + INFO_MSG);
-			p.sendMessage("�c" + DEATH_MSG);
+			p.sendMessage(ChatColor.BLUE + INFO_MSG);
+			p.sendMessage(ChatColor.RED + DEATH_MSG);
 			if (BGMain.GAMESTATE != GameState.GAME)
-				p.sendMessage("�a" + TIMER_MSG);
+				p.sendMessage(ChatColor.GREEN + TIMER_MSG);
 			else {
 				Integer timeleft = BGMain.MAX_GAME_RUNNING_TIME
 						- BGMain.GAME_RUNNING_TIME;
@@ -724,8 +724,8 @@ public class BGChat {
 					minute = "minute";
 				}
 
-				p.sendMessage("�a" + "Players remaining: �f"
-						+ BGMain.getGamers().length + " �a| Time remaining: �f"
+				p.sendMessage(ChatColor.GREEN + "Players remaining: "
+						+ BGMain.getGamers().length + " | Time remaining: "
 						+ timeleft + " " + minute);
 			}
 			p.sendMessage("-----------------------------------------------------");

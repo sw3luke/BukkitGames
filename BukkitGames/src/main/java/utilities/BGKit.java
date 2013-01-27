@@ -258,18 +258,18 @@ public class BGKit {
 			return;
 		
 		if (BGMain.winner(player))
-			player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.GOLD
+			player.setDisplayName(ChatColor.DARK_GRAY + "[" + kitname + "] " + ChatColor.RESET + ChatColor.GOLD
 					+ player.getName() + ChatColor.WHITE);
 		else if (player.hasPermission("bg.admin.color")
 				|| player.hasPermission("bg.admin.*"))
-			player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.RED
+			player.setDisplayName(ChatColor.DARK_GRAY +"[" + kitname + "] "+ ChatColor.RESET + ChatColor.RED
 					+ player.getName() + ChatColor.WHITE);
 		else if (player.hasPermission("bg.vip.color")
 				|| player.hasPermission("bg.vip.*"))
-			player.setDisplayName("§8[" + kitname + "] §r" + ChatColor.BLUE
+			player.setDisplayName(ChatColor.DARK_GRAY +"[" + kitname + "] "+ ChatColor.RESET + ChatColor.BLUE
 					+ player.getName() + ChatColor.WHITE);
 		else
-			player.setDisplayName("§8[" + kitname + "] §r"
+			player.setDisplayName(ChatColor.DARK_GRAY +"[" + kitname + "] " + ChatColor.RESET
 					+ ChatColor.WHITE + player.getName() + ChatColor.WHITE);
 	}
 	

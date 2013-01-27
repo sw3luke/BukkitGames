@@ -69,6 +69,8 @@ import utilities.Metrics;
 import utilities.Updater;
 import utilities.enums.BorderType;
 import utilities.enums.GameState;
+import utilities.enums.Language;
+import utilities.enums.Translation;
 
 import events.BGAbilitiesListener;
 import events.BGGameListener;
@@ -77,7 +79,7 @@ public class BGMain extends JavaPlugin {
 	public static  ReentrantLock lock = new ReentrantLock(true);
 
 	public static GameState GAMESTATE = GameState.PREGAME;
-	
+	public static Language LANGUAGE = Language.ENGLISH;
 	public static String HELP_MESSAGE = null;
 	public static String SERVER_FULL_MSG = "";
 	public static String WORLD_BORDER_MSG = "";
@@ -324,6 +326,12 @@ public class BGMain extends JavaPlugin {
 		AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
 				
+		String lang = getConfig().getString("LANGUAGE");
+		if(lang == "en")
+			LANGUAGE = Language.ENGLISH;
+		else if(lang == "de")
+			LANGUAGE = Language.GERMAN;
+		
 		if(REW && !SQL_USE) {
 			log.warning("MySQL has to be enabled for advanced reward, turning it off.");
 			REW = false;
@@ -547,14 +555,13 @@ public class BGMain extends JavaPlugin {
 		Bukkit.getServer().getWorlds().get(0).setStorm(false);
 		Bukkit.getServer().getWorlds().get(0).setThundering(false);
 		if (ADV_CHAT_SYSTEM) {
-			BGChat.printInfoChat(" --- The games have begun! ---");
-			BGChat.printDeathChat("�e\"May the odds be ever in your favor!\"");
+			BGChat.printInfoChat(" --- " + Translation.GAMES_HAVE_BEGUN.t() + " ---");
+			BGChat.printDeathChat(ChatColor.YELLOW + Translation.MAY_ODDS_BE_IN_YOUR_FAVOR.t());
 		} else {
 			BGChat.printTimeChat("");
-			BGChat.printTimeChat("The games have begun!");
+			BGChat.printTimeChat(Translation.GAMES_HAVE_BEGUN.t());
 		}
-		BGChat.printTimeChat("Everyone is invincible for "
-				+ TIME(FINAL_COUNTDOWN_SECONDS) + ".");
+		BGChat.printTimeChat(Translation.INVINCIBLE_FOR.t().replace("<time>", TIME(FINAL_COUNTDOWN_SECONDS)));
 	}
 	
 	private void copyDirectory(File sourceLocation, File targetLocation)
@@ -743,7 +750,7 @@ public class BGMain extends JavaPlugin {
 					else
 						text += CFW+" coins for winning the game!";
 				} 
-				BGChat.printPlayerChat(pl, "�6�lYOU HAVE WON THIS GAME!" + text);
+				BGChat.printPlayerChat(pl, ChatColor.GOLD + "" + ChatColor.BOLD + "YOU HAVE WON THIS GAME!" + text);
 				
 				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BGMain.instance, new Runnable() {
 					
@@ -769,7 +776,7 @@ public class BGMain extends JavaPlugin {
 					
 					public void run() {
 						if(pl.isOnline())
-							pl.kickPlayer("�6�lYOU HAVE WON THIS GAME! \n�6Thanks for playing the BukkitGames!");
+							pl.kickPlayer(ChatColor.GOLD + "" + ChatColor.BOLD + "YOU HAVE WON THIS GAME! \n" + ChatColor.GOLD +"Thanks for playing the BukkitGames!");
 						
 						Bukkit.getServer().getScheduler().cancelAllTasks();
 						Bukkit.getServer().shutdown();
@@ -941,7 +948,7 @@ public class BGMain extends JavaPlugin {
 		
 		p.setGameMode(GameMode.CREATIVE);
 		BGVanish.makeVanished(p);
-		BGChat.printPlayerChat(p, "�eYou are now a gamemaker!");
+		BGChat.printPlayerChat(p, ChatColor.YELLOW + Translation.NOW_GAMEMAKER.t());
 	}
 	
 	public static void remGameMaker(Player p) {
@@ -981,7 +988,7 @@ public class BGMain extends JavaPlugin {
 		for(int i=0;i<=8;i++) {
 			p.getInventory().setItem(i, new ItemStack(Material.CROPS, 1));
 		}
-		BGChat.printPlayerChat(p, "�eYou are now a spectator!");
+		BGChat.printPlayerChat(p, ChatColor.YELLOW + Translation.NOW_SPECTATOR.t());
 	}
 	
 	public static void remSpectator(Player p) {
@@ -1002,9 +1009,9 @@ public class BGMain extends JavaPlugin {
 	public static void checkVersion(CommandSender sender, Player p) {
 		if(!UPDATE_CHECK) {
 			if(p != null)
-				BGChat.printPlayerChat(p, "�7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
+				BGChat.printPlayerChat(p, ChatColor.GRAY + "Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
 			else
-				sender.sendMessage("�7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
+				sender.sendMessage(ChatColor.GRAY + "Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion() + " (Update checking disabled!)");
 			return;
 		}
 		Updater updater = new Updater(BGMain.instance, "bukkitgames", BGMain.getPFile(), Updater.UpdateType.NO_DOWNLOAD, false);
@@ -1012,14 +1019,14 @@ public class BGMain extends JavaPlugin {
 		if (update) {
 			String newversion = updater.getLatestVersionString();
 			if(p != null)
-				BGChat.printPlayerChat(p, "�6Update available: " + newversion + " �r/bgdownload");
+				BGChat.printPlayerChat(p, ChatColor.GREEN + "Update available: " + newversion + " /bgdownload");
 			else
-				sender.sendMessage("�6Update available: " + newversion + " �r/bgdownload");
+				sender.sendMessage(ChatColor.GREEN + "Update available: " + newversion + " /bgdownload");
 		} else {
 			if(p != null)
-				BGChat.printPlayerChat(p, "�7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
+				BGChat.printPlayerChat(p, ChatColor.GRAY + "Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
 			else
-				sender.sendMessage("�7Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
+				sender.sendMessage(ChatColor.GRAY + "Current version of The BukkitGames: " + BGMain.instance.getDescription().getVersion());
 		}
 	}
 	
