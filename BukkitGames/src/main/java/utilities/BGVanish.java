@@ -13,12 +13,13 @@ public class BGVanish {
 
 	public static void makeVanished(Player p) {
 		for (Player player : BGMain.getPlayers()) {
-			if (player.getName().equals(p.getName())) {
+			if (player.getName().equals(p.getName()))
 				continue;
-			}
-			if (!player.isOp()) {
-				player.hidePlayer(p);
-			}
+			
+			if(player.isOp() && BGMain.PLAYERS_VISIBLE)
+				continue;
+
+			player.hidePlayer(p);
 		}
 		vanished.add(p.getName());
 	}

@@ -40,6 +40,9 @@ TIPS:
   - 'Get help by typing in /help.'
   - 'Get information about a kit with /kitinfo [KitName].'
   
+# Wheather Ops should be able to see invisible players or not
+PLAYERS_VISIBLE: false
+  
 # Should the kitname displayed as prefix in the chat?
 KIT_PREFIX: true
 

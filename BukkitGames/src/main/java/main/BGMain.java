@@ -121,6 +121,7 @@ public class BGMain extends JavaPlugin {
 	public static Boolean FEAST_PROTECTED = true;
 	public static Boolean SPECTATOR_SYSTEM = false;
 	public static Boolean SQL_DSC = false;
+	public static Boolean PLAYERS_VISIBLE = false;
 	public static Location spawn;
 	public static Boolean AUTO_UPDATE = true;
 	public static Boolean UPDATE_CHECK = true;
@@ -316,6 +317,7 @@ public class BGMain extends JavaPlugin {
 		COMPASS = Boolean.valueOf(getConfig().getBoolean("COMPASS"));
 		AUTO_COMPASS = Boolean.valueOf(getConfig().getBoolean("AUTO_COMPASS"));
 		ITEM_MENU = getConfig().getBoolean("ITEM_MENU");
+		PLAYERS_VISIBLE = getConfig().getBoolean("PLAYERS_VISIBLE");
 				
 		String lang = getConfig().getString("LANGUAGE");
 		if(lang == "en")
