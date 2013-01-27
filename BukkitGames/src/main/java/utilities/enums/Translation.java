@@ -1,7 +1,5 @@
 package utilities.enums;
 
-import java.io.File;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -64,14 +62,11 @@ public enum Translation {
 	public String t() {
 		if(e == null) {
 			if(BGMain.LANGUAGE == Language.ENGLISH)
-				e = YamlConfiguration.loadConfiguration(
-					new File(BGMain.instance.getDataFolder(), "en.yml"));
+				e = YamlConfiguration.loadConfiguration(BGMain.instance.getResource("en.yml"));
 			else if(BGMain.LANGUAGE == Language.GERMAN)
-				e = YamlConfiguration.loadConfiguration(
-					new File(BGMain.instance.getDataFolder(), "de.yml"));
+				e = YamlConfiguration.loadConfiguration(BGMain.instance.getResource("de.yml"));
 			else
-				e = YamlConfiguration.loadConfiguration(
-					new File(BGMain.instance.getDataFolder(), "en.yml"));
+				e = YamlConfiguration.loadConfiguration(BGMain.instance.getResource("en.yml"));
 		}
 		
 		return e.getString(this.path);
