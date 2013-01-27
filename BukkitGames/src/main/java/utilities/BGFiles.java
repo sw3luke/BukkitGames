@@ -8,6 +8,9 @@ import main.BGMain;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import utilities.enums.Language;
+import utilities.enums.Translation;
+
 public class BGFiles {	
 	Logger log = BGMain.getPluginLogger();
 	
@@ -29,8 +32,6 @@ public class BGFiles {
 	}
 	
 	private void loadFiles() throws Exception {
-		
-		//Create files if not exist
 		File configFile = new File(BGMain.instance.getDataFolder(), "config.yml");
 		File kitFile = new File(BGMain.instance.getDataFolder(), "kit.yml");
 		File leaderboardFile = new File(BGMain.instance.getDataFolder(), "leaderboard.yml");
@@ -93,7 +94,15 @@ public class BGFiles {
 			log.info("Created " + creation + " files.");
 		
 		
-		//Save files in variables
+		log.info("Setting language to " + BGMain.LANGUAGE.toString().toLowerCase() + "...");
+		if(BGMain.LANGUAGE == Language.ENGLISH)
+			BGMain.copy(BGMain.instance.getResource("en.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
+		else if(BGMain.LANGUAGE == Language.GERMAN)
+			BGMain.copy(BGMain.instance.getResource("de.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
+		else
+			BGMain.copy(BGMain.instance.getResource("en.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
+		Translation.e = YamlConfiguration.loadConfiguration(new File(BGMain.instance.getDataFolder(), "lang.yml"));
+				
 		abconf = YamlConfiguration.loadConfiguration(
 				new File(BGMain.instance.getDataFolder(), "abilities.yml"));
 		bookconf = YamlConfiguration.loadConfiguration(

@@ -1,9 +1,6 @@
 package utilities.enums;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import main.BGMain;
 
 public enum Translation {	
 	NO_PERMISSION,
@@ -53,22 +50,13 @@ public enum Translation {
 	NOW_SPECTATOR;
 
 	private String path;
-	private FileConfiguration e = null;
+	public static FileConfiguration e = null;
 	
 	Translation() {
 		this.path = toString();
 	}
 
-	public String t() {
-		if(e == null) {
-			if(BGMain.LANGUAGE == Language.ENGLISH)
-				e = YamlConfiguration.loadConfiguration(BGMain.instance.getResource("en.yml"));
-			else if(BGMain.LANGUAGE == Language.GERMAN)
-				e = YamlConfiguration.loadConfiguration(BGMain.instance.getResource("de.yml"));
-			else
-				e = YamlConfiguration.loadConfiguration(BGMain.instance.getResource("en.yml"));
-		}
-		
+	public String t() {		
 		return e.getString(this.path);
 	}
 	
