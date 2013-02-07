@@ -635,7 +635,14 @@ public class BGMain extends JavaPlugin {
 		if(!BORDERS.containsKey(t))
 			return true;
 		Border border = BORDERS.get(t);
+		Location l = new Location(checkHere.getWorld(), border.centerX, checkHere.getY(), border.centerZ);
+		if(l.distance(checkHere) > border.radius) //CPU intensive :(
+			return false;
 		
+		return true;
+		
+		/*
+		 * TODO: This code doesn't work right
 		int X = (int) Math.abs(border.centerX - checkHere.getBlockX());
 		int Z = (int) Math.abs(border.centerZ - checkHere.getBlockZ());
 		if ((X < border.definiteSq) && (Z < border.definiteSq))
@@ -646,6 +653,7 @@ public class BGMain extends JavaPlugin {
 			return true;
 
 		return false;
+		*/
 	}
 		
 	public static Location getSpawn() {
