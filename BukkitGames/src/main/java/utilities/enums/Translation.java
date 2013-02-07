@@ -47,7 +47,10 @@ public enum Translation {
 	GAMES_HAVE_BEGUN, 
 	INVINCIBLE_FOR,
 	NOW_GAMEMAKER, 
-	NOW_SPECTATOR;
+	NOW_SPECTATOR, 
+	HEADSHOT_DEATH, 
+	PLAYERS_REMAIN, 
+	HEADSHOT;
 
 	private String path;
 	public static FileConfiguration e = null;

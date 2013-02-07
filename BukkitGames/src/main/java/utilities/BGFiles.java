@@ -8,8 +8,6 @@ import main.BGMain;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import utilities.enums.Language;
-import utilities.enums.Translation;
 
 public class BGFiles {	
 	Logger log = BGMain.getPluginLogger();
@@ -93,16 +91,7 @@ public class BGFiles {
 		if(creation > 0)
 			log.info("Created " + creation + " files.");
 		
-		
-		log.info("Setting language to " + BGMain.LANGUAGE.toString().toLowerCase() + "...");
-		if(BGMain.LANGUAGE == Language.ENGLISH)
-			BGMain.copy(BGMain.instance.getResource("en.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
-		else if(BGMain.LANGUAGE == Language.GERMAN)
-			BGMain.copy(BGMain.instance.getResource("de.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
-		else
-			BGMain.copy(BGMain.instance.getResource("en.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
-		Translation.e = YamlConfiguration.loadConfiguration(new File(BGMain.instance.getDataFolder(), "lang.yml"));
-				
+						
 		abconf = YamlConfiguration.loadConfiguration(
 				new File(BGMain.instance.getDataFolder(), "abilities.yml"));
 		bookconf = YamlConfiguration.loadConfiguration(

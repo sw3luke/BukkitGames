@@ -39,6 +39,7 @@ import org.bukkit.Sound;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -325,6 +326,15 @@ public class BGMain extends JavaPlugin {
 		else if(lang == "de")
 			LANGUAGE = Language.GERMAN;
 		
+		log.info("Setting language to " + BGMain.LANGUAGE.toString().toLowerCase() + "...");
+		if(BGMain.LANGUAGE == Language.ENGLISH)
+			BGMain.copy(BGMain.instance.getResource("en.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
+		else if(BGMain.LANGUAGE == Language.GERMAN)
+			BGMain.copy(BGMain.instance.getResource("de.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
+		else
+			BGMain.copy(BGMain.instance.getResource("en.yml"), new File(BGMain.instance.getDataFolder(), "lang.yml"));
+		Translation.e = YamlConfiguration.loadConfiguration(new File(BGMain.instance.getDataFolder(), "lang.yml"));
+		
 		if(REW && !SQL_USE) {
 			log.warning("MySQL has to be enabled for advanced reward, turning it off.");
 			REW = false;
@@ -418,9 +428,8 @@ public class BGMain extends JavaPlugin {
 
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = getDescription();
-		
 		Bukkit.getServer().getScheduler().cancelAllTasks();
-		
+				
 		if (SQL_USE) {
 			if (SQL_GAMEID != null) {
 				Integer PL_ID = getPlayerID(NEW_WINNER);
@@ -436,6 +445,8 @@ public class BGMain extends JavaPlugin {
 		}
 		
 		Bukkit.getServer().unloadWorld(Bukkit.getServer().getWorlds().get(0), false);
+		
+		new File(BGMain.instance.getDataFolder(), "lang.yml").delete();
 		
 		log.info("Plugin disabled");
 		log.info("Author: " + pdfFile.getAuthors() + " | Version: " + pdfFile.getVersion());

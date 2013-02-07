@@ -49,6 +49,7 @@ import utilities.BGKit;
 import utilities.BGReward;
 import utilities.BGTeam;
 import utilities.enums.GameState;
+import utilities.enums.Translation;
 
 import main.BGMain;
 
@@ -388,14 +389,10 @@ public class BGAbilitiesListener implements Listener {
 							Player v = (Player) victom;
 							ItemStack helmet = v.getInventory().getHelmet();
 							if (helmet == null) {
-								BGChat.printDeathChat(v.getName()
-										+ " was headshotted by " + p.getName()
-										+ ".");
+								BGChat.printDeathChat(Translation.HEADSHOT_DEATH.t().replace("<victom>", v.getName()).replace("<player>", p.getName()));
 								p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1.0F, (byte) 1);
 								if (!BGMain.ADV_CHAT_SYSTEM) {
-									BGChat.printDeathChat((BGMain
-											.getGamers().length - 1)
-											+ " players remaining.");
+									BGChat.printDeathChat(Translation.PLAYERS_REMAIN.t().replace("<amount>", (BGMain.getGamers().length - 1) + ""));
 									BGChat.printDeathChat("");
 								}
 								Location light = v.getLocation();
@@ -405,10 +402,8 @@ public class BGAbilitiesListener implements Listener {
 												light.add(0.0D, 100.0D, 0.0D));
 								BGGameListener.last_headshot = v.getName();
 								v.setHealth(0);
-								v.kickPlayer(ChatColor.RED + v.getName()
-										+ " was headshotted by " + p.getName()
-										+ ".");
-
+								v.kickPlayer(ChatColor.RED + Translation.HEADSHOT_DEATH.t().replace("<victom>", v.getName()).replace("<player>", p.getName()));
+								
 								if(BGMain.REW && BGMain.COINS_FOR_KILL != 0){
 									BGReward.giveCoins(p.getName(), BGMain.COINS_FOR_KILL);
 									if(BGMain.COINS_FOR_KILL == 1)
@@ -429,12 +424,11 @@ public class BGAbilitiesListener implements Listener {
 											+ BGMain.SQL_GAMEID + " ;");
 								}
 							} else {
-								helmet.setDurability((short) (helmet
-										.getDurability() + 20));
+								helmet.setDurability((short) (helmet.getDurability() + 20));
 								v.getInventory().setHelmet(helmet);
 							}
 						} else {
-							BGChat.printPlayerChat(p, "Headshot!");
+							BGChat.printPlayerChat(p, Translation.HEADSHOT.t());
 							victom.setHealth(0);
 						}
 					}
