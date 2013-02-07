@@ -553,7 +553,7 @@ public class Updater
             if(title.split("v").length == 2)
             {
                 String remoteVersion = title.split("v")[1].split(" ")[0].replace("DEV", ""); // Get the newest file's version number
-                String thisVersion = version.replace(" ", "").replace("DEV", "");
+                String thisVersion = version.replace(" ", "").replace("-SNAPSHOT", "");
                 
                 ArrayList<String> rV = new ArrayList<String>();
                 ArrayList<String> tV = new ArrayList<String>();

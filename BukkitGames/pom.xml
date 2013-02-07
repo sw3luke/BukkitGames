@@ -3,7 +3,7 @@
 
     <groupId>BukkitGames</groupId>
     <artifactId>BukkitGames</artifactId>
-    <version>1.9.2-SNAPSHOT</version>
+    <version>1.9.2.1-SNAPSHOT</version>
     <name>BukkitGames</name>
     <url>http://dev.bukkit.org/server-mods/bukkitgames</url>
     <packaging>jar</packaging>
