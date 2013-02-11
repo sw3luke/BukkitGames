@@ -507,18 +507,6 @@ public class BGGameListener implements Listener {
 				event.setFormat(ChatColor.ITALIC + "[SPECTATOR] " + ChatColor.RESET + event.getFormat());
 			}
 		}
-			
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			String m = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
-			String s = ChatColor.stripColor(m);
-			if(s.length() <= 53) {
-				BGChat.playerChatMsg(m);
-				log.info("[CHAT] " + m);
-			} else {
-				BGChat.printPlayerChat(event.getPlayer(), ChatColor.RED + Translation.MESSAGE_TOO_LONG.t());
-			}
-			event.setCancelled(true);
-		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)

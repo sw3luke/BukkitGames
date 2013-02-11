@@ -17,135 +17,38 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
-import utilities.enums.GameState;
 
 public class BGChat {
+	private static Logger log = BGMain.getPluginLogger();
 	static Integer TIP_COUNT = 0;
 	static ArrayList<String> TIPS = new ArrayList<String>();
-	private static Logger log = BGMain.getPluginLogger();
-	static String TIMER_MSG = "TIMER_MSG"; 
-	static String DEATH_MSG = "This server is running the BukkitGames plugin."; 
-	static String INFO_MSG = "Welcome to the HungerGames! | Get your kit now: /kit"; 
-	static HashMap<Player, String> PLAYER_MSG = new HashMap<Player, String>();
-	static HashMap<Player, Boolean> KIT_CHAT = new HashMap<Player, Boolean>();
-	static HashMap<Player, Boolean> HELP_CHAT = new HashMap<Player, Boolean>();
-	static HashMap<Player, String> KITINFO_CHAT = new HashMap<Player, String>();
-	static String[] CHAT_MSG = new String[6];
-	static HashMap<Integer, String> ABILITY_DESC = new HashMap<Integer, String>();
 	static HashMap<Player, IconMenu> MENUS = new HashMap<Player, IconMenu>();
 	
 	static Boolean update = true;
 
 	public BGChat() {		
-		CHAT_MSG[0] = "";
-		CHAT_MSG[1] = "";
-		CHAT_MSG[2] = "";
-		CHAT_MSG[3] = "";
-		CHAT_MSG[4] = "";
-		CHAT_MSG[5] = "";
-
-		ABILITY_DESC.put(1, BGFiles.abconf.getString("AB.1.Desc"));
-		ABILITY_DESC.put(2, BGFiles.abconf.getString("AB.2.Desc"));
-		ABILITY_DESC.put(3, BGFiles.abconf.getString("AB.3.Desc"));
-		ABILITY_DESC.put(4, BGFiles.abconf.getString("AB.4.Desc"));
-		ABILITY_DESC.put(5, BGFiles.abconf.getString("AB.5.Desc"));
-		ABILITY_DESC.put(6, BGFiles.abconf.getString("AB.6.Desc"));
-		ABILITY_DESC.put(7, BGFiles.abconf.getString("AB.7.Desc"));
-		ABILITY_DESC.put(8, BGFiles.abconf.getString("AB.8.Desc"));
-		ABILITY_DESC.put(9, BGFiles.abconf.getString("AB.9.Desc"));
-		ABILITY_DESC.put(10, BGFiles.abconf.getString("AB.10.Desc"));
-		ABILITY_DESC.put(11, BGFiles.abconf.getString("AB.11.Desc"));
-		ABILITY_DESC.put(12, BGFiles.abconf.getString("AB.12.Desc"));
-		ABILITY_DESC.put(13, BGFiles.abconf.getString("AB.13.Desc"));
-		ABILITY_DESC.put(14, BGFiles.abconf.getString("AB.14.Desc"));
-		ABILITY_DESC.put(15, BGFiles.abconf.getString("AB.15.Desc"));
-		ABILITY_DESC.put(16, BGFiles.abconf.getString("AB.16.Desc"));
-		
-		if(BGMain.ADV_ABI) {
-			ABILITY_DESC.put(17, BGFiles.abconf.getString("AB.17.Desc"));
-		}else {
-			ABILITY_DESC.put(17, "Advanced Abilities disabled! This ability wont work!");
-		}
-		
-		
-		ABILITY_DESC.put(18, BGFiles.abconf.getString("AB.18.Desc"));
-		ABILITY_DESC.put(19, BGFiles.abconf.getString("AB.19.Desc"));
-		ABILITY_DESC.put(20, BGFiles.abconf.getString("AB.20.Desc"));
-		ABILITY_DESC.put(21, BGFiles.abconf.getString("AB.21.Desc"));
-		ABILITY_DESC.put(22, BGFiles.abconf.getString("AB.22.Desc"));
-		ABILITY_DESC.put(23, BGFiles.abconf.getString("AB.23.Desc"));
-		
 		List<String> tiplist = BGFiles.config.getStringList("TIPS");
 		for(String tip : tiplist)
 			TIPS.add(tip);
-		
-	}
-
-	public static void playerChatMsg(String message) {
-		CHAT_MSG[5] = CHAT_MSG[4];
-		CHAT_MSG[4] = CHAT_MSG[3];
-		CHAT_MSG[3] = CHAT_MSG[2];
-		CHAT_MSG[2] = CHAT_MSG[1];
-		CHAT_MSG[1] = CHAT_MSG[0];
-		CHAT_MSG[0] = message;
-		updateChat();
 	}
 
 	public static void printInfoChat(String text) {
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			INFO_MSG = text;
-			updateChat();
-		} else {
-			Bukkit.getServer().broadcastMessage(ChatColor.DARK_GREEN + text);
-		}
+		Bukkit.getServer().broadcastMessage(ChatColor.DARK_GREEN + text);
 	}
 
 	public static void printDeathChat(String text) {
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			DEATH_MSG = text;
-			updateChat();
-		} else {
-			Bukkit.getServer().broadcastMessage(ChatColor.RED + text);
-		}
+		Bukkit.getServer().broadcastMessage(ChatColor.RED + text);
 	}
 
 	public static void printTimeChat(String text) {
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			TIMER_MSG = text;
-			updateChat();
-		} else {
-			Bukkit.getServer().broadcastMessage(ChatColor.GREEN + text);
-		}
+		Bukkit.getServer().broadcastMessage(ChatColor.GREEN + text);
 	}
 
 	public static void printPlayerChat(Player player, String text) {
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			PLAYER_MSG.put(player, ChatColor.GRAY + text);
-			updateChat(player);
-			final Player pl = player;
-			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
-						public void run() {
-							BGChat.PLAYER_MSG.remove(pl);
-						}
-					}, 100);
-		} else {
 			player.sendMessage(ChatColor.GRAY + text);
-		}
 	}
 
 	public static void printHelpChat(Player player) {
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			HELP_CHAT.put(player, true);
-			updateChat();
-			final Player pl = player;
-			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
-						public void run() {
-							BGChat.HELP_CHAT.remove(pl);
-						}
-					}, 100);
-		} else {
 			BGChat.printPlayerChat(player, BGMain.SERVER_TITLE);
 			String are = "are";
 			String players = "players";
@@ -168,23 +71,11 @@ public class BGChat {
 					+ minute + " left.");
 			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "")
 				player.sendMessage(ChatColor.GRAY + " - " + BGMain.HELP_MESSAGE);
-		}
 	}
 
 	public static void printKitChat(Player player) {
 		if(!BGMain.ITEM_MENU) {
 			
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			KIT_CHAT.put(player, true);
-			updateChat();
-			final Player pl = player;
-			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
-						public void run() {
-							BGChat.KIT_CHAT.remove(pl);
-						}
-					}, 100);
-		} else {
 			Set<String> kitname = BGFiles.kitconf.getKeys(false);
 			String yourkits = "";
 			String otherkits = "";
@@ -213,7 +104,6 @@ public class BGChat {
 			player.sendMessage(ChatColor.AQUA + "More kits available at: "
 					+ BGMain.KIT_BUY_WEB);
 			player.sendMessage("");
-		}
 		
 		} else {
 			 Set<String> kits = BGFiles.kitconf.getKeys(false);
@@ -312,7 +202,7 @@ public class BGChat {
 						
 						List<Integer> abils = kit.getIntegerList("ABILITY");
 						for(Integer abil : abils) {
-							String desc = getAbilityDesc(abil.intValue());
+							String desc = BGKit.getAbilityDesc(abil.intValue());
 							if (desc != null)
 								container.add(ChatColor.WHITE + " + " + desc);
 						}
@@ -359,23 +249,11 @@ public class BGChat {
 		String kitinfoname = kitname;
 		kitname = kitname.toLowerCase();
 		ConfigurationSection kit = BGFiles.kitconf.getConfigurationSection(kitname);
-		if (kit == null && !BGKit.kits.contains(kitname)) {
+		if (kit == null || !BGKit.isKit(kitname)) {
 			printPlayerChat(player,
 					"That kit doesn't exist! View all kits with /kit");
 			return;
 		}
-
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			KITINFO_CHAT.put(player, kitname);
-			updateChat();
-			final Player pl = player;
-			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(BGMain.instance, new Runnable() {
-						public void run() {
-							BGChat.KITINFO_CHAT.remove(pl);
-						}
-					}, 100);
-		} else {
 			char[] stringArray = kitinfoname.toCharArray();
 			stringArray[0] = Character.toUpperCase(stringArray[0]);
 			kitinfoname = new String(stringArray);
@@ -441,7 +319,7 @@ public class BGChat {
 			
 			List<Integer> abils = kit.getIntegerList("ABILITY");
 			for(Integer abil : abils) {
-				String desc = getAbilityDesc(abil.intValue());
+				String desc = BGKit.getAbilityDesc(abil.intValue());
 
 				if (desc != null) {
 					player.sendMessage(ChatColor.WHITE + " + " + desc);
@@ -453,7 +331,6 @@ public class BGChat {
 				player.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
 			else if(BGKit.getCoins(kitname.toLowerCase()) > 1)
 				player.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");	
-		}
 	}
 
 	public static void printTipChat() {
@@ -462,300 +339,7 @@ public class BGChat {
 		
 		String tip = TIPS.get(TIP_COUNT);
 		TIP_COUNT++;
-		if (BGMain.ADV_CHAT_SYSTEM) {
-			INFO_MSG = "[TIP] " + tip;
-			updateChat();
-		} else {
-			if (tip != "" || tip != null)
-				Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "[TIP] " + tip);
-		}
-	}
-
-	public static void updateChat() {
-		if(!BGMain.ADV_CHAT_SYSTEM)
-			return;
-		
-		for (Player pl : BGMain.getPlayers()) {
-			updateChat(pl);
-		}
-	}
-
-	public static void updateChat(Player p) {
-		if(!BGMain.ADV_CHAT_SYSTEM)
-			return;
-
-		// Clear chat
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-		p.sendMessage("");
-
-		if (HELP_CHAT.containsKey(p)) {
-			Integer line = 5;
-			String are = "are";
-			String players = "players";
-			if (BGMain.getGamers().length == 1) {
-				are = "is";
-				players = "player";
-			}
-
-			Integer timeleft = BGMain.MAX_GAME_RUNNING_TIME
-					- BGMain.GAME_RUNNING_TIME;
-			String is = "are";
-			String minute = "minutes";
-			if (timeleft <= 1) {
-				is = "minute";
-				minute = "minute";
-			}
-			Integer help_length = 0;
-			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "")
-				help_length = BGMain.HELP_MESSAGE.length();
-
-			while (help_length > 50) {
-				line++;
-				help_length = help_length - 50;
-			}
-
-			p.sendMessage(ChatColor.AQUA + BGMain.SERVER_TITLE);
-			p.sendMessage("");
-			p.sendMessage(ChatColor.GRAY + " - There " + are + " " + BGMain.getGamers().length
-					+ " " + players + " online.");
-			p.sendMessage(ChatColor.GRAY + " - There " + is + " " + timeleft + " " + minute
-					+ " left.");
-			if (BGMain.HELP_MESSAGE != null && BGMain.HELP_MESSAGE != "") {
-				p.sendMessage(ChatColor.GRAY + " - " + BGMain.HELP_MESSAGE);
-				line++;
-			}
-
-			if (PLAYER_MSG.containsKey(p))
-				line++;
-
-			while (line <= 10) {
-				p.sendMessage("");
-				line++;
-			}
-
-			if (PLAYER_MSG.containsKey(p))
-				p.sendMessage(PLAYER_MSG.get(p));
-
-		} else if (KIT_CHAT.containsKey(p)) {
-			Integer line = 5;
-			Set<String> kitname = BGFiles.kitconf.getKeys(false);
-
-			String yourkits = "";
-			String otherkits = "";
-			for (String name : kitname) {
-				if(name.equalsIgnoreCase("default"))
-					continue;
-				
-				char[] stringArray = name.toCharArray();
-				stringArray[0] = Character.toUpperCase(stringArray[0]);
-				name = new String(stringArray);
-				
-				if (p.hasPermission("bg.kit." + name.toLowerCase()) || (BGMain.SIMP_REW && BGMain.winner(p))
-					|| (BGMain.REW && BGReward.BOUGHT_KITS.get(p.getName()) != null
-					&& BGReward.BOUGHT_KITS.get(p.getName()).equals(name.toLowerCase()))) {
-					if(yourkits == "")
-						yourkits = name;
-					else
-						yourkits = name + ", " + yourkits;
-				} else {
-					if(otherkits == "")
-						otherkits = name;
-					else
-						otherkits = name + ", " + otherkits;
-				}
-			}
-			Integer otherline = otherkits.length();
-			Integer yourline = yourkits.length();
-			yourline = yourline + 11;
-			otherline = otherline + 12;
-
-			line++;
-			while (otherline > 50) {
-				line++;
-				otherline = otherline - 50;
-			}
-			line++;
-			while (yourline > 50) {
-				line++;
-				yourline = yourline - 50;
-			}
-			p.sendMessage(ChatColor.AQUA + "Available kits: " + ChatColor.GRAY + "(/kit [KitName])");
-			p.sendMessage("");
-			p.sendMessage(ChatColor.GREEN + "Your kits: " + ChatColor.WHITE + yourkits);
-			p.sendMessage(ChatColor.GREEN + "Other kits: " + ChatColor.WHITE + otherkits);
-			p.sendMessage(ChatColor.AQUA + "More kits available at: "
-					+ BGMain.KIT_BUY_WEB);
-
-			if (PLAYER_MSG.containsKey(p))
-				line++;
-
-			while (line <= 10) {
-				p.sendMessage("");
-				line++;
-			}
-
-			if (PLAYER_MSG.containsKey(p))
-				p.sendMessage(PLAYER_MSG.get(p));
-
-		} else if (KITINFO_CHAT.containsKey(p)) {
-			Integer line = 0;
-			String kitname = KITINFO_CHAT.get(p);
-			String kitinfoname = kitname;
-			kitname = kitname.toLowerCase();
-			ConfigurationSection kit = BGFiles.kitconf
-					.getConfigurationSection(kitname);
-
-			char[] stringArray = kitinfoname.toCharArray();
-			stringArray[0] = Character.toUpperCase(stringArray[0]);
-			kitinfoname = new String(stringArray);
-
-			p.sendMessage(ChatColor.GREEN + kitinfoname + " kit includes:");
-			p.sendMessage("");
-			line = line + 3;
-			List<String> kititems = kit.getStringList("ITEMS");
-			for (String item : kititems) {
-				String[] oneitem = item.split(",");
-
-				String itemstring = null;
-				Integer id = null;
-				Integer amount = null;
-				String enchantment = null;
-				String ench_numb = null;
-
-				if (oneitem[0].contains(":")) {
-					String[] ITEM_ID = oneitem[0].split(":");
-					id = Integer.valueOf(Integer.parseInt(ITEM_ID[0]));
-					amount = Integer.valueOf(Integer.parseInt(oneitem[1]));
-				} else {
-					id = Integer.valueOf(Integer.parseInt(oneitem[0]));
-					amount = Integer.valueOf(Integer.parseInt(oneitem[1]));
-				}
-
-				itemstring = " - "
-						+ amount
-						+ "x "
-						+ Material.getMaterial(id.intValue()).toString()
-								.replace("_", " ").toLowerCase();
-
-				if (oneitem.length == 4) {
-					enchantment = Enchantment
-							.getById(Integer.parseInt(oneitem[2])).getName()
-							.toLowerCase();
-					ench_numb = oneitem[3];
-
-					itemstring = itemstring + " with " + enchantment + " "
-							+ ench_numb;
-				}
-				line++;
-				p.sendMessage(ChatColor.WHITE + itemstring);
-			}
-
-			List<Integer> abils = kit.getIntegerList("ABILITY");
-			for(Integer abil : abils) {
-				String desc = getAbilityDesc(abil.intValue());
-				if (desc != null) {
-					p.sendMessage(ChatColor.WHITE + " - " + desc);
-					line++;
-				}
-			}
-			
-			List<String> pots = kit.getStringList("POTION");
-			for(String pot : pots) {	
-				if (pot != null & pot != "") {
-					if (!pot.equals(0)) {
-						String[] potion = pot.split(",");
-						if (Integer.parseInt(potion[0]) != 0) {
-							PotionEffectType pt = PotionEffectType.getById(Integer.parseInt(potion[0]));
-							String name = pt.getName();
-							if (Integer.parseInt(potion[1]) == 0) {
-								name += " (Duration: infinitely)";
-							} else {
-								name += " (Duration: "+potion[1]+" sec)";
-							}
-							p.sendMessage(ChatColor.WHITE + " - " + name);
-							line++;
-						}
-					}
-				}
-			}
-			
-			if(BGKit.getCoins(kitname.toLowerCase()) == 1) {
-				p.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coin");
-				line++;
-			} else if(BGKit.getCoins(kitname.toLowerCase()) > 1) {
-				p.sendMessage(ChatColor.WHITE + "PRICE: "+ BGKit.getCoins(kitname.toLowerCase())+ " Coins");
-				line++;
-			}
-			
-			if (PLAYER_MSG.containsKey(p))
-				line++;
-
-			while (line <= 10) {
-				p.sendMessage("");
-				line++;
-			}
-			if (PLAYER_MSG.containsKey(p))
-				p.sendMessage(ChatColor.GRAY + PLAYER_MSG.get(p));
-
-		} else {
-			p.sendMessage(ChatColor.BLUE + INFO_MSG);
-			p.sendMessage(ChatColor.RED + DEATH_MSG);
-			if (BGMain.GAMESTATE != GameState.GAME)
-				p.sendMessage(ChatColor.GREEN + TIMER_MSG);
-			else {
-				Integer timeleft = BGMain.MAX_GAME_RUNNING_TIME
-						- BGMain.GAME_RUNNING_TIME;
-				String minute = "minutes";
-				if (timeleft <= 1) {
-					minute = "minute";
-				}
-
-				p.sendMessage(ChatColor.GREEN + "Players remaining: "
-						+ BGMain.getGamers().length + " | Time remaining: "
-						+ timeleft + " " + minute);
-			}
-			p.sendMessage("-----------------------------------------------------");
-			if (!PLAYER_MSG.containsKey(p))
-				p.sendMessage(CHAT_MSG[5]);
-			p.sendMessage(CHAT_MSG[4]);
-			p.sendMessage(CHAT_MSG[3]);
-			p.sendMessage(CHAT_MSG[2]);
-			p.sendMessage(CHAT_MSG[1]);
-			p.sendMessage(CHAT_MSG[0]);
-			if (PLAYER_MSG.containsKey(p))
-				p.sendMessage(PLAYER_MSG.get(p));
-		}
-
-	}
-
-	public static String getAbilityDesc(Integer ability) {
-		if (ability == 0)
-			return null;
-
-		if (ABILITY_DESC.containsKey(ability))
-			return ABILITY_DESC.get(ability);
-		else
-			return null;
-	}
-
-	public static void setAbilityDesc(Integer ability, String description) throws Error {
-		if (ABILITY_DESC.containsKey(ability))
-			throw new Error("Cannot overwrite existing descriptions of abilties.");
-		else
-			ABILITY_DESC.put(ability, description);
+		if (tip != "" || tip != null)
+			Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "[TIP] " + tip);
 	}
 }

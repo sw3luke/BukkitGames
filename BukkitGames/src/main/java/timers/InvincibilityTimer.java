@@ -42,16 +42,10 @@ private static Integer shed_id = null;
 					if(BGMain.SHOW_TIPS) {
 						BGChat.printTipChat();
 					}
-					if(BGMain.ADV_CHAT_SYSTEM && !BGMain.SHOW_TIPS) {
-						BGChat.updateChat();
-					}
 					BGMain.GAMESTATE = GameState.GAME;
 					new GameTimer();
 					cancel();
 				}
-				
-				if(BGMain.FINAL_COUNTDOWN % 5 == 0 && BGMain.ADV_CHAT_SYSTEM)
-					BGChat.updateChat();
 			}
 			
 		}, 0, 20);

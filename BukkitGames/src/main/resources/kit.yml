@@ -10,7 +10,7 @@ default:
 # Add a section for each kit. EXAMPLE:
 # kitname: [THE NAME - SAME AS ABOVE - HAS TO BE IN SMALL LETTERS]
 #  ITEMS:  [LIST OF ALL ITEMS]
-#    - 'ITEM_ID:DURABILITY,AMOUNT,ENCHANTMENT_ID,ENCHANTMENT_LEVEL'
+#    - 'ITEM_ID:DURABILITY,AMOUNT ENCHANTMENT_ID:ENCHANTMENT_LEVEL'
 #  ABILITY: 
 #    - 0 [THE ID OF THE ABILITY - 0 IS NO ABILITY]
 #  POTION: 
@@ -29,7 +29,7 @@ barbarian:
   ITEMMENU: 267
 miner:
   ITEMS:
-    - '274,1,32,1'
+    - '274,1 32:1 1:2'
     - '306,1'
   ABILITY:
     - 0
@@ -56,7 +56,7 @@ beastmaster:
   ABILITY:
     - 0
   POTION:
-    - '18,30,1'
+    - '18,30 1:1'
   COINS: 7
   ITEMMENU: 276
 enderman:
@@ -72,7 +72,7 @@ enderman:
 pyro:
   ITEMS:
     - '259,1'
-    - '299,1,1,1'
+    - '299,1, 1:1'
   ABILITY:
     - 6
     - 7

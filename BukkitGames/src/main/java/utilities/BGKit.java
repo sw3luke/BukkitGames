@@ -21,6 +21,7 @@ public class BGKit {
 	static Logger log = BGMain.getPluginLogger();
 	static HashMap<Player, String> KIT = new HashMap<Player, String>();
 	public static ArrayList<String> kits = new ArrayList<String>();
+	private static HashMap<Integer, String> ABILITY_DESC = new HashMap<Integer, String>();
 
 	public BGKit() {
 		Set<String> kitList = BGFiles.kitconf.getKeys(false);
@@ -30,6 +31,38 @@ public class BGKit {
 			
 			kits.add(kit.toLowerCase());
 		}
+		
+		ABILITY_DESC.put(1, BGFiles.abconf.getString("AB.1.Desc"));
+		ABILITY_DESC.put(2, BGFiles.abconf.getString("AB.2.Desc"));
+		ABILITY_DESC.put(3, BGFiles.abconf.getString("AB.3.Desc"));
+		ABILITY_DESC.put(4, BGFiles.abconf.getString("AB.4.Desc"));
+		ABILITY_DESC.put(5, BGFiles.abconf.getString("AB.5.Desc"));
+		ABILITY_DESC.put(6, BGFiles.abconf.getString("AB.6.Desc"));
+		ABILITY_DESC.put(7, BGFiles.abconf.getString("AB.7.Desc"));
+		ABILITY_DESC.put(8, BGFiles.abconf.getString("AB.8.Desc"));
+		ABILITY_DESC.put(9, BGFiles.abconf.getString("AB.9.Desc"));
+		ABILITY_DESC.put(10, BGFiles.abconf.getString("AB.10.Desc"));
+		ABILITY_DESC.put(11, BGFiles.abconf.getString("AB.11.Desc"));
+		ABILITY_DESC.put(12, BGFiles.abconf.getString("AB.12.Desc"));
+		ABILITY_DESC.put(13, BGFiles.abconf.getString("AB.13.Desc"));
+		ABILITY_DESC.put(14, BGFiles.abconf.getString("AB.14.Desc"));
+		ABILITY_DESC.put(15, BGFiles.abconf.getString("AB.15.Desc"));
+		ABILITY_DESC.put(16, BGFiles.abconf.getString("AB.16.Desc"));
+		
+		if(BGMain.ADV_ABI) {
+			ABILITY_DESC.put(17, BGFiles.abconf.getString("AB.17.Desc"));
+		}else {
+			ABILITY_DESC.put(17, "Advanced Abilities disabled! This ability wont work!");
+		}
+		
+		
+		ABILITY_DESC.put(18, BGFiles.abconf.getString("AB.18.Desc"));
+		ABILITY_DESC.put(19, BGFiles.abconf.getString("AB.19.Desc"));
+		ABILITY_DESC.put(20, BGFiles.abconf.getString("AB.20.Desc"));
+		ABILITY_DESC.put(21, BGFiles.abconf.getString("AB.21.Desc"));
+		ABILITY_DESC.put(22, BGFiles.abconf.getString("AB.22.Desc"));
+		ABILITY_DESC.put(23, BGFiles.abconf.getString("AB.23.Desc"));
+		
 	}
 
 	public static void giveKit(Player p) {
@@ -315,8 +348,23 @@ public class BGKit {
 	}
 	
 	public static boolean isKit(String kitName) {
-		if(kits.contains(kitName))
-			return true;
-		return false;
+		return kits.contains(kitName);
+	}
+	
+	public static String getAbilityDesc(Integer ability) {
+		if (ability == 0)
+			return null;
+
+		if (ABILITY_DESC.containsKey(ability))
+			return ABILITY_DESC.get(ability);
+		else
+			return null;
+	}
+
+	public static void setAbilityDesc(Integer ability, String description) throws Error {
+		if (ABILITY_DESC.containsKey(ability))
+			throw new Error("Cannot overwrite existing descriptions of abilties.");
+		else
+			ABILITY_DESC.put(ability, description);
 	}
 }

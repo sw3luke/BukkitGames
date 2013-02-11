@@ -27,9 +27,6 @@ public class GameTimer {
 					if(BGMain.SHOW_TIPS) {	
 						BGChat.printTipChat();
 					}
-					if(BGMain.ADV_CHAT_SYSTEM && !BGMain.SHOW_TIPS) {
-						BGChat.updateChat();
-					}
 				}
 
 				if(BGMain.GAME_ENDING_TIME <= BGMain.GAME_RUNNING_TIME) {
