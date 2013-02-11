@@ -6,7 +6,6 @@ import main.BGMain;
 
 import org.bukkit.entity.Player;
 
-import utilities.BGChat;
 import utilities.BGKit;
 import utilities.enums.GameState;
 
@@ -21,10 +20,10 @@ public class API {
 	 * 			Ability Description
 	 */
 	public static void addAbility(Integer id, String desc) throws Error {
-		if(BGChat.getAbilityDesc(id) != null)
+		if(BGKit.getAbilityDesc(id) != null)
 			throw new Error("Ability ID " + id + " is already registered.");
 		
-		BGChat.setAbilityDesc(id, desc);
+		BGKit.setAbilityDesc(id, desc);
 	}
 	
 	
@@ -64,6 +63,15 @@ public class API {
 	}
 	
 	/**
+	 * Returns all available kits
+	 * 
+	 * @return ArrayList
+	 */
+	public static ArrayList<String> getKits() {
+		return BGKit.kits;
+	}
+	
+	/**
 	 * Returns the current GameState
 	 * 
 	 * @return GameState
@@ -91,7 +99,7 @@ public class API {
 	}
 	
 	/**
-	 * Returns online gamers
+	 * Returns all online gamers
 	 * 
 	 * @return Player[]
 	 */
