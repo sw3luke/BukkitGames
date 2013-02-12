@@ -572,7 +572,6 @@ public class BGGameListener implements Listener {
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		Entity damager = event.getDamager();		
 		if(damager instanceof Player) {
-			log.info("call");
 			if(BGMain.isSpectator((Player) damager)) {
 				event.setCancelled(true);
 				return;
