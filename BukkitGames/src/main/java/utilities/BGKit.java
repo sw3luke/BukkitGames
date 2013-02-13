@@ -193,7 +193,102 @@ public class BGKit {
 			if (oneitem.length == 4) {
 				i.addUnsafeEnchantment(
 						Enchantment.getById(Integer.parseInt(oneitem[2])),
+						Integer.parseInt(oneitem[1]));
+			}
+			// For-Loops did not seem to work, so its written out manually.
+			else if (oneitem.length == 6) {
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[2])),
+						Integer.parseInt(oneitem[1]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[4])),
 						Integer.parseInt(oneitem[3]));
+			}
+			else if (oneitem.length == 8) {
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[2])),
+						Integer.parseInt(oneitem[1]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[4])),
+						Integer.parseInt(oneitem[3]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[6])),
+						Integer.parseInt(oneitem[5]));
+			}
+			else if (oneitem.length == 10) {
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[2])),
+						Integer.parseInt(oneitem[1]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[4])),
+						Integer.parseInt(oneitem[3]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[6])),
+						Integer.parseInt(oneitem[5]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[8])),
+						Integer.parseInt(oneitem[7]));
+
+			}
+			else if (oneitem.length == 12) {
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[2])),
+						Integer.parseInt(oneitem[1]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[4])),
+						Integer.parseInt(oneitem[3]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[6])),
+						Integer.parseInt(oneitem[5]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[8])),
+						Integer.parseInt(oneitem[7]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[10])),
+						Integer.parseInt(oneitem[9]));
+			}
+			else if (oneitem.length == 14) {
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[2])),
+						Integer.parseInt(oneitem[1]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[4])),
+						Integer.parseInt(oneitem[3]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[6])),
+						Integer.parseInt(oneitem[5]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[8])),
+						Integer.parseInt(oneitem[7]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[10])),
+						Integer.parseInt(oneitem[9]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[12])),
+						Integer.parseInt(oneitem[11]));
+			}
+			else if (oneitem.length == 16) {
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[2])),
+						Integer.parseInt(oneitem[1]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[4])),
+						Integer.parseInt(oneitem[3]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[6])),
+						Integer.parseInt(oneitem[5]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[8])),
+						Integer.parseInt(oneitem[7]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[10])),
+						Integer.parseInt(oneitem[9]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[12])),
+						Integer.parseInt(oneitem[11]));
+				i.addUnsafeEnchantment(
+						Enchantment.getById(Integer.parseInt(oneitem[14])),
+						Integer.parseInt(oneitem[13]));
 			}
 
 			if ((id.intValue() < 298) || (317 < id.intValue())) {
