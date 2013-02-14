@@ -585,8 +585,7 @@ public class BGGameListener implements Listener {
 	            Player damaged = (Player) entityDamaged;
 	 
 	            if(BGMain.isSpectator(damaged) || BGMain.isGameMaker(damaged)) {
-	                damaged.setVelocity(new Vector(1, 2, 0));
-	                damaged.setFlying(true);
+	                damaged.teleport(BGMain.getSpawn());
 	                BGChat.printPlayerChat(damaged, ChatColor.RED + Translation.SPECTATOR_IN_THE_WAY.t());
 	               
 	                Arrow newArrow = shooter.launchProjectile(Arrow.class);
@@ -610,7 +609,7 @@ public class BGGameListener implements Listener {
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		if(event.getRightClicked() instanceof Player && BGMain.isSpectator((Player) event.getRightClicked())) {
 			if(!BGMain.isSpectator(event.getPlayer()) && !BGMain.isGameMaker(event.getPlayer())) {
-				event.getRightClicked().setVelocity(new Vector(1, 2, 0));
+				event.getRightClicked().teleport(BGMain.getSpawn());
 				BGChat.printPlayerChat((Player) event.getRightClicked(), ChatColor.RED + Translation.SPECTATOR_IN_THE_WAY.t());
 				
 				event.setCancelled(true);
