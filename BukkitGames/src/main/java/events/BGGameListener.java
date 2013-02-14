@@ -56,6 +56,8 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.util.Vector;
+
 import utilities.BGChat;
 import utilities.BGCornucopia;
 import utilities.BGFeast;
@@ -570,33 +572,47 @@ public class BGGameListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-		Entity damager = event.getDamager();		
-		if(damager instanceof Player) {
-			if(BGMain.isSpectator((Player) damager)) {
+		Entity entityDamager = event.getDamager();
+	    Entity entityDamaged = event.getEntity();
+	   
+	    if(entityDamager instanceof Arrow) {
+	        if(entityDamaged instanceof Player && ((Arrow) entityDamager).getShooter() instanceof Player) {
+	            Arrow arrow = (Arrow) entityDamager;
+	 
+	            Vector velocity = arrow.getVelocity();
+	 
+	            Player shooter = (Player) arrow.getShooter();
+	            Player damaged = (Player) entityDamaged;
+	 
+	            if(BGMain.isSpectator(damaged) || BGMain.isGameMaker(damaged)) {
+	                damaged.setVelocity(new Vector(1, 2, 0));
+	                damaged.setFlying(true);
+	                BGChat.printPlayerChat(damaged, ChatColor.RED + Translation.SPECTATOR_IN_THE_WAY.t());
+	               
+	                Arrow newArrow = shooter.launchProjectile(Arrow.class);
+	                newArrow.setShooter(shooter);
+	                newArrow.setVelocity(velocity);
+	                newArrow.setBounce(false);
+	               
+	                event.setCancelled(true);
+	                arrow.remove();
+	            }
+	        }
+	    } else if(entityDamager instanceof Player) {
+			if(BGMain.isSpectator((Player) entityDamager)) {
 				event.setCancelled(true);
 				return;
 			}
-			if(damager instanceof Arrow && BGMain.isSpectator((Player) event.getEntity())) {
-				event.getEntity().teleport(BGMain.getSpawn());
-				BGChat.printPlayerChat((Player) event.getEntity(), ChatColor.RED + Translation.SPECTATOR_IN_THE_WAY.t());
-				/* TODO: WORK IN PROGRESS - When an arrow hits and spectator, spawn a new arrow after the spectator was getting teleported away
-				Arrow arrow = (Arrow) damager;
-				Bukkit.getServer().getWorlds().get(0).spawnArrow(arrow.getLocation(), arg1, arg2, arg3);
-				*/
-				event.setCancelled(true);
-				return;
-			}
-			
-		}
+	    }
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		if(event.getRightClicked() instanceof Player && BGMain.isSpectator((Player) event.getRightClicked())) {
 			if(!BGMain.isSpectator(event.getPlayer()) && !BGMain.isGameMaker(event.getPlayer())) {
-				//A player wanted to place a block, but a spectator stood on it
-				event.getRightClicked().teleport(BGMain.getSpawn());
+				event.getRightClicked().setVelocity(new Vector(1, 2, 0));
 				BGChat.printPlayerChat((Player) event.getRightClicked(), ChatColor.RED + Translation.SPECTATOR_IN_THE_WAY.t());
+				
 				event.setCancelled(true);
 				return;
 			}
@@ -606,7 +622,7 @@ public class BGGameListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamage(EntityDamageEvent event) {
 		if(event.getEntity() instanceof Player) {
-			if(BGMain.isSpectator((Player) event.getEntity())) {
+			if(BGMain.isSpectator((Player) event.getEntity()) || BGMain.isGameMaker((Player) event.getEntity())) {
 				event.setCancelled(true);
 				return;
 			}
