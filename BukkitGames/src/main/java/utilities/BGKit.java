@@ -9,11 +9,13 @@ import java.util.logging.Logger;
 import main.BGMain;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -177,6 +179,42 @@ public class BGKit {
 			Integer id = null;
 			Integer amount = null;
 			Short durability = null;
+			int blue = 0;
+			int green = 0;
+			int red = 0;
+			if (item.toLowerCase().contains(">")){
+			String[] color = item.split(">");
+			if (color[1].toLowerCase().contains("blue"))
+			{
+			blue = 255;
+			green = 0;
+			red = 0;
+			}
+			else if (color[1].toLowerCase().contains("green"))
+			{
+			blue = 0;
+			green = 255;
+			red = 0;
+			}
+			else if (color[1].toLowerCase().contains("red"))
+			{
+			blue = 0;
+			green = 0;
+			red = 255;
+			}
+			else if (color[1].toLowerCase().contains("black"))
+			{
+			blue = 0;
+			green = 0;
+			red = 0;
+			}
+			else if (color[1].toLowerCase().contains("white"))
+			{
+			blue = 255;
+			green = 255;
+			red = 255;
+			}
+			}
 			if (oneitem[0].contains(":")) {
 				String[] ITEM_ID = oneitem[0].split(":");
 				id = Integer.valueOf(Integer.parseInt(ITEM_ID[0]));
@@ -291,26 +329,59 @@ public class BGKit {
 						Integer.parseInt(oneitem[13]));
 			}
 
-			if ((id.intValue() < 298) || (317 < id.intValue())) {
+			if ((id.intValue() < 298) || (317 < id.intValue())) 
+			{
 				p.getInventory().addItem(new ItemStack[] { i });
-			} else if ((id.intValue() == 298) || (id.intValue() == 302)
+			} 
+			else if ((id.intValue() == 298) || (id.intValue() == 302)
 					|| (id.intValue() == 306) || (id.intValue() == 310)
-					|| (id.intValue() == 314)) {
+					|| (id.intValue() == 314)) 
+			{
+				if ((id.intValue() == 298) && (item.contains(">")))// Checks if the Item line contains a > to give the armor color.
+				{
+				    LeatherArmorMeta h = (LeatherArmorMeta)i.getItemMeta();
+				    h.setColor(Color.fromBGR(blue, green, red));//Gave it variables so they set-up above.
+				    i.setItemMeta(h);// Give the armor the actual color we made
+				}
 				i.setAmount(1);
 				p.getInventory().setHelmet(i);
-			} else if ((id.intValue() == 299) || (id.intValue() == 303)
+				}
+			else if ((id.intValue() == 299) || (id.intValue() == 303)
 					|| (id.intValue() == 307) || (id.intValue() == 311)
-					|| (id.intValue() == 315)) {
+					|| (id.intValue() == 315)) 
+			{
+				if ((id.intValue() == 299) && (item.contains(">")))
+				{
+				    LeatherArmorMeta c = (LeatherArmorMeta)i.getItemMeta();
+				    c.setColor(Color.fromBGR(blue, green, red));
+				    i.setItemMeta(c);
+				}
 				i.setAmount(1);
 				p.getInventory().setChestplate(i);
-			} else if ((id.intValue() == 300) || (id.intValue() == 304)
+			} 
+			else if ((id.intValue() == 300) || (id.intValue() == 304)
 					|| (id.intValue() == 308) || (id.intValue() == 312)
-					|| (id.intValue() == 316)) {
+					|| (id.intValue() == 316)) 
+			{
+				if ((id.intValue() == 300) && (item.contains(">")))
+				{
+				    LeatherArmorMeta l = (LeatherArmorMeta)i.getItemMeta();
+				    l.setColor(Color.fromBGR(blue, green, red));
+				    i.setItemMeta(l);
+				}
 				i.setAmount(1);
 				p.getInventory().setLeggings(i);
-			} else if ((id.intValue() == 301) || (id.intValue() == 305)
+				}
+			else if ((id.intValue() == 301) || (id.intValue() == 305)
 					|| (id.intValue() == 309) || (id.intValue() == 313)
-					|| (id.intValue() == 317)) {
+					|| (id.intValue() == 317)) 
+			{
+				if ((id.intValue() == 301) && (item.contains(">")))
+				{
+				    LeatherArmorMeta b = (LeatherArmorMeta)i.getItemMeta();
+				    b.setColor(Color.fromBGR(blue, green, red));
+				    i.setItemMeta(b);
+				}
 				i.setAmount(1);
 				p.getInventory().setBoots(i);
 			}
